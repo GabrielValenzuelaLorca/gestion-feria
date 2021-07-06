@@ -7,7 +7,7 @@ const defaultState = {
     CHA: {stat: 10, mod: 0}
 };
 
-export default  (state = defaultState, {type, payload}) => {
+const homeReducer = (state = defaultState, {type, payload}) => {
 
     switch (type){
         case "ADD_STAT":
@@ -18,3 +18,5 @@ export default  (state = defaultState, {type, payload}) => {
             return state
     }
 }
+
+export default homeReducer;
