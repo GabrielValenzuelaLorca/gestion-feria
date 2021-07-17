@@ -6,8 +6,8 @@ const Navbar = () => {
       <div className="navbar-brand">
         <a className="navbar-item" href="www.youtube.com">
           <img
-            src="https://lh3.googleusercontent.com/proxy/jOPvS2PScGj-JM1BXIfPfXBwar3NG3Y6Zuyb2OILrvUmtss16wRnOg6f-CiDgB_VeoZeszQsX0x1PvclDeYHvOaWSFbtC1z-Ayg0MvkoV98aD7Q86TbqKzM"
-            width="100"
+            src="https://bulma.io/images/bulma-logo.png"
+            width="112"
             height="28"
             alt="Logo"
           />
