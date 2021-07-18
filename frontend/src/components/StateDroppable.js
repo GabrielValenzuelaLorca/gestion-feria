@@ -3,18 +3,18 @@ import { Droppable } from "react-beautiful-dnd";
 import CardDraggable from "./CardDraggable";
 
 const StateDroppable = (props) => {
-  const {stateItems} = props
+  const {stateItems, id} = props
 
   return (
-    <Droppable droppableId="droppable" key="1">
+    <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
             className= "box"
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {stateItems.map((item, index) => (
-              <CardDraggable item={item} index={index} key={item.id.toString()}/>
+            {stateItems.map(item => (
+              <CardDraggable item={item} key={item.id.toString()}/>
             ))}
             {provided.placeholder}
           </div>

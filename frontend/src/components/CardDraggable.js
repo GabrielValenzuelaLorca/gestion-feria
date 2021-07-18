@@ -2,10 +2,10 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 const CardDraggable = (props) => {
-  const {item, index} = props
+  const {item} = props
 
   return (
-    <Draggable draggableId={item.id} index={index}>
+    <Draggable draggableId={item.id.toString()} index={item.index}>
       {(provided, snapshot) => (
         <div className="box has-background-success "
           ref={provided.innerRef}
