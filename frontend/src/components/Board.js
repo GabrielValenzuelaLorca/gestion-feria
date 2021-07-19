@@ -92,17 +92,11 @@ const Board = (props) => {
         {columns.map(column => {
           return (
             <div className="column" key={column}>
+              <h1>{column}</h1>
               <StateDroppable stateItems={state[column]} id={column}/>
             </div>
           )
         })}
-        
-        {/* <div className="column">
-          <StateDroppable stateItems={stateItems} id="In Progress"/>
-        </div>
-        <div className="column">
-          <StateDroppable stateItems={stateItems} id="Done"/>
-        </div> */}
       </div>
     </DragDropContext>
   );

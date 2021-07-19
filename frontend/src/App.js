@@ -4,7 +4,7 @@ import Board from './components/Board';
 
 function App() {
   return (
-    <div className="has-background-light">
+    <div>
       <Navbar/>
         <div className= "section">
           <div className="container">

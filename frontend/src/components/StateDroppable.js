@@ -9,11 +9,17 @@ const StateDroppable = (props) => {
     <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
-            className= "box"
+            className= {`box has-background-${
+              {
+                "Backlog": "danger",
+                "To Do": "info",
+                "In Progress": "warning",
+                "Done": "success"
+              }[id] || "white"
+            }${snapshot.isDraggingOver ? "-dark" : ""}`}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            <h1>{id}</h1>
             {stateItems.map(item => (
               <CardDraggable item={item} key={item.id.toString()}/>
             ))}
