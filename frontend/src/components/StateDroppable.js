@@ -13,6 +13,7 @@ const StateDroppable = (props) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
+            <h1>{id}</h1>
             {stateItems.map(item => (
               <CardDraggable item={item} key={item.id.toString()}/>
             ))}

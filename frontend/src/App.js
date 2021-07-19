@@ -8,7 +8,7 @@ function App() {
       <Navbar/>
         <div className= "section">
           <div className="container">
-            <Board/>
+            <Board columns={["Backlog", "To Do", "In Progress", "Done"]}/>
           </div>
         </div>
     </div>

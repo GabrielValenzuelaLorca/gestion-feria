@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { DragDropContext} from "react-beautiful-dnd";
-import { reorder } from "../utils/functions";
 import StateDroppable from "./StateDroppable";
 
 const data = [
@@ -21,37 +20,83 @@ const data = [
     content: "item 3",
     estado: "Backlog",
     index: 2
+  },
+  {
+    id:4,
+    content: "item 4",
+    estado: "To Do",
+    index: 0
+  },
+  {
+    id:5,
+    content: "item 5",
+    estado: "To Do",
+    index: 1
   }
 ]
 
-const Board = () => {
-  const [stateItems, setItems] = useState(data)
+const Board = (props) => {
+  const {columns} = props
+  let initialState = {}
+  columns.forEach(column => 
+    initialState[column] = data.filter(item => item.estado === column)
+  )
+
+  const [state, setState] = useState(initialState);
 
   const onDragEnd = (result) => {
-    console.log("aer", result)
     if (!result.destination || !result.source) 
       return;
 
-    if (result.destination.droppableId === result.source.droppableId && 
-      result.destination.index === result.source.index) 
+    const sourceIndex = result.source.index;
+    const destIndex = result.destination.index;
+    const source = result.source.droppableId;
+    const dest = result.destination.droppableId;
+    let newState = {};
+
+    if (dest === source && destIndex === sourceIndex) 
       return;
 
-    const NewItems = reorder(
-      stateItems,
-      result
-    );
-    setItems(NewItems);
-  }
+    if (source === dest){
+      const newList = Array.from(state[source].sort((a,b)=>a.index-b.index));
+      const [removed] = newList.splice(sourceIndex, 1);
+      newList.splice(destIndex, 0, removed);
+      newList.map((item,index)=>{
+        item.index = index;
+        return item;
+      });
+      newState = {...state, [source]: newList};
+    } else {
+      const newListSource = Array.from(state[source].sort((a,b)=>a.index-b.index));
+      const newListDest = Array.from(state[dest].sort((a,b)=>a.index-b.index));
+      const [removed] = newListSource.splice(sourceIndex, 1);
+      removed.estado = dest;
+      newListDest.splice(destIndex, 0, removed);
+      newListSource.map((item,index)=>{
+        item.index = index;
+        return item;
+      });
+      newListDest.map((item,index)=>{
+        item.index = index;
+        return item;
+      });
+      newState = {...state, [source]: newListSource, [dest]:newListDest};
+    }
+
+    setState(newState);
+  } 
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="columns">
-        <div className="column">
-          <StateDroppable stateItems={stateItems} id="Backlog"/>
-        </div>
-        {/* <div className="column">
-          <StateDroppable stateItems={stateItems2} id="To Do"/>
-        </div> */}
+        {columns.map(column => {
+          return (
+            <div className="column" key={column}>
+              <StateDroppable stateItems={state[column]} id={column}/>
+            </div>
+          )
+        })}
+        
         {/* <div className="column">
           <StateDroppable stateItems={stateItems} id="In Progress"/>
         </div>
