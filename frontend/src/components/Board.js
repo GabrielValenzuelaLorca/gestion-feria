@@ -5,11 +5,11 @@ import StateDroppable from "./StateDroppable";
 const data = [
   {
     id:1,
-    titulo: "item 1",
+    titulo: "Crear tablero de historias de usuario",
     estado: "Backlog",
     avance: 50,
     puntos: 10,
-    criticidad: "Alto",
+    criticidad: "Medio",
     index: 0
   },
   {
