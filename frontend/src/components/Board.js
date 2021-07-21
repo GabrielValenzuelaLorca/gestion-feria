@@ -92,7 +92,7 @@ const Board = (props) => {
         {columns.map(column => {
           return (
             <div className="column" key={column}>
-              <h1>{column}</h1>
+              <h1 className="is-size-4 has-text-left">{column}</h1>
               <StateDroppable stateItems={state[column]} id={column}/>
             </div>
           )

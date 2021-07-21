@@ -7,7 +7,7 @@ const CardDraggable = (props) => {
   return (
     <Draggable draggableId={item.id.toString()} index={item.index}>
       {(provided, snapshot) => (
-        <div className={`box has-background-${snapshot.isDragging ? "grey-light" : "light"}`}
+        <div className={`card mb-3 p-2 has-background-${snapshot.isDragging ? "grey-light" : "light"}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
