@@ -5,32 +5,47 @@ import StateDroppable from "./StateDroppable";
 const data = [
   {
     id:1,
-    content: "item 1",
+    titulo: "item 1",
     estado: "Backlog",
+    avance: 50,
+    puntos: 10,
+    criticidad: "Alto",
     index: 0
   },
   {
     id:2,
-    content: "item 2",
+    titulo: "item 2",
     estado: "Backlog",
+    avance: 70,
+    puntos: 5,
+    criticidad: "Medio",
     index: 1
   },
   {
     id:3,
-    content: "item 3",
+    titulo: "item 3",
     estado: "Backlog",
+    avance: 100,
+    puntos: 7,
+    criticidad: "Bajo",
     index: 2
   },
   {
     id:4,
-    content: "item 4",
+    titulo: "item 4",
     estado: "To Do",
+    avance: 55,
+    puntos: 2,
+    criticidad: "Alto",
     index: 0
   },
   {
     id:5,
-    content: "item 5",
+    titulo: "item 5",
     estado: "To Do",
+    avance: 10,
+    puntos: 2,
+    criticidad: "Medio",
     index: 1
   }
 ]
@@ -92,7 +107,9 @@ const Board = (props) => {
         {columns.map(column => {
           return (
             <div className="column" key={column}>
-              <h1 className="is-size-4 has-text-left">{column}</h1>
+              <h1 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
+                {column}
+              </h1>
               <StateDroppable stateItems={state[column]} id={column}/>
             </div>
           )
