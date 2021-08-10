@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="navbar is-dark" role="navigation" aria-label="main navigation">
+    <nav className="navbar is-dark" aria-label="main navigation">
       <div className="navbar-brand">
         <a className="navbar-item" href="www.youtube.com">
           <img
