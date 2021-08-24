@@ -50,8 +50,7 @@ const data = [
   }
 ]
 
-const Board = (props) => {
-  const {columns} = props
+const Board = ({columns}) => {
   let initialState = {}
   columns.forEach(column => 
     initialState[column] = data.filter(item => item.estado === column)

@@ -2,9 +2,7 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import CardDraggable from "./CardDraggable";
 
-const StateDroppable = (props) => {
-  const {stateItems, id} = props
-
+const StateDroppable = ({stateItems, id}) => {
   return (
     <Droppable droppableId={id}>
         {(provided, snapshot) => (
@@ -12,7 +10,7 @@ const StateDroppable = (props) => {
             className= {`box has-background-${
               {
                 "Backlog": "danger",
-                "To Do": "info",
+                "To Do": "link",
                 "In Progress": "warning",
                 "Done": "success"
               }[id] || "white"

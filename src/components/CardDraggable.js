@@ -1,9 +1,7 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-const CardDraggable = (props) => {
-  const {item} = props
-
+const CardDraggable = ({item}) => {
   return (
     <Draggable draggableId={item.id.toString()} index={item.index}>
       {(provided, snapshot) => (

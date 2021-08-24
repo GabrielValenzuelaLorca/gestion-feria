@@ -1,17 +1,18 @@
-import './css/App.css';
+import React from 'react'
 import Navbar from './components/Navbar';
 import Board from './components/Board';
-import React from 'react'
+import BoardInfo from './components/BoardInfo';
 
 function App() {
   return (
     <div>
       <Navbar/>
-        <div className= "section">
-          <div className="container">
-            <Board columns={["Backlog", "To Do", "In Progress", "Done"]}/>
-          </div>
-        </div>
+      <div className= "section pb-0">
+        <BoardInfo/>
+      </div>
+      <div className= "section">
+        <Board columns={["Backlog", "To Do", "In Progress", "Done"]}/>
+      </div>
     </div>
   );
 }
