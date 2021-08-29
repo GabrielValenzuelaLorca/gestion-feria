@@ -47,14 +47,17 @@ const defaultState = [
 ];
 
 const storiesReducer = (state = defaultState, {type, payload}) => {
-
   switch (type){
-      case "UPDATE_STORIES":
-          return [...state, ...payload]
-      // case "SUB_STAT":
-      //     return {...state, ...payload}
-      default:
-          return state
+    case "UPDATE_STORIES":
+      const modified_ids = payload.map(story => story.id)
+      state.forEach(elem => {
+        if(!modified_ids.includes(elem.id))
+          payload.push(elem)
+      })
+      return [...payload]
+    
+    default:
+      return state
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { DragDropContext} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import StateDroppable from "./StateDroppable";
@@ -6,13 +6,11 @@ import StateDroppable from "./StateDroppable";
 const Board = ({columns}) => {
   const dispatch = useDispatch();
   const stories = useSelector(state => state.storiesReducer)
-  
-  let initialState = {}
-  columns.forEach(column => 
-    initialState[column] = stories.filter(item => item.estado === column)
-  )
+  let stories_by_column = {}
 
-  const [state, setState] = useState(initialState);
+  columns.forEach(column => 
+    stories_by_column[column] = stories.filter(item => item.estado === column)
+  )
 
   const onDragEnd = (result) => {
     if (!result.destination || !result.source) 
@@ -22,23 +20,26 @@ const Board = ({columns}) => {
     const destIndex = result.destination.index;
     const source = result.source.droppableId;
     const dest = result.destination.droppableId;
-    let newState = {};
+    let action = {type: "UPDATE_STORIES"};
 
     if (dest === source && destIndex === sourceIndex) 
       return;
 
     if (source === dest){
-      const newList = Array.from(state[source].sort((a,b)=>a.index-b.index));
+      const newList = Array.from(stories_by_column[source].sort((a,b)=>a.index-b.index));
       const [removed] = newList.splice(sourceIndex, 1);
       newList.splice(destIndex, 0, removed);
+
       newList.map((item,index)=>{
         item.index = index;
         return item;
       });
-      newState = {...state, [source]: newList};
+
+      action.payload = newList;
+
     } else {
-      const newListSource = Array.from(state[source].sort((a,b)=>a.index-b.index));
-      const newListDest = Array.from(state[dest].sort((a,b)=>a.index-b.index));
+      const newListSource = Array.from(stories_by_column[source].sort((a,b)=>a.index-b.index));
+      const newListDest = Array.from(stories_by_column[dest].sort((a,b)=>a.index-b.index));
       const [removed] = newListSource.splice(sourceIndex, 1);
       removed.estado = dest;
       newListDest.splice(destIndex, 0, removed);
@@ -50,10 +51,10 @@ const Board = ({columns}) => {
         item.index = index;
         return item;
       });
-      newState = {...state, [source]: newListSource, [dest]:newListDest};
+      action.payload = [...newListSource, ...newListDest];
     }
 
-    setState(newState);
+    dispatch(action);
   } 
 
   return (
@@ -65,7 +66,7 @@ const Board = ({columns}) => {
               <h1 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
                 {column}
               </h1>
-              <StateDroppable stateItems={state[column]} id={column}/>
+              <StateDroppable stateItems={stories_by_column[column]} id={column}/>
             </div>
           )
         })}
