@@ -1,59 +1,15 @@
 import React, { useState } from "react";
 import { DragDropContext} from "react-beautiful-dnd";
+import { useDispatch, useSelector } from "react-redux";
 import StateDroppable from "./StateDroppable";
 
-const data = [
-  {
-    id:1,
-    titulo: "Crear tablero de historias de usuario",
-    estado: "Backlog",
-    avance: 50,
-    puntos: 10,
-    criticidad: "Medio",
-    index: 0
-  },
-  {
-    id:2,
-    titulo: "item 2",
-    estado: "Backlog",
-    avance: 70,
-    puntos: 5,
-    criticidad: "Medio",
-    index: 1
-  },
-  {
-    id:3,
-    titulo: "item 3",
-    estado: "Backlog",
-    avance: 100,
-    puntos: 7,
-    criticidad: "Bajo",
-    index: 2
-  },
-  {
-    id:4,
-    titulo: "item 4",
-    estado: "To Do",
-    avance: 55,
-    puntos: 2,
-    criticidad: "Alto",
-    index: 0
-  },
-  {
-    id:5,
-    titulo: "item 5",
-    estado: "To Do",
-    avance: 10,
-    puntos: 2,
-    criticidad: "Medio",
-    index: 1
-  }
-]
-
 const Board = ({columns}) => {
+  const dispatch = useDispatch();
+  const stories = useSelector(state => state.storiesReducer)
+  
   let initialState = {}
   columns.forEach(column => 
-    initialState[column] = data.filter(item => item.estado === column)
+    initialState[column] = stories.filter(item => item.estado === column)
   )
 
   const [state, setState] = useState(initialState);
