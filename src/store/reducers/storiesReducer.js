@@ -3,6 +3,7 @@ const defaultState = [
     id:1,
     titulo: "Crear tablero de historias de usuario",
     estado: "Backlog",
+    numero: 1,
     avance: 50,
     puntos: 10,
     criticidad: "Medio",
@@ -12,6 +13,7 @@ const defaultState = [
     id:2,
     titulo: "item 2",
     estado: "Backlog",
+    numero: 2,
     avance: 70,
     puntos: 5,
     criticidad: "Medio",
@@ -21,6 +23,7 @@ const defaultState = [
     id:3,
     titulo: "item 3",
     estado: "Backlog",
+    numero: 3,
     avance: 100,
     puntos: 7,
     criticidad: "Bajo",
@@ -30,6 +33,7 @@ const defaultState = [
     id:4,
     titulo: "item 4",
     estado: "To Do",
+    numero: 4,
     avance: 55,
     puntos: 2,
     criticidad: "Alto",
@@ -39,6 +43,7 @@ const defaultState = [
     id:5,
     titulo: "item 5",
     estado: "To Do",
+    numero: 5,
     avance: 10,
     puntos: 2,
     criticidad: "Medio",
@@ -55,7 +60,9 @@ const storiesReducer = (state = defaultState, {type, payload}) => {
           payload.push(elem)
       })
       return [...payload]
-    
+
+    case "ADD_STORY":
+      return [...state, payload]
     default:
       return state
   }

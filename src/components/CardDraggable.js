@@ -12,7 +12,7 @@ const CardDraggable = ({item}) => {
         >
           <a className="card-header" href="youtube.com">
             <p className="card-header-title">
-              HU0{item.id} - {item.titulo}
+              HU{item.numero} - {item.titulo}
             </p>
           </a>
           <div className="card-content py-2" href="youtube.com">

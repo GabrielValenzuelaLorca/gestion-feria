@@ -1,6 +1,9 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 const StoryForm = ({isActive, handleClose}) => {  
+  const stories = useSelector(state => state.storiesReducer);
+  const dispatch = useDispatch();
 
   const save = () => {
     const storyForm = document.getElementById("story-form"); 
@@ -24,12 +27,29 @@ const StoryForm = ({isActive, handleClose}) => {
     });
 
     if (validation){
-      console.log("Todos los campos wenos mi pana");
-      handleClose()
+      const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
+      const new_story = {
+        id: 10,
+        titulo: result.titulo,
+        estado: "Backlog",
+        numero: result.numero,
+        avance: 0,
+        puntos: 0,
+        criticidad: "Medio",
+        descripcion: result.descripcion,
+        index: max_index + 1,
+      }
+
+      dispatch({
+        type: "ADD_STORY",
+        payload: new_story
+      });
+
+      clearForm();
     } 
   }
 
-  const cancel = () => {
+  const clearForm = () => {
     const storyForm = document.getElementById("story-form"); 
     const fields = ["numero","titulo","descripcion"];
 
@@ -81,7 +101,7 @@ const StoryForm = ({isActive, handleClose}) => {
         </section>
         <footer className="modal-card-foot">
           <button className="button is-success" onClick={save}>Guardar</button>
-          <button className="button is-danger" onClick={cancel}>Cancelar</button>
+          <button className="button is-danger" onClick={clearForm}>clearFormar</button>
         </footer>
       </div>
     </div>
