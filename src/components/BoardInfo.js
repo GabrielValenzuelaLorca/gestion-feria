@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import HistoryForm from './HistoryForm';
+import StoryForm from './StoryForm';
 
 const BoardInfo = () => {
   const [modalState, setModal] = useState(false);
@@ -27,7 +27,7 @@ const BoardInfo = () => {
         <span>Nueva Historia</span>
       </button>
 
-      <HistoryForm isActive={modalState} handleClose={() => handleState(false)}/>
+      <StoryForm isActive={modalState} handleClose={() => handleState(false)}/>
     </div>
   )
 }

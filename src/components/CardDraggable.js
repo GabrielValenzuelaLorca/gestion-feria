@@ -25,7 +25,7 @@ const CardDraggable = ({item}) => {
               >
                 <i className="fas fa-circle"></i>
               </span>
-              <span className="level-right">{item.puntos} Ptos.</span>
+              <span className="level-right tag is-primary is-rounded">{item.puntos} Ptos.</span>
             </span>
             <span className="has-text-weight-medium">Responsables:</span>
             <ul className="pl-2">
