@@ -1,8 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { addStory } from '../store/actions/storiesActions';
 
 const StoryForm = ({isActive, handleClose}) => {  
-  const stories = useSelector(state => state.storiesReducer);
+  const stories = useSelector(state => state.stories);
   const dispatch = useDispatch();
 
   const save = () => {
@@ -40,10 +41,7 @@ const StoryForm = ({isActive, handleClose}) => {
         index: max_index + 1,
       }
 
-      dispatch({
-        type: "ADD_STORY",
-        payload: new_story
-      });
+      dispatch(addStory(new_story));
 
       clearForm();
     } 
