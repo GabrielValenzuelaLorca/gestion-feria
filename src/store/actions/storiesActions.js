@@ -7,7 +7,7 @@ export function updateStories(payload) {
     }
 }
 
-export function addStort(payload) {
+export function addStory(payload) {
   return {
       type: ADD_STORY,
       payload: payload

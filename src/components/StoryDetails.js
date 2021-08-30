@@ -1,64 +1,64 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-const StoryForm = ({isActive, handleClose}) => {  
-  const stories = useSelector(state => state.storiesReducer);
+const StoryDetails = ({isActive, handleClose}) => {  
+  const story = useSelector(state => state.storiesReducer);
   const dispatch = useDispatch();
 
-  const save = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
-    let result = {};
-    let validation = true;
+  // const save = () => {
+  //   const storyForm = document.getElementById("story-form"); 
+  //   const fields = ["numero","titulo","descripcion"];
+  //   let result = {};
+  //   let validation = true;
 
-    fields.forEach((field) => {
-      result[field] = storyForm.elements[field].value
-      let input_class = storyForm.elements[field].classList;
-      let warning_message_class = document.getElementById('form-new-story-required-'+field).classList;
+  //   fields.forEach((field) => {
+  //     result[field] = storyForm.elements[field].value
+  //     let input_class = storyForm.elements[field].classList;
+  //     let warning_message_class = document.getElementById('form-new-story-required-'+field).classList;
 
-      if(result[field] === ""){
-        input_class.add('is-danger')
-        warning_message_class.remove('is-hidden');     
-        validation = false; 
-      } else {
-        input_class.remove('is-danger')
-        warning_message_class.add('is-hidden');   
-      }
-    });
+  //     if(result[field] === ""){
+  //       input_class.add('is-danger')
+  //       warning_message_class.remove('is-hidden');     
+  //       validation = false; 
+  //     } else {
+  //       input_class.remove('is-danger')
+  //       warning_message_class.add('is-hidden');   
+  //     }
+  //   });
 
-    if (validation){
-      const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
-      const new_story = {
-        id: 10,
-        titulo: result.titulo,
-        estado: "Backlog",
-        numero: result.numero,
-        avance: 0,
-        puntos: 0,
-        criticidad: "Medio",
-        descripcion: result.descripcion,
-        index: max_index + 1,
-      }
+  //   if (validation){
+  //     const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
+  //     const new_story = {
+  //       id: 10,
+  //       titulo: result.titulo,
+  //       estado: "Backlog",
+  //       numero: result.numero,
+  //       avance: 0,
+  //       puntos: 0,
+  //       criticidad: "Medio",
+  //       descripcion: result.descripcion,
+  //       index: max_index + 1,
+  //     }
 
-      dispatch({
-        type: "ADD_STORY",
-        payload: new_story
-      });
+  //     dispatch({
+  //       type: "ADD_STORY",
+  //       payload: new_story
+  //     });
 
-      clearForm();
-    } 
-  }
+  //     clearForm();
+  //   } 
+  // }
 
-  const clearForm = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
+  // const clearForm = () => {
+  //   const storyForm = document.getElementById("story-form"); 
+  //   const fields = ["numero","titulo","descripcion"];
 
-    fields.forEach((field) => {
-      storyForm.elements[field].value = "";
-    });
+  //   fields.forEach((field) => {
+  //     storyForm.elements[field].value = "";
+  //   });
 
-    handleClose();
-  }
+  //   handleClose();
+  // }
 
   return (
     <div className={`modal ${ isActive ? "is-active" : "" }`}>
@@ -100,12 +100,12 @@ const StoryForm = ({isActive, handleClose}) => {
           </form>
         </section>
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={save}>Guardar</button>
-          <button className="button is-danger" onClick={clearForm}>Cancelar</button>
+          <button className="button is-success" >Guardar</button>
+          <button className="button is-danger" >Cancelar</button>
         </footer>
       </div>
     </div>
   )
 }
 
-export default StoryForm;
+export default StoryDetails;
