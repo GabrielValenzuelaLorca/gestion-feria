@@ -18,7 +18,7 @@ const StoryDetails = ({story, isActive, handleClose}) => {
               <div className="control">
                 <textarea className="textarea" name="descripcion" 
                 placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
-                value={story.descripcion}
+                value={story.descripcion || "Sin Descripción" }
                 readOnly/>
               </div>
             </div>
@@ -38,7 +38,7 @@ const StoryDetails = ({story, isActive, handleClose}) => {
               <div className="control">
                 <textarea className="textarea" name="criterios" 
                 placeholder="El sistema debe ser capaz de..."
-                value={story.criterios}
+                value={story.criterios || "Sin Criterios de Aceptación"}
                 readOnly/>
               </div>
             </div>
@@ -63,9 +63,12 @@ const StoryDetails = ({story, isActive, handleClose}) => {
               <label className="label">Responsable(s)</label>  
               <div className="control">
                 <div className="tags">
-                  {story.responsables.map((responsable, index)=>(
-                    <span className="tag is-primary is-medium" key={index}>{responsable}</span>
-                  ))}
+                  {story.responsables.length ? 
+                    story.responsables.map((responsable, index)=>
+                      <span className="tag is-primary is-medium" key={index}>{responsable}</span>
+                    ) : 
+                    <span className="tag is-primary is-medium">Sin Responsables</span>
+                }
                 </div>
               </div>
             </div>

@@ -41,11 +41,12 @@ const CardDraggable = ({item}) => {
               </span>
               <span className="has-text-weight-medium">Responsables:</span>
               <ul className="pl-2">
-                {item.responsables.length === 0 ? 
+                {item.responsables.length ?
+                  item.responsables.map((responsable, index) => 
+                    <li className="is-size-7" key={index}>{responsable}</li>
+                  ) :  
                   <li className="is-size-7">Sin Responsables</li>
-                : item.responsables.map(((responsable, index) => (
-                  <li className="is-size-7" key={index}>{responsable}</li>
-                )))}
+                }
               </ul>
             </div>
           </div>
