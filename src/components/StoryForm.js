@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addStory } from '../store/actions/storiesActions';
+import functions from '../utils/functions'
 
 const StoryForm = ({isActive, handleClose}) => {  
   const stories = useSelector(state => state.stories);
@@ -29,17 +30,14 @@ const StoryForm = ({isActive, handleClose}) => {
 
     if (validation){
       const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
-      const new_story = {
-        id: 10,
+      const max_id = Math.max(...stories.map(s => s.id));
+      const new_story = functions.newStory({
+        id: max_id + 1,
         titulo: result.titulo,
-        estado: "Backlog",
         numero: result.numero,
-        avance: 0,
-        puntos: 0,
-        criticidad: "Medio",
         descripcion: result.descripcion,
         index: max_index + 1,
-      }
+      });
 
       dispatch(addStory(new_story));
 
@@ -98,7 +96,7 @@ const StoryForm = ({isActive, handleClose}) => {
           </form>
         </section>
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={save}>Guardar</button>
+          <button className="button is-success" onClick={save}>Crear</button>
           <button className="button is-danger" onClick={clearForm}>Cancelar</button>
         </footer>
       </div>
