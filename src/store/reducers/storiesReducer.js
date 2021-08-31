@@ -7,6 +7,10 @@ const defaultState = [
     avance: 50,
     puntos: 10,
     criticidad: "Medio",
+    sprint: "Sin Definir",
+    descripcion: "Esto es una descripción",
+    criterios: "Esto es un criterio",
+    responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
     index: 0
   },
   {
@@ -17,6 +21,10 @@ const defaultState = [
     avance: 70,
     puntos: 5,
     criticidad: "Medio",
+    sprint: "Sin Definir",
+    descripcion: "Esto es una descripción",
+    criterios: "Esto es un criterio",
+    responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
     index: 1
   },
   {
@@ -27,6 +35,10 @@ const defaultState = [
     avance: 100,
     puntos: 7,
     criticidad: "Bajo",
+    sprint: "Sin Definir",
+    descripcion: "Esto es una descripción",
+    criterios: "Esto es un criterio",
+    responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
     index: 2
   },
   {
@@ -37,6 +49,10 @@ const defaultState = [
     avance: 55,
     puntos: 2,
     criticidad: "Alto",
+    sprint: "Sin Definir",
+    descripcion: "Esto es una descripción",
+    criterios: "Esto es un criterio",
+    responsables: ["Pedro Godoy", "Gabriel Valenzuela", "Cecilia Reyes", "Luis Hevia", "Liubov Dombrovskaia"],
     index: 0
   },
   {
@@ -47,6 +63,10 @@ const defaultState = [
     avance: 10,
     puntos: 2,
     criticidad: "Medio",
+    sprint: "Sin Definir",
+    descripcion: "Esto es una descripción",
+    criterios: "Esto es un criterio",
+    responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
     index: 1
   }
 ];
@@ -63,6 +83,7 @@ const storiesReducer = (state = defaultState, {type, payload}) => {
 
     case "ADD_STORY":
       return [...state, payload]
+      
     default:
       return state
   }

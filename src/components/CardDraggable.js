@@ -41,12 +41,13 @@ const CardDraggable = ({item}) => {
               </span>
               <span className="has-text-weight-medium">Responsables:</span>
               <ul className="pl-2">
-                <li className="is-size-7">Gabriel Valenzuela</li>
-                <li className="is-size-7">Pedro Godoy</li>
+                {item.responsables.map(((responsable, index) => (
+                  <li className="is-size-7" key={index}>{responsable}</li>
+                )))}
               </ul>
             </div>
           </div>
-          <StoryDetails isActive={modalState} handleClose={() => functions.setModalState(false, setModal)}/>
+          <StoryDetails story={item} isActive={modalState} handleClose={() => functions.setModalState(false, setModal)}/>
         </div>
       )}
     </Draggable>

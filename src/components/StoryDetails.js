@@ -1,107 +1,79 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 
-const StoryDetails = ({isActive, handleClose}) => {  
-  const story = useSelector(state => state.storiesReducer);
-  const dispatch = useDispatch();
-
-  // const save = () => {
-  //   const storyForm = document.getElementById("story-form"); 
-  //   const fields = ["numero","titulo","descripcion"];
-  //   let result = {};
-  //   let validation = true;
-
-  //   fields.forEach((field) => {
-  //     result[field] = storyForm.elements[field].value
-  //     let input_class = storyForm.elements[field].classList;
-  //     let warning_message_class = document.getElementById('form-new-story-required-'+field).classList;
-
-  //     if(result[field] === ""){
-  //       input_class.add('is-danger')
-  //       warning_message_class.remove('is-hidden');     
-  //       validation = false; 
-  //     } else {
-  //       input_class.remove('is-danger')
-  //       warning_message_class.add('is-hidden');   
-  //     }
-  //   });
-
-  //   if (validation){
-  //     const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
-  //     const new_story = {
-  //       id: 10,
-  //       titulo: result.titulo,
-  //       estado: "Backlog",
-  //       numero: result.numero,
-  //       avance: 0,
-  //       puntos: 0,
-  //       criticidad: "Medio",
-  //       descripcion: result.descripcion,
-  //       index: max_index + 1,
-  //     }
-
-  //     dispatch({
-  //       type: "ADD_STORY",
-  //       payload: new_story
-  //     });
-
-  //     clearForm();
-  //   } 
-  // }
-
-  // const clearForm = () => {
-  //   const storyForm = document.getElementById("story-form"); 
-  //   const fields = ["numero","titulo","descripcion"];
-
-  //   fields.forEach((field) => {
-  //     storyForm.elements[field].value = "";
-  //   });
-
-  //   handleClose();
-  // }
+const StoryDetails = ({story, isActive, handleClose}) => {  
 
   return (
     <div className={`modal ${ isActive ? "is-active" : "" }`}>
       <div className="modal-background" onClick={handleClose}></div>
       <div className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">Definición de Historias</p>
+          <p className="modal-card-title has-text-weight-bold	">
+            HU{story.numero} - {story.titulo}
+          </p>
         </header>
         <section className="modal-card-body">
-          <form id="story-form">
-            <div className="field">
-              <label className="label">Número Historia</label>
-              <div className="control">
-                <div className="field has-addons">
-                  <div className="control">
-                    <button className="button is-static">HU</button>
-                  </div>
-                  <div className="control">
-                    <input className="input" name="numero" type="number" placeholder="10" min="0" />
-                  </div>
-                </div>
-              </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-numero">Este campo es obligatorio</p>
-            </div>
-            <div className="field">
-              <label className="label">Título Historia</label>
-              <div className="control">
-                <input className="input" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..."/>
-              </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-titulo">Este campo es obligatorio</p>
-            </div>
+          <form id="story-details-form">
             <div className="field">
               <label className="label">Descripción Historia</label>
               <div className="control">
-                <textarea className="textarea" name="descripcion" placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."/>
+                <textarea className="textarea" name="descripcion" 
+                placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
+                value={story.descripcion}
+                readOnly/>
               </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-descripcion">Este campo es obligatorio</p>
+            </div>
+            <div className="field">
+              <label className="label">Puntos de Historia </label>     
+              <span className="tag is-medium is-primary">{story.puntos} Puntos</span>    
+              <div className="control is-hidden">
+                <input className="input" name="puntos" type="number" placeholder="10" min="0" value={story.puntos} readOnly/>
+              </div>
+            </div>
+            <div className="field">
+              <label className="label">Porcentaje de Avance</label>     
+              <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
+            </div>
+            <div className="field">
+              <label className="label">Criterios de Aceptación</label>
+              <div className="control">
+                <textarea className="textarea" name="criterios" 
+                placeholder="El sistema debe ser capaz de..."
+                value={story.criterios}
+                readOnly/>
+              </div>
+            </div>
+            <div className="field">
+              <label className="label">Criticidad</label>         
+              <span className= {`tag is-medium is-${
+                {Alto: "danger",
+                Medio: "warning",
+                Bajo: "success"}[story.criticidad]}`
+              }>{story.criticidad}</span>
+              <div className="control is-hidden">
+                <div className="select">
+                  <select>
+                    <option>Alto</option>
+                    <option>Medio</option>
+                    <option>Bajo</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="field">   
+              <label className="label">Responsable(s)</label>  
+              <div className="control">
+                <div className="tags">
+                  {story.responsables.map((responsable, index)=>(
+                    <span className="tag is-primary is-medium" key={index}>{responsable}</span>
+                  ))}
+                </div>
+              </div>
             </div>
           </form>
         </section>
         <footer className="modal-card-foot">
-          <button className="button is-success" >Guardar</button>
-          <button className="button is-danger" >Cancelar</button>
+          <button className="button is-link">Editar</button>
+          <button className="button is-link" onClick={handleClose}>Cerrar</button>
         </footer>
       </div>
     </div>
