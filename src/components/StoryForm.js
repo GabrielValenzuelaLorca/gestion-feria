@@ -6,25 +6,25 @@ import functions from '../utils/functions'
 const StoryForm = ({isActive, handleClose}) => {  
   const stories = useSelector(state => state.stories);
   const dispatch = useDispatch();
+  const storyForm = document.getElementById("story-form"); 
+  const fields = ["numero","titulo","descripcion"];
 
   const save = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
     let result = {};
     let validation = true;
 
     fields.forEach((field) => {
       result[field] = storyForm.elements[field].value
-      let input_class = storyForm.elements[field].classList;
-      let warning_message_class = document.getElementById('form-new-story-required-'+field).classList;
+      const inputClass = storyForm.elements[field].classList;
+      const warningMessageClass = storyForm.querySelector(`.warning-${field}`).classList;
 
       if(result[field] === ""){
-        input_class.add('is-danger')
-        warning_message_class.remove('is-hidden');     
+        inputClass.add('is-danger')
+        warningMessageClass.remove('is-hidden');     
         validation = false; 
       } else {
-        input_class.remove('is-danger')
-        warning_message_class.add('is-hidden');   
+        inputClass.remove('is-danger')
+        warningMessageClass.add('is-hidden');   
       }
     });
 
@@ -32,10 +32,8 @@ const StoryForm = ({isActive, handleClose}) => {
       const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
       const max_id = Math.max(...stories.map(s => s.id));
       const new_story = functions.newStory({
+        ...result,
         id: max_id + 1,
-        titulo: result.titulo,
-        numero: result.numero,
-        descripcion: result.descripcion,
         index: max_index + 1,
       });
 
@@ -46,9 +44,6 @@ const StoryForm = ({isActive, handleClose}) => {
   }
 
   const clearForm = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
-
     fields.forEach((field) => {
       storyForm.elements[field].value = "";
     });
@@ -77,21 +72,21 @@ const StoryForm = ({isActive, handleClose}) => {
                   </div>
                 </div>
               </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-numero">Este campo es obligatorio</p>
+              <p className="help is-danger is-hidden warning-numero">Este campo es obligatorio</p>
             </div>
             <div className="field">
               <label className="label">Título Historia</label>
               <div className="control">
                 <input className="input" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..."/>
               </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-titulo">Este campo es obligatorio</p>
+              <p className="help is-danger is-hidden warning-titulo">Este campo es obligatorio</p>
             </div>
             <div className="field">
               <label className="label">Descripción Historia</label>
               <div className="control">
                 <textarea className="textarea" name="descripcion" placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."/>
               </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-descripcion">Este campo es obligatorio</p>
+              <p className="help is-danger is-hidden warning-descripcion">Este campo es obligatorio</p>
             </div>
           </form>
         </section>
