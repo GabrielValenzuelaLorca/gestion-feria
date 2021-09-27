@@ -1,20 +1,15 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import CardDraggable from "./CardDraggable";
+import { columnStyle } from '../utils/classStyles'
 
 const StateDroppable = ({stateItems, id}) => {
   return (
     <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
-            className= {`box has-background-${
-              {
-                "Backlog": "danger",
-                "To Do": "link",
-                "In Progress": "warning",
-                "Done": "success"
-              }[id] || "white"
-            }${snapshot.isDraggingOver ? "-dark" : ""}`}
+            className= {`box has-background-${columnStyle[id] || "white"}
+            ${snapshot.isDraggingOver ? "-dark" : ""}`}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >

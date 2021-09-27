@@ -1,4 +1,5 @@
 import React from 'react'
+import { criticidadStyle } from '../utils/classStyles';
 
 const StoryDetails = ({story, isActive, handleClose}) => {  
 
@@ -30,7 +31,10 @@ const StoryDetails = ({story, isActive, handleClose}) => {
               </div>
             </div>
             <div className="field">
-              <label className="label">Porcentaje de Avance</label>     
+              <label className="label level">
+                <span className="level-left">Porcentaje de Avance</span>
+                <span className="level-left">{story.avance}%</span>
+              </label>     
               <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
             </div>
             <div className="field">
@@ -44,17 +48,15 @@ const StoryDetails = ({story, isActive, handleClose}) => {
             </div>
             <div className="field">
               <label className="label">Criticidad</label>         
-              <span className= {`tag is-medium is-${
-                {Alto: "danger",
-                Medio: "warning",
-                Bajo: "success"}[story.criticidad]}`
+              <span className= {`tag is-medium is-${criticidadStyle[story.criticidad]}`
               }>{story.criticidad}</span>
               <div className="control is-hidden">
                 <div className="select">
                   <select>
-                    <option>Alto</option>
-                    <option>Medio</option>
-                    <option>Bajo</option>
+                    <option>Importante</option>
+                    <option>Esencial</option>
+                    <option>Deseable</option>
+                    <option>Opcional</option>
                   </select>
                 </div>
               </div>

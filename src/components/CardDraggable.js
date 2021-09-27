@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import functions from "../utils/functions";
+import { criticidadStyle } from "../utils/classStyles";
+import { setModalState } from "../utils/functions";
 import StoryDetails from "./StoryDetails";
 
 const CardDraggable = ({item}) => {
@@ -19,7 +20,7 @@ const CardDraggable = ({item}) => {
               <p className="card-header-title">
                   HU{item.numero} - {item.titulo}
               </p>
-              <button className="card-header-icon" onClick={() => functions.setModalState(true, setModal)}>
+              <button className="card-header-icon" onClick={() => setModalState(true, setModal)}>
                 <span className="icon has-text-grey-light" 
                   onMouseOver={(e) => e.target.classList.remove('has-text-grey-light')}
                   onMouseLeave={(e) => e.target.classList.add('has-text-grey-light')}>
@@ -30,10 +31,7 @@ const CardDraggable = ({item}) => {
             <div className="card-content py-2">
               <progress className="progress is-link mb-2" value={item.avance.toString()} max="100"/>
               <span className="icon-text level mb-0">
-                <span className={`icon level-left has-text-${
-                  {Alto: "danger",
-                  Medio: "warning",
-                  Bajo: "success"}[item.criticidad]}`}
+                <span className={`icon level-left has-text-${criticidadStyle[item.criticidad]}`}
                 >
                   <i className="fas fa-circle"></i>
                 </span>
@@ -50,7 +48,7 @@ const CardDraggable = ({item}) => {
               </ul>
             </div>
           </div>
-          <StoryDetails story={item} isActive={modalState} handleClose={() => functions.setModalState(false, setModal)}/>
+          <StoryDetails story={item} isActive={modalState} handleClose={() => setModalState(false, setModal)}/>
         </div>
       )}
     </Draggable>

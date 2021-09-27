@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import StoryForm from './StoryForm';
-import functions from '../utils/functions'
+import { setModalState } from '../utils/functions'
 
 const BoardInfo = () => {
   const [modalState, setModal] = useState(false);
@@ -12,14 +12,14 @@ const BoardInfo = () => {
       <p className="has-text-light">Fecha de Cierre: 05/09/2021</p>
       <p className="has-text-light">Tiempo Restante: 5 días</p>
 
-      <button className="button is-success" onClick={() => functions.setModalState(true, setModal)}>
+      <button className="button is-success" onClick={() => setModalState(true, setModal)}>
         <span className="icon is-small">
           <i className="fas fa-plus"></i>
         </span>
         <span>Nueva Historia</span>
       </button>
 
-      <StoryForm isActive={modalState} handleClose={() => functions.setModalState(false, setModal)}/>
+      <StoryForm isActive={modalState} handleClose={() => setModalState(false, setModal)}/>
     </div>
   )
 }

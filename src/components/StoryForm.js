@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addStory } from '../store/actions/storiesActions';
-import functions from '../utils/functions'
+import { newStory } from '../utils/functions'
 
 const StoryForm = ({isActive, handleClose}) => {  
   const stories = useSelector(state => state.stories);
@@ -31,7 +31,7 @@ const StoryForm = ({isActive, handleClose}) => {
     if (validation){
       const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
       const max_id = Math.max(...stories.map(s => s.id));
-      const new_story = functions.newStory({
+      const new_story = newStory({
         ...result,
         id: max_id + 1,
         index: max_index + 1,

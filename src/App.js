@@ -11,7 +11,7 @@ function App() {
         <BoardInfo/>
       </div>
       <div className= "section">
-        <Board columns={["Backlog", "To Do", "In Progress", "Done"]}/>
+        <Board columns={["Backlog", "Por Hacer", "En Desarrollo", "Completado"]}/>
       </div>
     </div>
   );
