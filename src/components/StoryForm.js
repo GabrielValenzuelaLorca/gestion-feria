@@ -56,7 +56,9 @@ const StoryForm = ({isActive, handleClose}) => {
       <div className="modal-background" onClick={handleClose}></div>
       <div className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">Definición de Historias</p>
+          <p className="has-text-weight-bold is-size-4">
+            Definición de Historias
+          </p>
         </header>
         <section className="modal-card-body">
           <form id="story-form">

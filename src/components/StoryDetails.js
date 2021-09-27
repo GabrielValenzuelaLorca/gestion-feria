@@ -8,7 +8,7 @@ const StoryDetails = ({story, isActive, handleClose}) => {
       <div className="modal-background" onClick={handleClose}></div>
       <div className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title has-text-weight-bold	">
+          <p className="has-text-weight-bold is-size-4">
             HU{story.numero} - {story.titulo}
           </p>
         </header>
@@ -31,7 +31,7 @@ const StoryDetails = ({story, isActive, handleClose}) => {
               </div>
             </div>
             <div className="field">
-              <label className="label level">
+              <label className="label level is-mobile">
                 <span className="level-left">Porcentaje de Avance</span>
                 <span className="level-left">{story.avance}%</span>
               </label>     
