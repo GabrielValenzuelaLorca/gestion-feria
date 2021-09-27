@@ -13,7 +13,7 @@ const StoryForm = ({isActive, handleClose}) => {
     let result = {};
     let validation = true;
 
-    fields.forEach((field) => {
+    fields.forEach(field => {
       result[field] = storyForm.elements[field].value
       const inputClass = storyForm.elements[field].classList;
       const warningMessageClass = storyForm.querySelector(`.warning-${field}`).classList;

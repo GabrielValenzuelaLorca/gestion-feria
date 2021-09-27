@@ -8,8 +8,8 @@ const StateDroppable = ({stateItems, id}) => {
     <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
-            className= {`box has-background-${columnStyle[id] || "white"}
-            ${snapshot.isDraggingOver ? "-dark" : ""}`}
+            className= {`box has-background-${columnStyle[id] || "white"}`
+            + `${snapshot.isDraggingOver ? "-dark" : ""}`}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
