@@ -20,10 +20,8 @@ const CardDraggable = ({item}) => {
               <p className="card-header-title">
                   HU{item.numero} - {item.titulo}
               </p>
-              <button className="card-header-icon has-text-grey-light" 
+              <button className="pt-4 card-header-icon button is-light is-rounded" 
                 onClick={() => setModalState(true, setModal)}
-                onMouseEnter={(e) => e.target.classList.remove('has-text-grey-light')}
-                onMouseLeave={(e) => e.target.classList.add('has-text-grey-light')}
               >
                 <span className="icon" >
                   <i className="fas fa-lg fa-ellipsis-v"></i>
@@ -50,7 +48,7 @@ const CardDraggable = ({item}) => {
               </ul>
             </div>
           </div>
-          <StoryDetails story={item} isActive={modalState} handleClose={() => setModalState(false, setModal)}/>
+          <StoryDetails story={item} isActive={modalState} closeModal={() => setModalState(false, setModal)}/>
         </div>
       )}
     </Draggable>
