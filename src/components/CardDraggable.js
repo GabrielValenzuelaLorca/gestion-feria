@@ -20,11 +20,13 @@ const CardDraggable = ({item}) => {
               <p className="card-header-title">
                   HU{item.numero} - {item.titulo}
               </p>
-              <button className="card-header-icon" onClick={() => setModalState(true, setModal)}>
-                <span className="icon has-text-grey-light" 
-                  onMouseOver={(e) => e.target.classList.remove('has-text-grey-light')}
-                  onMouseLeave={(e) => e.target.classList.add('has-text-grey-light')}>
-                  <i className="fas fa-external-link-alt"></i>
+              <button className="card-header-icon has-text-grey-light" 
+                onClick={() => setModalState(true, setModal)}
+                onMouseEnter={(e) => e.target.classList.remove('has-text-grey-light')}
+                onMouseLeave={(e) => e.target.classList.add('has-text-grey-light')}
+              >
+                <span className="icon" >
+                  <i className="fas fa-lg fa-ellipsis-v"></i>
                 </span>
               </button>
             </div>
