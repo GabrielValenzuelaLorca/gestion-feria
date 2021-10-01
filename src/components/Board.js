@@ -60,18 +60,18 @@ const Board = ({columns}) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="columns">
+      <section className="columns">
         {columns.map(column => {
           return (
             <div className="column" key={column}>
-              <h1 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
+              <h2 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
                 {column}
-              </h1>
+              </h2>
               <StateDroppable stateItems={stories_by_column[column]} id={column}/>
             </div>
           )
         })}
-      </div>
+      </section>
     </DragDropContext>
   );
 }

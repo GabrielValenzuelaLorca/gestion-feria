@@ -12,10 +12,10 @@ const Navbar = () => {
             alt="Logo"
           />
         </a>
-
+        
 				<div className="navbar-item">
-						<span>Titulo</span>
-					</div>
+          <span>Titulo</span>
+        </div>
       </div>
 
       <div className="navbar-menu">

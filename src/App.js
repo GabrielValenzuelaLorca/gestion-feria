@@ -6,13 +6,17 @@ import BoardInfo from './components/BoardInfo';
 function App() {
   return (
     <div>
-      <Navbar/>
-      <div className= "section pb-0">
+      <header>
+        <Navbar/>
+      </header>
+
+      <header className= "section pb-0">
         <BoardInfo/>
-      </div>
-      <div className= "section">
+      </header>
+
+      <section className= "section">
         <Board columns={["Backlog", "Por Hacer", "En Desarrollo", "Completado"]}/>
-      </div>
+      </section>
     </div>
   );
 }

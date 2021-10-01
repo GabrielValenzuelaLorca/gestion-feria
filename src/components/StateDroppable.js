@@ -7,7 +7,7 @@ const StateDroppable = ({stateItems, id}) => {
   return (
     <Droppable droppableId={id}>
         {(provided, snapshot) => (
-          <div
+          <section
             className= {`box has-background-${columnStyle[id] || "white"}`
             + `${snapshot.isDraggingOver ? "-dark" : ""}`}
             {...provided.droppableProps}
@@ -17,7 +17,7 @@ const StateDroppable = ({stateItems, id}) => {
               <CardDraggable item={item} key={item.id.toString()}/>
             ))}
             {provided.placeholder}
-          </div>
+          </section>
         )}
       </Droppable>
   )
