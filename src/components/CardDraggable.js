@@ -20,7 +20,7 @@ const CardDraggable = ({item}) => {
                 HU{item.numero} - {item.titulo}
             </p>
 
-            <button className="pt-4 card-header-icon button is-light is-rounded" 
+            <button className="mt-1 mr-1 button is-light is-rounded" 
               onClick={() => setModalState(true, setModal)}
             >
               <span className="icon" >
