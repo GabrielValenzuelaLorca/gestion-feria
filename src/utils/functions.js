@@ -24,3 +24,8 @@ export const setModalState = (state, setState) => {
   
   setState(state);
 }
+
+export const addToRefs = (ref, element) => {
+  if (element && !ref.current.includes(element))
+      ref.current.push(element);
+}

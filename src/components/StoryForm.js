@@ -15,15 +15,15 @@ const StoryForm = ({isActive, handleClose}) => {
 
     Object.keys(formRef.current).forEach(field => {
       const element = formRef.current[field];
-      result[field] = element.value;
       const inputClass = element.classList;
       const warningMessageClass = warningRef.current[field].classList;
 
-      if(result[field] === ""){
+      if(element.value === ""){
         inputClass.add('is-danger')
         warningMessageClass.remove('is-hidden');     
         validation = false; 
       } else {
+        result[field] = element.value;
         inputClass.remove('is-danger')
         warningMessageClass.add('is-hidden');   
       }

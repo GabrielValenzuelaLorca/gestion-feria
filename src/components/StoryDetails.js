@@ -1,18 +1,19 @@
 import React, { useRef } from 'react'
 import { criticidadStyle } from '../utils/classStyles';
+import { addToRefs } from '../utils/functions';
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
-  const form = useRef();
-  const footer = useRef();
-  const field = useRef();
+  const hiddenRef = useRef([]);
+  const readRef = useRef([]);
 
   const toggleForm = () => {
-    const footerButtons = Array.from(footer.current.children);
-    const formChildren = Array.from(form.current.children);
+    hiddenRef.current.forEach(element => 
+      element.classList.toggle("is-hidden")
+    )
 
-    footerButtons.forEach(node => {
-      node.classList.toggle("is-hidden");
-    })
+    readRef.current.forEach(element => 
+      element.toggleAttribute("readonly")
+    )
   }
 
   const handleEdit = () => {
@@ -25,7 +26,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
   return (
     <section className={`modal ${ isActive ? "is-active" : "" }`}>
-      <div className="modal-background" onClick={closeModal}/>
+      <div className="modal-background" onClick={closeModal}></div>
       
       <article className="modal-card">
         <header className="modal-card-head">
@@ -34,9 +35,10 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           </p>
         </header>
 
-        <form className="modal-card-body" ref={form}>
+        <section className="modal-card-body">
           {/* Inputs de titulo y numero  */}
-          <div className="field is-grouped is-hidden">
+          <div ref={el => addToRefs(hiddenRef, el)} className="field is-hidden">
+            <label className="label">Número Historia</label>
             <div className="control">
               <div className="field has-addons">
                 <div className="control">
@@ -44,20 +46,30 @@ const StoryDetails = ({story, isActive, closeModal}) => {
                 </div>
 
                 <div className="control">
-                  <input className="input" name="numero" type="number" placeholder="10" min="0" defaultValue={story.numero}/>
+                  <input className="input" type="number" placeholder="10" min="0" defaultValue={story.numero}/>
                 </div>
               </div>
             </div>
+            <p className="help is-danger is-hidden">
+              Este campo es obligatorio
+            </p>
+          </div>
 
+          <div ref={el => addToRefs(hiddenRef, el)} className="field is-hidden">
+            <label className="label">Título Historia</label>
             <div className="control">
-              <input className="input" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..." defaultValue={story.titulo}/>
+              <input className="input" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..." defaultValue={story.titulo}/>
             </div>
+            <p className="help is-danger is-hidden">
+              Este campo es obligatorio
+            </p>
           </div>
 
           <div className="field">
             <label className="label">Descripción Historia</label>
             <div className="control">
-              <textarea className="textarea" name="descripcion" 
+              <textarea ref={el => addToRefs(readRef, el)} 
+              className="textarea" name="descripcion" 
               placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
               defaultValue={ story.descripcion || "Sin Descripción" }
               readOnly/>
@@ -66,13 +78,13 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
           <div className="field">
             <label className="label">Puntos de Historia </label>     
-            <span className="tag is-medium is-primary">{story.puntos} Puntos</span>    
-            <div className="control is-hidden">
-              <input className="input" name="puntos" type="number" placeholder="10" min="0" value={story.puntos} readOnly/>
+            <span ref={el => addToRefs(hiddenRef, el)} className="tag is-medium is-primary">{story.puntos} Puntos</span>    
+            <div ref={el => addToRefs(hiddenRef, el)} className="control is-hidden">
+              <input className="input" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
             </div>
           </div>
 
-          <div className="field">
+          <div ref={el => addToRefs(hiddenRef, el)} className="field">
             <label className="label level is-mobile">
               <span className="level-left">Porcentaje de Avance</span>
               <span className="level-left">{story.avance}%</span>
@@ -83,7 +95,8 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           <div className="field">
             <label className="label">Criterios de Aceptación</label>
             <div className="control">
-              <textarea className="textarea" name="criterios" 
+              <textarea ref={el => addToRefs(readRef, el)}
+              className="textarea" name="criterios" 
               placeholder="El sistema debe ser capaz de..."
               defaultValue={story.criterios || "Sin Criterios de Aceptación"}
               readOnly/>
@@ -92,10 +105,10 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
           <div className="field">
             <label className="label">Criticidad</label>    
-            <span className= {`tag is-medium is-${criticidadStyle[story.criticidad]}`}>
+            <span ref={el => addToRefs(hiddenRef, el)} className={`tag is-medium is-${criticidadStyle[story.criticidad]}`}>
               {story.criticidad}
             </span>
-            <div className="control is-hidden">
+            <div ref={el => addToRefs(hiddenRef, el)} className="control is-hidden">
               <div className="select">
                 <select>
                   <option>Importante</option>
@@ -109,7 +122,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
           <div className="field">   
             <label className="label">Responsable(s)</label>  
-            <div className="control">
+            <div ref={el => addToRefs(hiddenRef, el)} className="control">
               <div className="tags">
                 {story.responsables.length ? 
                   story.responsables.map((responsable, index)=>
@@ -120,22 +133,22 @@ const StoryDetails = ({story, isActive, closeModal}) => {
               </div>
             </div>
           </div>
-        </form>
+        </section>
 
-        <footer className="modal-card-foot" ref={footer}>
-          <button className="button is-link" onClick={handleEdit}>
+        <footer className="modal-card-foot">
+          <button ref={el => addToRefs(hiddenRef, el)} className="button is-link" onClick={handleEdit}>
             Editar
           </button>
 
-          <button className="button is-link" onClick={closeModal}>
+          <button ref={el => addToRefs(hiddenRef, el)} className="button is-link" onClick={closeModal}>
             Cerrar
           </button>
           
-          <button className="button is-success is-hidden">
+          <button ref={el => addToRefs(hiddenRef, el)} className="button is-success is-hidden">
             Guardar
           </button>
 
-          <button className="button is-danger is-hidden" type="reset" onClick={handleCancel}>
+          <button ref={el => addToRefs(hiddenRef, el)} className="button is-danger is-hidden" type="reset" onClick={handleCancel}>
             Cancelar
           </button>
         </footer>
