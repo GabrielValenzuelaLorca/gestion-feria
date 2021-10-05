@@ -3,7 +3,7 @@ export const newStory = (story) => {
     id: story.id,
     titulo: story.titulo,
     estado: "Backlog",
-    numero: story.numero,
+    numero: parseInt(story.numero, 10),
     avance: 0,
     puntos: 0,
     criticidad: "Opcional",

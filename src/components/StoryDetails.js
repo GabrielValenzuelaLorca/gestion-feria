@@ -1,23 +1,58 @@
 import React, { useRef } from 'react'
 import { criticidadStyle } from '../utils/classStyles';
-import { addToRefs } from '../utils/functions';
+
+/*
+  criticidad,
+  responsables
+*/
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
-  const hiddenRef = useRef([]);
-  const readRef = useRef([]);
+  const modalBodyRef = useRef();
 
   const toggleForm = () => {
-    hiddenRef.current.forEach(element => 
+    const forHideEl = modalBodyRef.current.querySelectorAll('.for-hide');
+    const forReadEl = modalBodyRef.current.querySelectorAll('.for-read');
+
+    forHideEl.forEach(element => 
       element.classList.toggle("is-hidden")
     )
 
-    readRef.current.forEach(element => 
+    forReadEl.forEach(element => 
       element.toggleAttribute("readonly")
     )
   }
 
   const handleEdit = () => {
     toggleForm();
+  }
+
+  const handleSave = () => {
+    let result = {};
+    let validation = true;
+    const formData = modalBodyRef.current.querySelectorAll('.form-value');
+    
+    formData.forEach(element => {
+      if(element.classList.contains("required")){
+        const inputClass = element.classList;
+        const warningMessageClass = modalBodyRef.current.querySelector(`.warning-${element.name}`).classList;
+        if(element.value === ""){
+          inputClass.add("is-danger");
+          warningMessageClass.remove("is-hidden");
+          validation = false;
+        } else {
+          inputClass.remove("is-danger");
+          warningMessageClass.add("is-hidden");
+          result[element.name] = element.value;
+        }
+      } else 
+        result[element.name] = element.value === "" ? null : element.value;
+    });
+
+    if(validation){
+      console.log("la data", result);
+      toggleForm();
+      closeModal();
+    }
   }
 
   const handleCancel = () => {
@@ -28,7 +63,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     <section className={`modal ${ isActive ? "is-active" : "" }`}>
       <div className="modal-background" onClick={closeModal}></div>
       
-      <article className="modal-card">
+      <article ref={modalBodyRef} className="modal-card">
         <header className="modal-card-head">
           <p className="has-text-weight-bold is-size-4">
             HU{story.numero} - {story.titulo}
@@ -36,8 +71,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         </header>
 
         <section className="modal-card-body">
-          {/* Inputs de titulo y numero  */}
-          <div ref={el => addToRefs(hiddenRef, el)} className="field is-hidden">
+          <div className="field is-hidden for-hide">
             <label className="label">Número Historia</label>
             <div className="control">
               <div className="field has-addons">
@@ -46,21 +80,21 @@ const StoryDetails = ({story, isActive, closeModal}) => {
                 </div>
 
                 <div className="control">
-                  <input className="input" type="number" placeholder="10" min="0" defaultValue={story.numero}/>
+                  <input className="input form-value required" name="numero" type="number" placeholder="10" min="0" defaultValue={story.numero}/>
                 </div>
               </div>
             </div>
-            <p className="help is-danger is-hidden">
+            <p className="help is-danger is-hidden warning-numero">
               Este campo es obligatorio
             </p>
           </div>
 
-          <div ref={el => addToRefs(hiddenRef, el)} className="field is-hidden">
+          <div className="field is-hidden for-hide">
             <label className="label">Título Historia</label>
             <div className="control">
-              <input className="input" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..." defaultValue={story.titulo}/>
+              <input className="input form-value required" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..." defaultValue={story.titulo}/>
             </div>
-            <p className="help is-danger is-hidden">
+            <p className="help is-danger is-hidden warning-titulo">
               Este campo es obligatorio
             </p>
           </div>
@@ -68,35 +102,59 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           <div className="field">
             <label className="label">Descripción Historia</label>
             <div className="control">
-              <textarea ref={el => addToRefs(readRef, el)} 
-              className="textarea" name="descripcion" 
+              <textarea className="textarea for-read form-value required" name="descripcion" 
               placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
               defaultValue={ story.descripcion || "Sin Descripción" }
               readOnly/>
             </div>
+            <p className="help is-danger is-hidden warning-descripcion">
+              Este campo es obligatorio
+            </p>
           </div>
 
-          <div className="field">
+          <div className="field for-hide">
             <label className="label">Puntos de Historia </label>     
-            <span ref={el => addToRefs(hiddenRef, el)} className="tag is-medium is-primary">{story.puntos} Puntos</span>    
-            <div ref={el => addToRefs(hiddenRef, el)} className="control is-hidden">
-              <input className="input" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
-            </div>
+            <span className="tag is-medium is-primary">{story.puntos} Puntos</span>    
           </div>
 
-          <div ref={el => addToRefs(hiddenRef, el)} className="field">
+          <div className="field for-hide">
             <label className="label level is-mobile">
               <span className="level-left">Porcentaje de Avance</span>
-              <span className="level-left">{story.avance}%</span>
+
+              <span className="level-right icon-text">
+                <span>{story.avance}</span>
+                <span className="icon">
+                  <i className="fas fa-percentage"/>  
+                </span>
+              </span>
             </label>     
             <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
+          </div>
+
+          <div className="field is-horizontal is-hidden for-hide">
+            <div className="field-body">
+              <div className="field">
+                <label className="label">Puntos de Historia</label>
+                <div className="control">
+                  <input className="input form-value" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
+                </div>
+              </div>
+              <div className="field">
+                <label className="label">Porcentaje de Avance</label>
+                <div className="control has-icons-right">
+                  <input className="input" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
+                  <span className="icon is-right">
+                    <i className="fas fa-percentage"/>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="field">
             <label className="label">Criterios de Aceptación</label>
             <div className="control">
-              <textarea ref={el => addToRefs(readRef, el)}
-              className="textarea" name="criterios" 
+              <textarea className="textarea for-read form-value" name="criterios" 
               placeholder="El sistema debe ser capaz de..."
               defaultValue={story.criterios || "Sin Criterios de Aceptación"}
               readOnly/>
@@ -105,12 +163,12 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
           <div className="field">
             <label className="label">Criticidad</label>    
-            <span ref={el => addToRefs(hiddenRef, el)} className={`tag is-medium is-${criticidadStyle[story.criticidad]}`}>
+            <span className={`tag is-medium is-${criticidadStyle[story.criticidad]} for-hide`}>
               {story.criticidad}
             </span>
-            <div ref={el => addToRefs(hiddenRef, el)} className="control is-hidden">
+            <div className="control is-hidden for-hide">
               <div className="select">
-                <select>
+                <select className="form-value" name="criticidad">
                   <option>Importante</option>
                   <option>Esencial</option>
                   <option>Deseable</option>
@@ -122,7 +180,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
           <div className="field">   
             <label className="label">Responsable(s)</label>  
-            <div ref={el => addToRefs(hiddenRef, el)} className="control">
+            <div className="control for-hide">
               <div className="tags">
                 {story.responsables.length ? 
                   story.responsables.map((responsable, index)=>
@@ -136,19 +194,19 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         </section>
 
         <footer className="modal-card-foot">
-          <button ref={el => addToRefs(hiddenRef, el)} className="button is-link" onClick={handleEdit}>
+          <button className="button is-link for-hide" onClick={handleEdit}>
             Editar
           </button>
 
-          <button ref={el => addToRefs(hiddenRef, el)} className="button is-link" onClick={closeModal}>
+          <button className="button is-link for-hide" onClick={closeModal}>
             Cerrar
           </button>
           
-          <button ref={el => addToRefs(hiddenRef, el)} className="button is-success is-hidden">
+          <button  className="button is-success is-hidden for-hide" onClick={handleSave}>
             Guardar
           </button>
 
-          <button ref={el => addToRefs(hiddenRef, el)} className="button is-danger is-hidden" type="reset" onClick={handleCancel}>
+          <button className="button is-danger is-hidden for-hide" type="reset" onClick={handleCancel}>
             Cancelar
           </button>
         </footer>
