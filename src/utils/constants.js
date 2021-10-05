@@ -1,3 +1,5 @@
+export const CRITICIDAD = ["Importante", "Esencial", "Deseable", "Opcional"]
+
 // export const STATS = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
 
 // export const STATS_ICONS = {

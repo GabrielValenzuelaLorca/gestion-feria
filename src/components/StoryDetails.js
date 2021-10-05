@@ -1,17 +1,27 @@
 import React, { useRef } from 'react'
 import { criticidadStyle } from '../utils/classStyles';
+import { CRITICIDAD } from '../utils/constants';
 
 /*
-  criticidad,
   responsables
 */
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
   const modalBodyRef = useRef();
 
+  const changeColorSelect = (element) => {
+    element.classList = "";
+    const classList = element.classList;
+    classList.add("form-value");
+    classList.add(`has-background-${criticidadStyle[element.value]}`);
+    if (["Importante", "Deseable"].includes(element.value))
+      classList.add("has-text-white");
+  }
+
   const toggleForm = () => {
     const forHideEl = modalBodyRef.current.querySelectorAll('.for-hide');
     const forReadEl = modalBodyRef.current.querySelectorAll('.for-read');
+    const select = modalBodyRef.current.querySelector('select');
 
     forHideEl.forEach(element => 
       element.classList.toggle("is-hidden")
@@ -20,6 +30,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     forReadEl.forEach(element => 
       element.toggleAttribute("readonly")
     )
+    changeColorSelect(select);
   }
 
   const handleEdit = () => {
@@ -168,11 +179,10 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </span>
             <div className="control is-hidden for-hide">
               <div className="select">
-                <select className="form-value" name="criticidad">
-                  <option>Importante</option>
-                  <option>Esencial</option>
-                  <option>Deseable</option>
-                  <option>Opcional</option>
+                <select className="form-value" name="criticidad" onChange={el => changeColorSelect(el.target)}>
+                  {CRITICIDAD.map((item,i) => 
+                    <option className="has-background-white has-text-black" key={i}>{item}</option>
+                  )}
                 </select>
               </div>
             </div>
