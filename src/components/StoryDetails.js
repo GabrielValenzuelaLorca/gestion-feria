@@ -194,10 +194,23 @@ const StoryDetails = ({story, isActive, closeModal}) => {
               <div className="tags">
                 {story.responsables.length ? 
                   story.responsables.map((responsable, index)=>
-                    <span className="tag is-primary is-medium" key={index}>{responsable}</span>
+                    <span className="tag is-light is-medium" key={index}>{responsable}</span>
                   ) : 
-                  <span className="tag is-primary is-medium">Sin Responsables</span>
+                  <span className="tag is-light is-medium">Sin Responsables</span>
               }
+              </div>
+            </div>
+
+            <div className="control is-hidden for-hide">
+              <div className="buttons">
+                <button class="button">One</button>
+                <button class="button">Two</button>
+                <button class="button">Three</button>
+                <button class="button">Four</button>
+                <button class="button">Five</button>
+                <button class="button">Six</button>
+                <button class="button">Seven</button>
+                <button class="button">Eight</button>
               </div>
             </div>
           </div>
