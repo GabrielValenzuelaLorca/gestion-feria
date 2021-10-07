@@ -57,6 +57,12 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           warningMessageClass.add("is-hidden");
           result[element.name] = element.value;
         }
+      } else if (element.classList.contains("buttons")){
+        result.responsables = [];
+        [...element.children].forEach(resp => {
+          if (resp.classList.contains('selected'))
+            result.responsables.push(resp.innerText)
+        })
       } else 
         result[element.name] = element.value === "" ? null : element.value;
     });
@@ -204,9 +210,9 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </div>
 
             <div className="control is-hidden for-hide">
-              <div className="buttons">
+              <div className="buttons form-value">
                 {RESPONSABLES_SAMPLE.map((resp, i) =>
-                  <button key={i} class="button" onClick={el => selectResponsable(el.target)}>{resp}</button>
+                  <button key={i} className={`button ${story.responsables.includes(resp) ? "selected is-link" : ""}`} onClick={el => selectResponsable(el.target)}>{resp}</button>
                 )}
               </div>
             </div>
