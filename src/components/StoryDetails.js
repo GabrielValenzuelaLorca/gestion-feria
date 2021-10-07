@@ -139,13 +139,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           <div className="field for-hide">
             <label className="label level is-mobile">
               <span className="level-left">Porcentaje de Avance</span>
-
-              <span className="level-right icon-text">
-                <span>{story.avance}</span>
-                <span className="icon">
-                  <i className="fas fa-percentage"/>  
-                </span>
-              </span>
+              <span className="level-right">{story.avance}%</span>
             </label>     
             <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
           </div>
@@ -160,11 +154,15 @@ const StoryDetails = ({story, isActive, closeModal}) => {
               </div>
               <div className="field">
                 <label className="label">Porcentaje de Avance</label>
-                <div className="control has-icons-right">
-                  <input className="input" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
-                  <span className="icon is-right">
-                    <i className="fas fa-percentage"/>
-                  </span>
+                <div className="control">
+                  <div className="field has-addons">
+                    <div className="control is-expanded">
+                    <input className="input" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
+                    </div>
+                    <div className="control">
+                      <button className="button is-static">%</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
