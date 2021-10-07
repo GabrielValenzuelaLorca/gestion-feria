@@ -1,9 +1,12 @@
 import React, { useRef } from 'react'
+import { useDispatch } from 'react-redux';
+import { updateStories } from '../store/actions/storiesActions';
 import { criticidadStyle } from '../utils/classStyles';
 import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../utils/constants';
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
   const modalBodyRef = useRef();
+  const dispatch = useDispatch();
 
   const selectResponsable = (element) => {
     const classList = element.classList;
@@ -68,7 +71,8 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     });
 
     if(validation){
-      console.log("la data", result);
+      result = {...story, ...result}
+      dispatch(updateStories([result]));
       toggleForm();
       closeModal();
     }
