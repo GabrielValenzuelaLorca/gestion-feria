@@ -1,13 +1,15 @@
 import React, { useRef } from 'react'
 import { criticidadStyle } from '../utils/classStyles';
-import { CRITICIDAD } from '../utils/constants';
-
-/*
-  responsables
-*/
+import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../utils/constants';
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
   const modalBodyRef = useRef();
+
+  const selectResponsable = (element) => {
+    const classList = element.classList;
+    classList.toggle('selected');
+    classList.toggle('is-link');
+  }
 
   const changeColorSelect = (element) => {
     element.classList = "";
@@ -203,14 +205,9 @@ const StoryDetails = ({story, isActive, closeModal}) => {
 
             <div className="control is-hidden for-hide">
               <div className="buttons">
-                <button class="button">One</button>
-                <button class="button">Two</button>
-                <button class="button">Three</button>
-                <button class="button">Four</button>
-                <button class="button">Five</button>
-                <button class="button">Six</button>
-                <button class="button">Seven</button>
-                <button class="button">Eight</button>
+                {RESPONSABLES_SAMPLE.map((resp, i) =>
+                  <button key={i} class="button" onClick={el => selectResponsable(el.target)}>{resp}</button>
+                )}
               </div>
             </div>
           </div>
