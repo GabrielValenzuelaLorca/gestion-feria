@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { updateStories } from '../store/actions/storiesActions';
 import { criticidadStyle } from '../utils/classStyles';
 import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../utils/constants';
+import { newStory } from '../utils/functions';
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
   const modalBodyRef = useRef();
@@ -52,10 +53,6 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     });
   }
 
-  const handleEdit = () => {
-    toggleForm();
-  }
-
   const handleSave = () => {
     let result = {};
     let validation = true;
@@ -66,6 +63,18 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         const inputClass = element.classList;
         const warningMessageClass = modalBodyRef.current.querySelector(`.warning-${element.name}`).classList;
         if(element.value === ""){
+          inputClass.add("is-danger");
+          warningMessageClass.remove("is-hidden");
+          validation = false;
+        } else {
+          inputClass.remove("is-danger");
+          warningMessageClass.add("is-hidden");
+          result[element.name] = element.value;
+        }
+      } else if (element.classList.contains("validate-number")) {
+        const inputClass = element.classList;
+        const warningMessageClass = modalBodyRef.current.querySelector(`.warning-${element.name}`).classList;
+        if(parseInt(element.value, 10) < parseInt(element.min, 10) || (element.max !== "" && parseInt(element.value, 10) > parseInt(element.max, 10))){
           inputClass.add("is-danger");
           warningMessageClass.remove("is-hidden");
           validation = false;
@@ -85,7 +94,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     });
 
     if(validation){
-      result = {...story, ...result}
+      result = newStory({...story, ...result});
       dispatch(updateStories([result]));
       toggleForm();
     }
@@ -108,6 +117,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         </header>
 
         <section className="modal-card-body">
+          {/* Sección form numero */}
           <div className="field is-hidden for-hide">
             <label className="label">Número Historia</label>
             <div className="control">
@@ -126,6 +136,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </p>
           </div>
 
+          {/* Sección form titulo */}
           <div className="field is-hidden for-hide">
             <label className="label">Título Historia</label>
             <div className="control">
@@ -136,6 +147,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </p>
           </div>
 
+          {/* Sección descripción */}
           <div className="field">
             <label className="label">Descripción Historia</label>
             <div className="control">
@@ -149,11 +161,13 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </p>
           </div>
 
+          {/* Sección puntos */}
           <div className="field for-hide">
             <label className="label">Puntos de Historia </label>     
             <span className="tag is-medium is-primary">{story.puntos} Puntos</span>    
           </div>
 
+          {/* Sección avance */}
           <div className="field for-hide">
             <label className="label level is-mobile">
               <span className="level-left">Porcentaje de Avance</span>
@@ -162,30 +176,38 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
           </div>
 
+          {/* Sección form de puntos y avance */}
           <div className="field is-horizontal is-hidden for-hide">
             <div className="field-body">
               <div className="field">
                 <label className="label">Puntos de Historia</label>
                 <div className="control">
-                  <input className="input form-value" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
+                  <input className="input form-value validate-number" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
                 </div>
+                <p className="help is-danger is-hidden warning-puntos">
+                  Valor inválido
+                </p>
               </div>
               <div className="field">
                 <label className="label">Porcentaje de Avance</label>
                 <div className="control">
                   <div className="field has-addons">
                     <div className="control is-expanded">
-                    <input className="input" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
+                      <input className="input form-value validate-number" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
                     </div>
                     <div className="control">
                       <button className="button is-static">%</button>
                     </div>
                   </div>
                 </div>
+                <p className="help is-danger is-hidden warning-avance">
+                  Valor inválido
+                </p>
               </div>
             </div>
           </div>
 
+          {/* Sección criterios de aceptación */}
           <div className="field">
             <label className="label">Criterios de Aceptación</label>
             <div className="control">
@@ -196,6 +218,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </div>
           </div>
 
+          {/* Sección criticidad */}
           <div className="field">
             <label className="label">Criticidad</label>    
             <span className={`tag is-medium is-${criticidadStyle[story.criticidad]} for-hide`}>
@@ -212,6 +235,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </div>
           </div>
 
+          {/* Sección responsables */}
           <div className="field">   
             <label className="label">Responsable(s)</label>  
             <div className="control for-hide">
@@ -236,7 +260,7 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         </section>
 
         <footer className="modal-card-foot">
-          <button className="button is-link for-hide" onClick={handleEdit}>
+          <button className="button is-link for-hide" onClick={toggleForm}>
             Editar
           </button>
 

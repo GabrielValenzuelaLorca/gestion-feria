@@ -2,15 +2,15 @@ export const newStory = (story) => {
   return {
     id: story.id,
     titulo: story.titulo,
-    estado: "Backlog",
+    estado: story.estado || "Backlog" ,
     numero: parseInt(story.numero, 10),
-    avance: 0,
-    puntos: 0,
-    criticidad: "Opcional",
-    sprint: "Sin Definir",
+    avance: parseInt(story.avance, 10) || 0,
+    puntos: parseInt(story.puntos, 10) || 0,
+    criticidad: story.criticidad || "Opcional",
+    sprint: story.sprint || "Sin Definir",
     descripcion: story.descripcion,
-    criterios: "",
-    responsables: [],
+    criterios: story.criterios || "",
+    responsables: story.responsables || [],
     index: story.index
   }
 }
