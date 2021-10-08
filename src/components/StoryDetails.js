@@ -38,6 +38,20 @@ const StoryDetails = ({story, isActive, closeModal}) => {
     changeColorSelect(select);
   }
 
+  const clearForm = () => {
+    const formData = modalBodyRef.current.querySelectorAll('.form-value');
+    formData.forEach(element => {
+      if (element.classList.contains("buttons")){
+        [...element.children].forEach(resp => {
+          resp.classList = "button";
+          if (story.responsables.includes(resp.innerText))
+            selectResponsable(resp);
+        })
+      } else 
+        element.value = story[element.name];
+    });
+  }
+
   const handleEdit = () => {
     toggleForm();
   }
@@ -74,12 +88,12 @@ const StoryDetails = ({story, isActive, closeModal}) => {
       result = {...story, ...result}
       dispatch(updateStories([result]));
       toggleForm();
-      closeModal();
     }
   }
 
   const handleCancel = () => {
     toggleForm();
+    clearForm();
   }
 
   return (
@@ -189,9 +203,9 @@ const StoryDetails = ({story, isActive, closeModal}) => {
             </span>
             <div className="control is-hidden for-hide">
               <div className="select">
-                <select className="form-value" name="criticidad" onChange={el => changeColorSelect(el.target)}>
+                <select className="form-value" name="criticidad" defaultValue={story.criticidad} onChange={el => changeColorSelect(el.target)}>
                   {CRITICIDAD.map((item,i) => 
-                    <option className="has-background-white has-text-black" key={i}>{item}</option>
+                    <option className="has-background-white has-text-black" key={i} value={item}>{item}</option>
                   )}
                 </select>
               </div>
