@@ -1,23 +1,26 @@
 import React from 'react'
 import Navbar from './components/Navbar';
-import Board from './components/Board';
-import BoardInfo from './components/BoardInfo';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import StoriesView from './views/StoriesView';
+import ActivitiesView from './views/ActivitiesView';
 
 function App() {
   return (
-    <div>
+    <Router>
       <header>
         <Navbar/>
       </header>
 
-      <header className= "section pb-0">
-        <BoardInfo/>
-      </header>
+      <Switch>
+        <Route exact path="/">
+          <StoriesView/>
+        </Route>
 
-      <section className= "section">
-        <Board columns={["Backlog", "Por Hacer", "En Desarrollo", "Completado"]}/>
-      </section>
-    </div>
+        <Route path="actividades">
+          <ActivitiesView/>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
