@@ -1,110 +1,119 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { addStory } from '../store/actions/storiesActions';
+import { newStory } from '../utils/functions'
 
 const StoryForm = ({isActive, handleClose}) => {  
-  const stories = useSelector(state => state.storiesReducer);
+  const stories = useSelector(state => state.stories);
   const dispatch = useDispatch();
+  const formRef = useRef({}); 
+  const warningRef = useRef({});
 
   const save = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
     let result = {};
     let validation = true;
 
-    fields.forEach((field) => {
-      result[field] = storyForm.elements[field].value
-      let input_class = storyForm.elements[field].classList;
-      let warning_message_class = document.getElementById('form-new-story-required-'+field).classList;
+    Object.keys(formRef.current).forEach(field => {
+      const element = formRef.current[field];
+      const inputClass = element.classList;
+      const warningMessageClass = warningRef.current[field].classList;
 
-      if(result[field] === ""){
-        input_class.add('is-danger')
-        warning_message_class.remove('is-hidden');     
+      if(element.value === ""){
+        inputClass.add('is-danger')
+        warningMessageClass.remove('is-hidden');     
         validation = false; 
       } else {
-        input_class.remove('is-danger')
-        warning_message_class.add('is-hidden');   
+        result[field] = element.value;
+        inputClass.remove('is-danger')
+        warningMessageClass.add('is-hidden');   
       }
     });
 
     if (validation){
       const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
-      const new_story = {
-        id: 10,
-        titulo: result.titulo,
-        estado: "Backlog",
-        numero: result.numero,
-        avance: 0,
-        puntos: 0,
-        criticidad: "Medio",
-        descripcion: result.descripcion,
+      const max_id = Math.max(...stories.map(s => s.id));
+      const new_story = newStory({
+        ...result,
+        id: max_id + 1,
         index: max_index + 1,
-      }
-
-      dispatch({
-        type: "ADD_STORY",
-        payload: new_story
       });
+
+      dispatch(addStory(new_story));
 
       clearForm();
     } 
   }
 
   const clearForm = () => {
-    const storyForm = document.getElementById("story-form"); 
-    const fields = ["numero","titulo","descripcion"];
-
-    fields.forEach((field) => {
-      storyForm.elements[field].value = "";
+    Object.keys(formRef.current).forEach(field => {
+      formRef.current[field].value = "";
     });
 
     handleClose();
   }
 
   return (
-    <div className={`modal ${ isActive ? "is-active" : "" }`}>
-      <div className="modal-background" onClick={handleClose}></div>
-      <div className="modal-card">
+    <section className={`modal ${ isActive ? "is-active" : "" }`}>
+      <div className="modal-background" onClick={handleClose}/>
+
+      <article className="modal-card">
         <header className="modal-card-head">
-          <p className="modal-card-title">Definición de Historias</p>
+          <p className="has-text-weight-bold is-size-4">
+            Definición de Historias
+          </p>
         </header>
+
         <section className="modal-card-body">
-          <form id="story-form">
-            <div className="field">
-              <label className="label">Número Historia</label>
-              <div className="control">
-                <div className="field has-addons">
-                  <div className="control">
-                    <button className="button is-static">HU</button>
-                  </div>
-                  <div className="control">
-                    <input className="input" name="numero" type="number" placeholder="10" min="0" />
-                  </div>
+          <div className="field">
+            <label className="label">Número Historia</label>
+            <div className="control">
+              <div className="field has-addons">
+                <div className="control">
+                  <button className="button is-static">HU</button>
+                </div>
+
+                <div className="control">
+                  <input ref={el => formRef.current.numero = el} className="input" type="number" placeholder="10" min="0" />
                 </div>
               </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-numero">Este campo es obligatorio</p>
             </div>
-            <div className="field">
-              <label className="label">Título Historia</label>
-              <div className="control">
-                <input className="input" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..."/>
-              </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-titulo">Este campo es obligatorio</p>
+            <p ref={el => warningRef.current.numero = el} className="help is-danger is-hidden">
+              Este campo es obligatorio
+            </p>
+          </div>
+
+          <div className="field">
+            <label className="label">Título Historia</label>
+            <div className="control">
+              <input ref={el => formRef.current.titulo = el} className="input" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..."/>
             </div>
-            <div className="field">
-              <label className="label">Descripción Historia</label>
-              <div className="control">
-                <textarea className="textarea" name="descripcion" placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."/>
-              </div>
-              <p className="help is-danger is-hidden" id="form-new-story-required-descripcion">Este campo es obligatorio</p>
+            <p ref={el => warningRef.current.titulo = el} className="help is-danger is-hidden">
+              Este campo es obligatorio
+            </p>
+          </div>
+
+          <div className="field">
+            <label className="label">Descripción Historia</label>
+            <div className="control">
+              <textarea ref={el => formRef.current.descripcion = el} className="textarea" placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."/>
             </div>
-          </form>
+            <p ref={el => warningRef.current.descripcion = el} className="help is-danger is-hidden">
+              Este campo es obligatorio
+            </p>
+          </div>
         </section>
+
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={save}>Guardar</button>
-          <button className="button is-danger" onClick={clearForm}>Cancelar</button>
+          <button className="button is-success" onClick={save}>
+            Crear
+          </button>
+
+          <button className="button is-danger" onClick={clearForm}>
+            Cancelar
+          </button>
         </footer>
-      </div>
-    </div>
+      </article>
+    </section>
   )
 }
 

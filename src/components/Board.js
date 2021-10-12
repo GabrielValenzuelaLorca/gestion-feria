@@ -2,10 +2,11 @@ import React from "react";
 import { DragDropContext} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import StateDroppable from "./StateDroppable";
+import { updateStories } from "../store/actions/storiesActions";
 
 const Board = ({columns}) => {
   const dispatch = useDispatch();
-  const stories = useSelector(state => state.storiesReducer)
+  const stories = useSelector(state => state.stories)
   let stories_by_column = {}
 
   columns.forEach(column => 
@@ -20,7 +21,7 @@ const Board = ({columns}) => {
     const destIndex = result.destination.index;
     const source = result.source.droppableId;
     const dest = result.destination.droppableId;
-    let action = {type: "UPDATE_STORIES"};
+    let payload = [];
 
     if (dest === source && destIndex === sourceIndex) 
       return;
@@ -35,7 +36,7 @@ const Board = ({columns}) => {
         return item;
       });
 
-      action.payload = newList;
+      payload = newList;
 
     } else {
       const newListSource = Array.from(stories_by_column[source].sort((a,b)=>a.index-b.index));
@@ -51,26 +52,26 @@ const Board = ({columns}) => {
         item.index = index;
         return item;
       });
-      action.payload = [...newListSource, ...newListDest];
+      payload = [...newListSource, ...newListDest];
     }
 
-    dispatch(action);
+    dispatch(updateStories(payload));
   } 
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="columns">
+      <section className="columns">
         {columns.map(column => {
           return (
             <div className="column" key={column}>
-              <h1 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
+              <h2 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
                 {column}
-              </h1>
+              </h2>
               <StateDroppable stateItems={stories_by_column[column]} id={column}/>
             </div>
           )
         })}
-      </div>
+      </section>
     </DragDropContext>
   );
 }
