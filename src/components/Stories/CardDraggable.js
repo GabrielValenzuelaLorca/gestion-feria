@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { criticidadStyle } from "../utils/classStyles";
-import { setModalState } from "../utils/functions";
+import { criticidadStyle } from "../../utils/classStyles";
+import { setModalState } from "../../utils/functions";
 import StoryDetails from "./StoryDetails";
 
 const CardDraggable = ({item}) => {

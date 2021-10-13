@@ -1,6 +1,6 @@
 import React from 'react';
-import BoardInfo from '../components/BoardInfo';
-import Board from '../components/Board';
+import BoardInfo from '../components/Stories/BoardInfo';
+import Board from '../components/Stories/Board';
 
 const StoriesView = () => {
   return (

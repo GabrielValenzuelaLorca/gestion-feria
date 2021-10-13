@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import StoryForm from './StoryForm';
-import { setModalState } from '../utils/functions'
+import { setModalState } from '../../utils/functions'
 
 const BoardInfo = () => {
   const [modalState, setModal] = useState(false);
