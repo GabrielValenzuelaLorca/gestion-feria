@@ -15,18 +15,18 @@ const Navbar = () => {
         </a>
         
         <Link className="navbar-item" to="/actividades">
-          <span class="icon-text">
-            <span class="icon">
-            <i class="fas fa-list-ul"></i>
+          <span className="icon-text">
+            <span className="icon">
+            <i className="fas fa-list-ul"></i>
             </span>
             <span>Actividades</span>
           </span>
         </Link>
 
         <Link className="navbar-item" to="/">
-          <span class="icon-text">
-            <span class="icon">
-            <i class="fas fa-border-all"></i>
+          <span className="icon-text">
+            <span className="icon">
+            <i className="fas fa-border-all"></i>
             </span>
             <span>Historias de Usuario</span>
           </span>

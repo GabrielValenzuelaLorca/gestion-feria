@@ -16,7 +16,7 @@ function App() {
           <StoriesView/>
         </Route>
 
-        <Route path="actividades">
+        <Route path="/actividades">
           <ActivitiesView/>
         </Route>
       </Switch>
