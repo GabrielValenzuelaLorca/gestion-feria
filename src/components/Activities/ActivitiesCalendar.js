@@ -9,16 +9,19 @@ const ActivitiesCalendar = () => {
   // const [value, onChange] = useState(new Date());
 
   return (
-    <section className="calendar">
+    <section className="calendar box">
       <FullCalendar
         plugins = {[ dayGridPlugin, interactionPlugin  ]}
         events = {[
           { title: 'event 1', date: '2021-10-16' },
           { title: 'event 2', date: '2021-10-17' }
         ]}
-        dateClick = {(e) => console.log(e)}
+        eventClick = {
+          e => console.log(e)
+        }
         locale = {esLocale}
-        aspectRatio = {1.33}
+        aspectRatio = {1.25}
+        navLinks = {false}
       />
     </section>
   )

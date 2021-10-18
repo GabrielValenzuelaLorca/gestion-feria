@@ -1,11 +1,33 @@
-.calendar {
-  border: 2px solid rgb(0,0 ,0, 0.2 );
-  border-radius: 5px;
-  box-shadow: 2px 2px 10px rgb(0,0 ,0, 0.3);
-  padding: 5px 10px;
-
+.calendar .fc-toolbar-title::first-letter{
+  text-transform: uppercase;
 }
 
-.calendar .fc-toolbar-title{
-  text-transform: capitalize;
+.calendar .fc-day-today{
+  background-color: rgba(119, 119, 119, 0.15) !important;
+}
+
+.calendar .fc-button-primary{
+  background-color: #f18e00 !important;
+  border-color: #f18e00 !important;
+}
+
+.calendar .fc-h-event{
+  background-color: #777 !important;
+  border-color: #777 !important;
+}
+
+.calendar .fc-view-harness:hover *:not(.fc-daygrid-day-events *){
+  cursor: default;
+}
+
+.calendar .fc-daygrid-day-number:hover{
+  color: #f18e00;
+}
+
+.calendar .fc-daygrid-day-number{
+  color: #f18e00;
+}
+
+.calendar .fc-col-header-cell-cushion{
+  color: rgba(0, 0, 0, 0.65)
 }
