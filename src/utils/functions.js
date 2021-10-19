@@ -29,3 +29,9 @@ export const addToRefs = (ref, element) => {
   if (element && !ref.current.includes(element))
       ref.current.push(element);
 }
+
+export const diffDates = (initial, final) => {
+  console.log("inicial", initial)
+  const diff = new Date(final).getTime() - new Date(initial).getTime();
+  return Math.ceil(diff / (1000 * 3600 * 24) + 1)
+}

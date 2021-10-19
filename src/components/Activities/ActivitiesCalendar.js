@@ -5,17 +5,12 @@ import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from '@fullcalendar/core/locales/es';
 import '../../css/calendar.css'
 
-const ActivitiesCalendar = () => {
-  // const [value, onChange] = useState(new Date());
-
+const ActivitiesCalendar = ({activities}) => {
   return (
     <section className="calendar box">
       <FullCalendar
         plugins = {[ dayGridPlugin, interactionPlugin  ]}
-        events = {[
-          { title: 'event 1', date: '2021-10-16' },
-          { title: 'event 2', date: '2021-10-17' }
-        ]}
+        events = {activities}
         eventClick = {
           e => console.log(e)
         }

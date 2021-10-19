@@ -11,7 +11,7 @@ const CardDraggable = ({item}) => {
     <div>
       <Draggable draggableId={item.id.toString()} index={item.index}>
         {(provided, snapshot) => (
-          <article className={`card mb-3 has-background-${snapshot.isDragging ? "grey-light" : "light"}`}
+          <article className={`card block has-background-${snapshot.isDragging ? "grey-light" : "light"}`}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -47,7 +47,7 @@ const CardDraggable = ({item}) => {
               <ul className="pl-2">
                 {item.responsables.length ?
                   item.responsables.map((responsable, index) => 
-                    <li className="is-size-7" key={index}>{responsable}</li>
+                    <li className="is-size-7" key={index}>- {responsable}</li>
                   ) :  
                   <li className="is-size-7">Sin Responsables</li>
                 }
