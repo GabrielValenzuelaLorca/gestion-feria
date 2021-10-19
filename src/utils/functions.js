@@ -31,7 +31,6 @@ export const addToRefs = (ref, element) => {
 }
 
 export const diffDates = (initial, final) => {
-  console.log("inicial", initial)
   const diff = new Date(final).getTime() - new Date(initial).getTime();
   return Math.ceil(diff / (1000 * 3600 * 24) + 1)
 }

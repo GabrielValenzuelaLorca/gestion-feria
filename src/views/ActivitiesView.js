@@ -11,6 +11,7 @@ const sample = {
     atraso: false,
     cierre: "2021-10-24",
     descripcion: "evento para mover historias",
+    duracion: false
   },
   2:{
     id: 2,
@@ -19,7 +20,8 @@ const sample = {
     final: '2021-10-25',
     atraso: false,
     cierre: '2021-10-26',
-    descripcion: "evento para crear historias"
+    descripcion: "evento para crear historias",
+    duracion: true,
   },
   3:{
     id: 3,
@@ -28,7 +30,8 @@ const sample = {
     final: '2021-10-24',
     atraso: false,
     cierre: '2021-10-25',
-    descripcion: "evento para probar las tarjetas"
+    descripcion: "evento para probar las tarjetas",
+    duracion: true
   },
 }
 

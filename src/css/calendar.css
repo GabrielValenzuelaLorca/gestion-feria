@@ -11,11 +11,6 @@
   border-color: #f18e00 !important;
 }
 
-.calendar .fc-h-event{
-  background-color: #777 !important;
-  border-color: #777 !important;
-}
-
 .calendar .fc-view-harness:hover *:not(.fc-daygrid-day-events *){
   cursor: default;
 }
