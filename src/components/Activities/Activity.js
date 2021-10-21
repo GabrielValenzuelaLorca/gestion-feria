@@ -1,7 +1,7 @@
 import React from 'react';
 import { diffDates } from '../../utils/functions';
 
-const Activity = ({activity, setActivities}) => {
+const Activity = ({activity}) => {
   return (
     <div className="card block">
       <div className="card-header">
@@ -15,8 +15,8 @@ const Activity = ({activity, setActivities}) => {
       </div>
 
       <div className="card-footer">
-        <p className="card-footer-item">Duración: {diffDates(activity.inicio, activity.final)} días</p>
-        <p className="card-footer-item">Tiempo Restante: {diffDates(new Date(), activity.final)} días</p>
+        <p className="card-footer-item">Duración: {diffDates(activity.inicio, activity.termino)} días</p>
+        <p className="card-footer-item">Tiempo Restante: {diffDates(new Date(), activity.termino)} días</p>
       </div>
     </div>
   )

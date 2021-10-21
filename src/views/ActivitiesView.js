@@ -9,7 +9,7 @@ const sample = {
     id: 1,
     nombre: "Evento 1",
     inicio: "2021-10-16",
-    final: "2021-10-23",
+    termino: "2021-10-23",
     atraso: false,
     cierre: "2021-10-24",
     descripcion: "evento para mover historias",
@@ -19,7 +19,7 @@ const sample = {
     id: 2,
     nombre: "Evento 2",
     inicio: '2021-10-17',
-    final: '2021-10-25',
+    termino: '2021-10-25',
     atraso: false,
     cierre: '2021-10-26',
     descripcion: "evento para crear historias",
@@ -29,7 +29,7 @@ const sample = {
     id: 3,
     nombre: "Evento 3",
     inicio: '2021-10-17',
-    final: '2021-10-24',
+    termino: '2021-10-24',
     atraso: false,
     cierre: '2021-10-25',
     descripcion: "evento para probar las tarjetas",
@@ -40,6 +40,7 @@ const sample = {
 const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState(sample);
   const [modalState, setModal] = useState(false);
+  
   return (
     <section>
       <div className="section  columns">
@@ -67,12 +68,11 @@ const ActivitiesView = () => {
           { 
             Object.keys(activitiesState).length > 0
             ? Object.values(activitiesState)
-                .sort((a,b) => new Date(a.final).getTime() - new Date(b.final).getTime())
+                .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
                 .map(activity => 
                   <Activity 
                     key={activity.id}
                     activity={activity}
-                    setActivities={setActivities}
                 />)
             : <p className="notification">
                 No hay actividades en este momento
@@ -81,7 +81,12 @@ const ActivitiesView = () => {
         </div>
       </div>
 
-      <ActivityForm isActive={modalState} handleClose={() => setModalState(false, setModal)}/>
+      <ActivityForm 
+        isActive={modalState} 
+        closeModal={() => setModalState(false, setModal)}
+        activitiesState={activitiesState}
+        setActivities={setActivities}
+      />
     </section>
   )
 }

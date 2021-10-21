@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
+import { newActivity } from '../../utils/functions';
 import Checkbox from '../Forms/Checkbox';
 import Input from '../Forms/Input';
 import Textarea from '../Forms/Textarea';
 
-const ActivityForm = ({isActive, handleClose}) => {
+const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) => {
   const fields = ["nombre", "inicio", "termino", "atraso", "cierre", "descripcion"]
   const [validState, setValid] = useState({
     nombre: true,
@@ -14,6 +15,19 @@ const ActivityForm = ({isActive, handleClose}) => {
   });
   const [checkState, setCheck] = useState(false)
   const formRef = useRef();
+
+  const clearForm = () => {
+    const elements = formRef.current.elements;
+    fields.forEach(field => {
+      if(elements[field]){
+        if (field==="atraso") {
+          elements[field].checked = false;
+          setCheck(false);
+        }
+        else elements[field].value = "";
+      }
+    })
+  }
 
   //Chequear que las fechas sean validas
   const handleCreate = () => {
@@ -34,13 +48,24 @@ const ActivityForm = ({isActive, handleClose}) => {
     setValid({...validState, ...auxValid});
 
     if(validation){
-      console.log("aer", auxValid)
+      const new_id = Math.max(...Object.keys(activitiesState).map(id => parseInt(id, 10))) + 1;
+      const obj = {
+        id: new_id,
+        ...values
+      }
+      setActivities({...activitiesState, ...newActivity(obj)});
+      handleCancel();
     }
+  }
+
+  const handleCancel = () => {
+    clearForm();
+    closeModal();
   }
 
   return (
     <section className={`modal ${ isActive ? "is-active" : "" }`}>
-      <div className="modal-background" onClick={handleClose}/>
+      <div className="modal-background" onClick={closeModal}/>
 
       <article className="modal-card">
         <header className="modal-card-head">
@@ -102,7 +127,7 @@ const ActivityForm = ({isActive, handleClose}) => {
             Crear
           </button>
 
-          <button className="button is-danger">
+          <button className="button is-danger" onClick={handleCancel}>
             Cancelar
           </button>
         </footer>

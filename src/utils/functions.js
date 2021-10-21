@@ -15,6 +15,16 @@ export const newStory = (story) => {
   }
 }
 
+export const newActivity = (activity) => {
+  return {
+    [activity.id]:{
+      atraso:false,
+      cierre:null,
+      ...activity
+    }
+  }
+}
+
 export const setModalState = (state, setState) => {
   const root = document.getElementById("html"); 
   if ( state )
