@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
 import Activity from '../components/Activities/Activity';
+import ActivityForm from '../components/Activities/ActivityForm';
+import { setModalState } from '../utils/functions';
 
 const sample = {
   1:{
@@ -37,9 +39,10 @@ const sample = {
 
 const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState(sample);
+  const [modalState, setModal] = useState(false);
   return (
     <section>
-      <header className="section pb-0 columns">
+      <div className="section  columns">
         <div className="column">
           <h1 className="title is-4">Calendario de Actividades</h1>
           <ActivitiesCalendar 
@@ -47,8 +50,22 @@ const ActivitiesView = () => {
           /> 
         </div>
         <div className="column">
-          <h1 className="title is-4">Listado de Actividades</h1>
-          { Object.keys(activitiesState).length > 0
+          <div className="level mb-3">
+            <div className="level-left">
+              <h1 className="title is-4 level-item">Listado de Actividades</h1>
+            </div>
+            <div className="level-right">
+              <button className="button is-success" onClick={() => setModalState(true, setModal)}>
+                <span className="icon is-small">
+                  <i className="fas fa-plus"></i>
+                </span>
+                
+                <span>Nueva Actividad</span>
+              </button>
+            </div>
+          </div>
+          { 
+            Object.keys(activitiesState).length > 0
             ? Object.values(activitiesState)
                 .sort((a,b) => new Date(a.final).getTime() - new Date(b.final).getTime())
                 .map(activity => 
@@ -62,7 +79,9 @@ const ActivitiesView = () => {
               </p>
           }
         </div>
-      </header>
+      </div>
+
+      <ActivityForm isActive={modalState} handleClose={() => setModalState(false, setModal)}/>
     </section>
   )
 }
