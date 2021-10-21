@@ -9,21 +9,11 @@ const ActivityForm = ({isActive, handleClose}) => {
     nombre: true,
     inicio: true,
     termino: true,
-    descripcion: true
+    cierre: true,
+    descripcion: true,
   });
   const [checkState, setCheck] = useState(false)
   const formRef = useRef();
-
-  const toggleAtraso = (check) => {
-    setCheck(check);
-    if(check) 
-      setValid({...validState, cierre:true})
-    else {
-      let auxValid = {...validState};
-      delete auxValid.cierre;
-      setValid({...auxValid});
-    }
-  }
 
   //Chequear que las fechas sean validas
   const handleCreate = () => {
@@ -32,17 +22,19 @@ const ActivityForm = ({isActive, handleClose}) => {
     let auxValid = {};
     let validation = true;
     fields.forEach(field => {
-      if(elements[field])
+      if(elements[field]){
         values[field] = field==="atraso" ? elements[field].checked : elements[field].value;
-      if(Object.keys(validState).includes(field)){
-        let valid = elements[field].value !== "";
-        auxValid[field] = valid;
-        validation &= valid;
+        if(Object.keys(validState).includes(field)){
+          let valid = elements[field].value !== "";
+          auxValid[field] = valid;
+          validation = validation && valid;
+        }
       }
     });
-    setValid(auxValid);
+    setValid({...validState, ...auxValid});
+
     if(validation){
-      console.log("aer", values)
+      console.log("aer", auxValid)
     }
   }
 
@@ -82,7 +74,7 @@ const ActivityForm = ({isActive, handleClose}) => {
 
           <Checkbox name={"atraso"}
             text={"¿Acepta atrasos?"}
-            toggle={toggleAtraso}
+            setCheck={setCheck}
           />
 
           {
