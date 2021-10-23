@@ -13,8 +13,25 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     cierre: true,
     descripcion: true,
   });
+  const [warningState, setWarning] = useState({
+    nombre: "",
+    inicio: "",
+    termino: "",
+    cierre: "",
+    descripcion: "",
+  })
   const [checkState, setCheck] = useState(false)
   const formRef = useRef();
+
+  const resetValid = () => {
+    let valid = {}, warning={};
+    Object.keys(validState).forEach(field => {
+      valid[field] = true;
+      warning[field] = "";
+    })
+    setValid(valid);
+    setWarning(warning);
+  }
 
   const clearForm = () => {
     const elements = formRef.current.elements;
@@ -27,9 +44,10 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
         else elements[field].value = "";
       }
     })
+    resetValid();
   }
 
-  //Chequear que las fechas sean validas
+  //TODO Chequear que las fechas sean validas
   const handleCreate = () => {
     let values = {};
     const elements = formRef.current.elements;
@@ -79,22 +97,22 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
             label={"Titulo Actividad"}  
             type={"text"}
             placeholder={"Creación de informes..."}
-            required={true}
             valid={validState.nombre}
+            warningMessage={warningState.nombre}
           />
 
           <Input name={"inicio"}
             label={"Fecha de Inicio"}  
             type={"date"}
-            required={true}
             valid={validState.inicio}
+            warningMessage={warningState.inicio}
           />
 
           <Input name={"termino"}
             label={"Fecha de Término"}  
             type={"date"}
-            required={true}
             valid={validState.termino}
+            warningMessage={warningState.termino}
           />
 
           <Checkbox name={"atraso"}
@@ -108,8 +126,8 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
               label={"Fecha de Cierre"}  
               type={"date"}
               placeholder={"24-12-2012"}
-              required={true}
               valid={validState.cierre}
+              warningMessage={warningState.cierre}
             />
           }
           
@@ -117,8 +135,8 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
           <Textarea name={"descripcion"}
             label={"Descripción Actividad"}
             placeholder={"Los alumnos tendrán que crear sus historias de usuario para..."}
-            required={true}
             valid={validState.descripcion}
+            warningMessage={warningState.descripcion}
           />
         </form>
 
