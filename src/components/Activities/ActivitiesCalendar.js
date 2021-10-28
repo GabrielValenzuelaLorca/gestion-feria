@@ -9,16 +9,15 @@ const ActivitiesCalendar = ({activities}) => {
   const parseActivities = () => activities.map(activity => (
     {
       id: activity.id,
-      start: activity.duracion ? activity.inicio : activity.final,
-      end: activity.duracion ? new Date(new Date(activity.final).getTime()+(2 * 86400000)) : null,
+      start: activity.duracion ? activity.inicio : activity.termino,
+      end: activity.duracion ? new Date(new Date(activity.termino).getTime()+(2 * 86400000)) : null,
       title: activity.nombre,
       backgroundColor: "#999",
       borderColor: "#999",
       allDay: true
     }
   ))
-  
-  parseActivities()
+
   return (
     <section className="calendar box">
       <FullCalendar
