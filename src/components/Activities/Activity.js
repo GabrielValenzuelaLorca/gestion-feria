@@ -15,8 +15,8 @@ const Activity = ({activity}) => {
       </div>
 
       <div className="card-footer">
-        <p className="card-footer-item">Duración: {diffDates(activity.inicio, activity.termino)} días</p>
-        <p className="card-footer-item">Tiempo Restante: {diffDates(new Date(), activity.termino)} días</p>
+        <p className="card-footer-item">Duración: {diffDates(activity.inicio, activity.termino)} día(s)</p>
+        <p className="card-footer-item">Tiempo Restante: {diffDates(new Date(), activity.termino)} día(s)</p>
       </div>
     </div>
   )

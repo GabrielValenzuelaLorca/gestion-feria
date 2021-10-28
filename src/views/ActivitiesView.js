@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
 import Activity from '../components/Activities/Activity';
 import ActivityForm from '../components/Activities/ActivityForm';
-import { setModalState } from '../utils/functions';
+import { diffDates, setModalState } from '../utils/functions';
 
 const sample = {
   1:{
@@ -68,6 +68,7 @@ const ActivitiesView = () => {
           { 
             Object.keys(activitiesState).length > 0
             ? Object.values(activitiesState)
+                .filter(activity => diffDates(new Date(), activity.termino) > 0)
                 .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
                 .map(activity => 
                   <Activity 
