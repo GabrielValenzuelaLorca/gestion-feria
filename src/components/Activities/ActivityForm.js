@@ -2,12 +2,14 @@ import React, { useRef, useState } from 'react';
 import { diffDates, newActivity } from '../../utils/functions';
 import Checkbox from '../Forms/Checkbox';
 import Input from '../Forms/Input';
+import Select from '../Forms/Select';
 import Textarea from '../Forms/Textarea';
 
 const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) => {
-  const fields = ["nombre", "inicio", "termino", "atraso", "cierre", "descripcion"]
+  const fields = ["nombre", "tipo", "inicio", "termino", "atraso", "cierre", "descripcion"]
   const [validState, setValid] = useState({
     nombre: true,
+    tipo: true,
     inicio: true,
     termino: true,
     cierre: true,
@@ -15,6 +17,7 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
   });
   const [warningState, setWarning] = useState({
     nombre: "",
+    tipo: "",
     inicio: "",
     termino: "",
     cierre: "",
@@ -37,7 +40,7 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     const elements = formRef.current.elements;
     fields.forEach(field => {
       if(elements[field]){
-        if (field==="atraso") {
+        if (field==="atraso"){
           elements[field].checked = false;
           setCheck(false);
         }
@@ -57,11 +60,13 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
       if(elements[field]){
         values[field] = field==="atraso" ? elements[field].checked : elements[field].value;
         if(Object.keys(validState).includes(field)){
+          // Validate empty fields
           let valid = elements[field].value !== "";
           auxValid[field] = valid;
           auxWarning[field] = valid ? "" : "Este campo es obligatorio";
           validation = validation && valid;
 
+          // Validate right dates
           if (valid){
             let diff = 1;
             let day = "";
@@ -125,6 +130,22 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
             warningMessage={warningState.nombre}
           />
 
+          <Select name={"tipo"}
+            label={"Tipo Actividad"}
+            valid={validState.tipo}
+            options={[
+              "Documento",
+              "Presentación",
+              "Creación de Historias",
+              "Edición de Historias",
+              "Repartición de Historias por Sprint",
+              "Sprint 1",
+              "Sprint 2",
+              "Sprint 3",
+            ]}
+            warningMessage={warningState.tipo}
+          />
+
           <Input name={"inicio"}
             label={"Fecha de Inicio"}  
             type={"date"}
@@ -155,7 +176,6 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
             />
           }
           
-
           <Textarea name={"descripcion"}
             label={"Descripción Actividad"}
             placeholder={"Los alumnos tendrán que crear sus historias de usuario para..."}

@@ -13,7 +13,8 @@ const Input = ({name, label, type, placeholder, valid=true, warningMessage}) => 
         />
       </div>
 
-      {!valid && 
+      {
+        !valid && 
         <p className="help is-danger">
           {warningMessage}
         </p>

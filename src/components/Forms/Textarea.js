@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Textarea = ({name, label, placeholder, valid=true}) => {
+const Textarea = ({name, label, placeholder, valid=true, warningMessage}) => {
   return (
     <div className="field">
       <label className="label">{label}</label>
@@ -12,9 +12,10 @@ const Textarea = ({name, label, placeholder, valid=true}) => {
         />
       </div>
 
-      {!valid && 
+      {
+        !valid && 
         <p className="help is-danger">
-          Este campo es obligatorio
+          {warningMessage}
         </p>
       }
     </div>
