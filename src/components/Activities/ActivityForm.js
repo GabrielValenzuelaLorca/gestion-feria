@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { newActivity } from '../../utils/functions';
+import { diffDates, newActivity } from '../../utils/functions';
 import Checkbox from '../Forms/Checkbox';
 import Input from '../Forms/Input';
 import Textarea from '../Forms/Textarea';
@@ -47,11 +47,11 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     resetValid();
   }
 
-  //TODO Chequear que las fechas sean validas
   const handleCreate = () => {
     let values = {};
     const elements = formRef.current.elements;
     let auxValid = {};
+    let auxWarning = {};
     let validation = true;
     fields.forEach(field => {
       if(elements[field]){
@@ -59,11 +59,35 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
         if(Object.keys(validState).includes(field)){
           let valid = elements[field].value !== "";
           auxValid[field] = valid;
+          auxWarning[field] = valid ? "" : "Este campo es obligatorio";
           validation = validation && valid;
+
+          if (valid){
+            let diff = 1;
+            let day = "";
+            if(field === "inicio") {
+              diff = diffDates(new Date(), elements[field].value);
+              day = "hoy";
+            }
+            else if(field === "termino" && elements["inicio"].value !== ""){
+              diff = diffDates(elements["inicio"].value, elements[field].value);
+              day = "inicio";
+            }
+            else if(field === "cierre" && elements["termino"].value !== ""){
+              diff = diffDates(elements["termino"].value, elements[field].value);
+              day = "término"
+            }
+            
+            let dateValid = diff > 0;
+            auxValid[field] = dateValid;
+            auxWarning[field] = dateValid ? "" : `La fecha debe ser posterior o igual al día de ${day}`;
+            validation = validation && dateValid;
+          }
         }
       }
     });
     setValid({...validState, ...auxValid});
+    setWarning({...warningState, ...auxWarning});
 
     if(validation){
       const new_id = Math.max(...Object.keys(activitiesState).map(id => parseInt(id, 10))) + 1;
