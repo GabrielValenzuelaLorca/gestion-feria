@@ -66,7 +66,9 @@ const ActivitiesView = () => {
             </div>
           </div>
           { 
-            Object.keys(activitiesState).length > 0
+            Object.values(activitiesState)
+              .filter(activity => diffDates(new Date(), activity.termino) > 0)
+              .length > 0
             ? Object.values(activitiesState)
                 .filter(activity => diffDates(new Date(), activity.termino) > 0)
                 .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
