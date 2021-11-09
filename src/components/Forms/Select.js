@@ -1,14 +1,34 @@
 import React from 'react';
 
-const Select = ({name, label, options, placeholder="Seleccione una opción", valid, warningMessage}) => {
+const Select = ({
+  name, 
+  label, 
+  options, 
+  placeholder="Seleccione una opción",
+  required, 
+  validState, 
+  setValid,
+  show
+}) => {
+  const handleChange = () => {
+    setValid({...validState, [name]:true});
+  }
+
   return (
     <div className="field">
-      <label className="label">{label}</label>    
+      <label className="label">
+        {label}
+        {
+          required &&
+          <span className={"has-text-danger"}>*</span>
+        } 
+      </label>    
       <div className="control">
-        <div className={`select ${!valid ? "is-danger" : ""}`}>
+        <div className={`select ${required && show && !validState[name] ? "is-danger" : ""}`}>
           <select 
             name={name} 
             defaultValue=""
+            onChange={handleChange}
           >
             <option value="" hidden>{placeholder}</option>
             {options.map((option, i) => {
@@ -18,9 +38,9 @@ const Select = ({name, label, options, placeholder="Seleccione una opción", val
         </div>
       </div>
       {
-        !valid && 
+        required && show && !validState[name] && 
         <p className="help is-danger">
-          {warningMessage}
+          Este campo es obligatorio
         </p>
       }
     </div>

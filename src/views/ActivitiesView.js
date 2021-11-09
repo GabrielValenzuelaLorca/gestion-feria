@@ -28,10 +28,10 @@ const sample = {
   3:{
     id: 3,
     nombre: "Evento 3",
-    inicio: '2021-10-17',
-    termino: '2021-10-24',
+    inicio: '2021-11-05',
+    termino: '2021-11-10',
     atraso: false,
-    cierre: '2021-10-25',
+    cierre: '2021-11-11',
     descripcion: "evento para probar las tarjetas",
     duracion: true
   },
@@ -78,7 +78,7 @@ const ActivitiesView = () => {
                     activity={activity}
                 />)
             : <p className="notification">
-                No hay actividades en este momento
+                No hay actividades por realizar en este momento
               </p>
           }
         </div>

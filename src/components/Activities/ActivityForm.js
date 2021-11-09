@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { diffDates, newActivity } from '../../utils/functions';
+import { diffDates, newActivity, validate } from '../../utils/functions';
 import Checkbox from '../Forms/Checkbox';
 import Input from '../Forms/Input';
 import Select from '../Forms/Select';
@@ -8,32 +8,29 @@ import Textarea from '../Forms/Textarea';
 const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) => {
   const fields = ["nombre", "tipo", "inicio", "termino", "atraso", "cierre", "descripcion"]
   const [validState, setValid] = useState({
-    nombre: true,
-    tipo: true,
-    inicio: true,
-    termino: true,
-    cierre: true,
-    descripcion: true,
+    nombre: false,
+    tipo: false,
+    inicio: false,
+    termino: false,
+    descripcion: false,
   });
-  const [warningState, setWarning] = useState({
-    nombre: "",
-    tipo: "",
-    inicio: "",
+  const [customWarning, setWarning] = useState({
     termino: "",
-    cierre: "",
-    descripcion: "",
-  })
-  const [checkState, setCheck] = useState(false)
+    cierre: ""
+  });
+  const [showWarning, setShow] = useState(false);
+  const [checkState, setCheck] = useState(false);
   const formRef = useRef();
 
   const resetValid = () => {
     let valid = {}, warning={};
     Object.keys(validState).forEach(field => {
-      valid[field] = true;
+      valid[field] = false;
       warning[field] = "";
     })
     setValid(valid);
     setWarning(warning);
+    setShow(false);
   }
 
   const clearForm = () => {
@@ -50,51 +47,49 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     resetValid();
   }
 
+  const handleCheck = (check) => {
+    setCheck(check);
+    if(check){
+      setWarning({...customWarning, cierre:""})
+      setValid({...validState, cierre: false});
+    }
+    else {
+      let {cierre, ...state} = validState;
+      setValid(state);
+    }
+  }
+
   const handleCreate = () => {
     let values = {};
     const elements = formRef.current.elements;
-    let auxValid = {};
-    let auxWarning = {};
-    let validation = true;
+    let customValidate = {
+      termino: false,
+    }
+    if(Object.keys(elements).includes("cierre"))
+      customValidate.cierre = false;
+
     fields.forEach(field => {
       if(elements[field]){
         values[field] = field==="atraso" ? elements[field].checked : elements[field].value;
-        if(Object.keys(validState).includes(field)){
-          // Validate empty fields
-          let valid = elements[field].value !== "";
-          auxValid[field] = valid;
-          auxWarning[field] = valid ? "" : "Este campo es obligatorio";
-          validation = validation && valid;
-
-          // Validate right dates
-          if (valid){
-            let diff = 1;
-            let day = "";
-            if(field === "inicio") {
-              diff = diffDates(new Date(), elements[field].value);
-              day = "hoy";
-            }
-            else if(field === "termino" && elements["inicio"].value !== ""){
-              diff = diffDates(elements["inicio"].value, elements[field].value);
-              day = "inicio";
-            }
-            else if(field === "cierre" && elements["termino"].value !== ""){
-              diff = diffDates(elements["termino"].value, elements[field].value);
-              day = "término"
-            }
-            
-            let dateValid = diff > 0;
-            auxValid[field] = dateValid;
-            auxWarning[field] = dateValid ? "" : `La fecha debe ser posterior o igual al día de ${day}`;
-            validation = validation && dateValid;
-          }
+        // Custom validation
+        if(validState.termino && field==="termino" && elements["inicio"].value !== ""){
+          let diffValid = diffDates(elements["inicio"].value, elements[field].value) > 0;
+          customValidate.termino = diffValid;
+          setValid({...validState, termino: diffValid});
+          setWarning({...customWarning, termino: `La fecha debe ser posterior o igual al día de inicio`});
+        } else if(validState.cierre && field === "cierre" && elements["termino"].value !== ""){
+          let diffValid = diffDates(elements["termino"].value, elements[field].value) > 0;
+          customValidate.cierre = diffValid;
+          setValid({...validState, cierre: diffValid}); 
+          setWarning({...customWarning, cierre: `La fecha debe ser posterior o igual al día de termino`});
         }
       }
     });
-    setValid({...validState, ...auxValid});
-    setWarning({...warningState, ...auxWarning});
 
-    if(validation){
+    console.log("el validState", validState);
+    console.log("el customvalidState", customValidate)
+
+    if(validate(validState) && validate(customValidate)){
       const new_id = Math.max(...Object.keys(activitiesState).map(id => parseInt(id, 10))) + 1;
       const obj = {
         id: new_id,
@@ -102,7 +97,8 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
       }
       setActivities({...activitiesState, ...newActivity(obj)});
       handleCancel();
-    }
+    } else 
+      setShow(true);
   }
 
   const handleCancel = () => {
@@ -122,16 +118,18 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
         </header>
 
         <form className="modal-card-body" ref={formRef}>
-          <Input name={"nombre"}
-            label={"Titulo Actividad"}  
-            type={"text"}
-            placeholder={"Creación de informes..."}
-            valid={validState.nombre}
-            warningMessage={warningState.nombre}
+          <Input name="nombre"
+            label="Titulo Actividad"  
+            type="text"
+            placeholder="Creación de informes..."
+            validations={{required:true}}
+            validState={validState}
+            show={showWarning}
+            setValid={setValid}
           />
 
-          <Select name={"tipo"}
-            label={"Tipo Actividad"}
+          <Select name="tipo"
+            label="Tipo Actividad"
             valid={validState.tipo}
             options={[
               "Documento",
@@ -143,44 +141,62 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
               "Sprint 2",
               "Sprint 3",
             ]}
-            warningMessage={warningState.tipo}
+            required={true}
+            validState={validState}
+            setValid={setValid}
+            show={showWarning}
           />
 
-          <Input name={"inicio"}
-            label={"Fecha de Inicio"}  
-            type={"date"}
-            valid={validState.inicio}
-            warningMessage={warningState.inicio}
+          <Input name="inicio"
+            label="Fecha de Inicio"  
+            type="date"
+            validations={{
+              required:true,
+              fromNow:true
+            }}
+            validState={validState}
+            show={showWarning}
+            setValid={setValid}
           />
 
-          <Input name={"termino"}
-            label={"Fecha de Término"}  
-            type={"date"}
-            valid={validState.termino}
-            warningMessage={warningState.termino}
+          <Input name="termino"
+            label="Fecha de Término"  
+            type="date"
+            validations={{required:true}}
+            validState={validState}
+            show={showWarning}
+            setValid={setValid}
+            customWarning={customWarning.termino}
           />
 
-          <Checkbox name={"atraso"}
-            text={"¿Acepta atrasos?"}
-            setCheck={setCheck}
+          <Checkbox name="atraso"
+            text="¿Acepta atrasos?"
+            setCheck={handleCheck}
           />
 
           {
             checkState &&
-            <Input name={"cierre"}
-              label={"Fecha de Cierre"}  
-              type={"date"}
-              placeholder={"24-12-2012"}
-              valid={validState.cierre}
-              warningMessage={warningState.cierre}
+            <Input name="cierre"
+              label="Fecha de Cierre"  
+              type="date"
+              placeholder="24-12-2012"
+              validations={{required:true}}
+              validState={validState}
+              show={showWarning}
+              setValid={setValid}
+              customWarning={customWarning.cierre}
             />
           }
           
-          <Textarea name={"descripcion"}
-            label={"Descripción Actividad"}
-            placeholder={"Los alumnos tendrán que crear sus historias de usuario para..."}
-            valid={validState.descripcion}
-            warningMessage={warningState.descripcion}
+          <Textarea name="descripcion"
+            label="Descripción Actividad"
+            placeholder="Los alumnos tendrán que crear sus historias de usuario para..."
+            validation={{
+              required: true
+            }}
+            validState={validState}
+            setValid={setValid}
+            show={showWarning}
           />
         </form>
 
