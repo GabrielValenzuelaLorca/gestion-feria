@@ -86,9 +86,6 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
       }
     });
 
-    console.log("el validState", validState);
-    console.log("el customvalidState", customValidate)
-
     if(validate(validState) && validate(customValidate)){
       const new_id = Math.max(...Object.keys(activitiesState).map(id => parseInt(id, 10))) + 1;
       const obj = {
