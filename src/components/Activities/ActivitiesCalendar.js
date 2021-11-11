@@ -9,8 +9,8 @@ const ActivitiesCalendar = ({activities}) => {
   const parseActivities = () => activities.map(activity => (
     {
       id: activity.id,
-      start: activity.duracion ? activity.inicio : activity.termino,
-      end: activity.duracion ? new Date(new Date(activity.termino).getTime()+(2 * 86400000)) : null,
+      start: activity.inicio !== activity.termino ? activity.inicio : activity.termino,
+      end: activity.inicio !== activity.termino ? new Date(new Date(activity.termino).getTime()+(2 * 86400000)) : null,
       title: activity.nombre,
       backgroundColor: "#999",
       borderColor: "#999",
