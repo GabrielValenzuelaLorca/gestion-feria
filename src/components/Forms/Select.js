@@ -31,7 +31,7 @@ const Select = ({
             onChange={handleChange}
           >
             <option value="" hidden>{placeholder}</option>
-            {options.map((option, i) => {
+            {options && options.map((option, i) => {
               return <option key={i} value={i}>{option}</option>
             })}
           </select>

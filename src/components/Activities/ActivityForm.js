@@ -1,9 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { diffDates, newActivity, validate } from '../../utils/functions';
-import Checkbox from '../Forms/Checkbox';
-import Input from '../Forms/Input';
-import Select from '../Forms/Select';
-import Textarea from '../Forms/Textarea';
+import { Checkbox, Input, Select, Textarea } from '../Forms';
 
 const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) => {
   const fields = ["nombre", "tipo", "inicio", "termino", "atraso", "cierre", "descripcion"]
@@ -127,7 +124,6 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
 
           <Select name="tipo"
             label="Tipo Actividad"
-            valid={validState.tipo}
             options={[
               "Documento",
               "Presentación",

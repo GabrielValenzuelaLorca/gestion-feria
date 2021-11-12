@@ -28,10 +28,10 @@ const sample = {
   3:{
     id: 3,
     nombre: "Evento 3",
-    inicio: '2021-11-05',
-    termino: '2021-11-10',
+    inicio: '2021-11-11',
+    termino: '2021-11-25',
     atraso: false,
-    cierre: '2021-11-11',
+    cierre: '2021-11-30',
     descripcion: "evento para probar las tarjetas",
     duracion: true
   },
