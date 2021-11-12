@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from '@fullcalendar/core/locales/es';
 import '../../css/calendar.css'
+import ActivityDetails from './ActivityDetails';
+import { setModalState } from '../../utils/functions';
 
 const ActivitiesCalendar = ({activities}) => {
-  const parseActivities = () => activities.map(activity => (
+  const [clickedState, setClick] = useState();
+  const [modalState, setModal] = useState();
+
+  const parseActivities = () => Object.values(activities).map(activity => (
     {
       id: activity.id,
       start: activity.inicio !== activity.termino ? activity.inicio : activity.termino,
@@ -24,11 +29,19 @@ const ActivitiesCalendar = ({activities}) => {
         plugins = {[ dayGridPlugin, interactionPlugin  ]}
         events = {parseActivities()}
         eventClick = {
-          e => console.log(e)
+          (e) => {
+            setClick(e.event.id);
+            setModalState(true, setModal);
+          }
         }
         locale = {esLocale}
         height = "auto"
         navLinks = {false}
+      />
+      <ActivityDetails
+        isActive={modalState}
+        closeModal={() => setModalState(false, setModal)}
+        activity={clickedState ? activities[clickedState] : null}
       />
     </section>
   )

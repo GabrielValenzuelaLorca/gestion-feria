@@ -47,7 +47,7 @@ const ActivitiesView = () => {
         <div className="column">
           <h1 className="title is-4">Calendario de Actividades</h1>
           <ActivitiesCalendar 
-            activities={Object.values(activitiesState)} 
+            activities={activitiesState} 
           /> 
         </div>
         <div className="column">
