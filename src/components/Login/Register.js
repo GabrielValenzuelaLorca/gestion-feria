@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
 import AES from 'crypto-js/aes'
-import { validate } from '../../utils/functions';
+import { delay, validate } from '../../utils/functions';
 import { Input } from '../Forms';
 import { createUser } from '../../services/user';
+import { useHistory } from 'react-router';
 
 const Register = ({modalState, closeModal}) => {
   const fields = ["correo", "nombre", "contraseña", "contraseña_repeat"];
@@ -17,7 +18,9 @@ const Register = ({modalState, closeModal}) => {
   });
   const [showWarning, setShow] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [showMessage, setMessage] = useState(false);
   const formRef = useRef();
+  const history = useHistory();
 
   const resetValid = () => {
     let valid = {}, warning={};
@@ -67,7 +70,9 @@ const Register = ({modalState, closeModal}) => {
       }
       let user = await createUser(user_to_send);
       window.sessionStorage.setItem("user", JSON.stringify(user));
-      handleCancel();
+      setMessage(true);
+      await delay(3000);
+      history.push('/actividades')
     } else 
       setShow(true);
     setLoading(false);
@@ -81,73 +86,85 @@ const Register = ({modalState, closeModal}) => {
   return (
     <section className={`modal ${ modalState ? "is-active" : "" }`}>
       <div className="modal-background" onClick={closeModal}/>
+      {
+        showMessage ?
+          <section className="notification is-success is-light">
+            <p className="is-size-4"><strong>¡Registro Exitoso!</strong></p>
+            <p className="is-size-6">En breve serás redireccionado</p>
+          </section> 
+        :
+          <article className="modal-card">
+            <header className="modal-card-head">
+              <p className="has-text-weight-bold is-size-4">
+                Crear Usuario
+              </p>
+            </header>
 
-      <article className="modal-card">
-        <header className="modal-card-head">
-          <p className="has-text-weight-bold is-size-4">
-            Crear Usuario
-          </p>
-        </header>
+            <form className="modal-card-body" ref={formRef}>
+              <Input name="correo"
+                label="Correo"  
+                type="email"
+                placeholder="Ingrese su correo"
+                validations={{
+                  required:true,
+                  email:true
+                }}
+                validState={validState}
+                show={showWarning}
+                setValid={setValid}
+              />
 
-        <form className="modal-card-body" ref={formRef}>
-          <Input name="correo"
-            label="Correo"  
-            type="email"
-            placeholder="Ingrese su correo"
-            validations={{
-              required:true,
-              email:true
-            }}
-            validState={validState}
-            show={showWarning}
-            setValid={setValid}
-          />
+              <Input name="nombre"
+                label="Nombre"  
+                type="text"
+                placeholder="Ingrese su nombre"
+                validations={{required:true}}
+                validState={validState}
+                show={showWarning}
+                setValid={setValid}
+              />
 
-          <Input name="nombre"
-            label="Nombre"  
-            type="text"
-            placeholder="Ingrese su nombre"
-            validations={{required:true}}
-            validState={validState}
-            show={showWarning}
-            setValid={setValid}
-          />
+              <Input name="contraseña"
+                label="Contraseña"  
+                type="password"
+                placeholder="********"
+                validations={{
+                  required:true,
+                  passLen:true
+                }}
+                validState={validState}
+                show={showWarning}
+                setValid={setValid}
+              />
 
-          <Input name="contraseña"
-            label="Contraseña"  
-            type="password"
-            placeholder="********"
-            validations={{
-              required:true,
-              passLen:true
-            }}
-            validState={validState}
-            show={showWarning}
-            setValid={setValid}
-          />
+              <Input name="contraseña_repeat"
+                label="Repetir Contraseña"  
+                type="password"
+                placeholder="********"
+                validations={{required:true}}
+                validState={validState}
+                show={showWarning}
+                setValid={setValid}
+                customWarning={customWarning.contraseña_repeat}
+                onKeyDown={(e) => {
+                  e.keyCode === 13 && handleCreate();
+                }}
+              />
+            </form>
 
-          <Input name="contraseña_repeat"
-            label="Repetir Contraseña"  
-            type="password"
-            placeholder="********"
-            validations={{required:true}}
-            validState={validState}
-            show={showWarning}
-            setValid={setValid}
-            customWarning={customWarning.contraseña_repeat}
-          />
-        </form>
+            <footer className="modal-card-foot">
+              <button className={`button is-success ${isLoading && "is-loading"}`} onClick={handleCreate}>
+                Registrar
+              </button>
 
-        <footer className="modal-card-foot">
-          <button className={`button is-success ${isLoading && "is-loading"}`} onClick={handleCreate}>
-            Registrar
-          </button>
-
-          <button className="button is-danger" onClick={handleCancel}>
-            Cancelar
-          </button>
-        </footer>
-      </article>
+              <button className="button is-danger" onClick={handleCancel}>
+                Cancelar
+              </button>
+            </footer>
+          </article>
+        
+          
+      }
     </section>
   )
 }

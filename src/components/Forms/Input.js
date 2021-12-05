@@ -15,7 +15,8 @@ const Input = ({
   validState, 
   setValid, 
   show=false,
-  customWarning=""
+  customWarning="",
+  onKeyDown=null
 }) => {
   const {required, fromNow, email, passLen} = validations;
   const ref = useRef();
@@ -70,6 +71,7 @@ const Input = ({
           type={type} 
           placeholder={placeholder}
           onChange={handleChange}
+          onKeyDown={onKeyDown}
         />
       </div>
 

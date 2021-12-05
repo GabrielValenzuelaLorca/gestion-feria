@@ -12,7 +12,14 @@ function App() {
     <Router>
       <NavbarWithRouter/>
       <Switch>
-        <Route path="/login" component={LoginView}/>
+        <Route path="/login">
+          {
+            window.sessionStorage.getItem('user') ? 
+              <Redirect to="/actividades"/>
+            :
+              <LoginView/>
+          }
+        </Route>
         <Route path="/historias" component={StoriesView}/>
         <Route path="/actividades" component={ActivitiesView}/>
         <Route exact path="/">
