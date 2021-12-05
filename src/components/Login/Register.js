@@ -66,7 +66,6 @@ const Register = ({modalState, closeModal}) => {
         password: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
       }
       let user = await createUser(user_to_send);
-      delete user.password;
       window.sessionStorage.setItem("user", JSON.stringify(user));
       handleCancel();
     } else 
