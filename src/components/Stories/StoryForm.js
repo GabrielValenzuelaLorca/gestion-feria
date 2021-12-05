@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addStory } from '../store/actions/storiesActions';
-import { newStory } from '../utils/functions'
+import { addStory } from '../../store/actions/storiesActions';
+import { newStory } from '../../utils/functions'
 
 const StoryForm = ({isActive, handleClose}) => {  
   const stories = useSelector(state => state.stories);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import CardDraggable from "./CardDraggable";
-import { columnStyle } from '../utils/classStyles'
+import { columnStyle } from '../../utils/classStyles'
 
 const StateDroppable = ({stateItems, id}) => {
   return (

@@ -15,6 +15,16 @@ export const newStory = (story) => {
   }
 }
 
+export const newActivity = (activity) => {
+  return {
+    [activity.id]:{
+      atraso:false,
+      cierre:null,
+      ...activity
+    }
+  }
+}
+
 export const setModalState = (state, setState) => {
   const root = document.getElementById("html"); 
   if ( state )
@@ -28,4 +38,15 @@ export const setModalState = (state, setState) => {
 export const addToRefs = (ref, element) => {
   if (element && !ref.current.includes(element))
       ref.current.push(element);
+}
+
+export const diffDates = (initial, final) => {
+  const diff = new Date(final).getTime() - new Date(initial).getTime();
+  return Math.ceil(diff / (1000 * 3600 * 24) + 1)
+}
+
+export const validate = (validState) => {
+  return Object.values(validState).reduce((acc,next) => {
+    return acc && next;
+  }, true)
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -6,16 +7,31 @@ const Navbar = () => {
       <div className="navbar-brand">
         <a className="navbar-item" href="www.youtube.com">
           <img
-            src="https://bulma.io/images/bulma-logo.png"
+            src="https://bulma.io/images/bulma-logo-white.png"
             width="112"
             height="28"
             alt="Logo"
           />
         </a>
         
-				<div className="navbar-item">
-          <span>Titulo</span>
-        </div>
+        <Link className="navbar-item" to="/actividades">
+          <span className="icon-text">
+            <span className="icon">
+            <i className="fas fa-list-ul"></i>
+            </span>
+            <span>Actividades</span>
+          </span>
+        </Link>
+
+        <Link className="navbar-item" to="/">
+          <span className="icon-text">
+            <span className="icon">
+            <i className="fas fa-border-all"></i>
+            </span>
+            <span>Historias de Usuario</span>
+          </span>
+        </Link>
+        
       </div>
 
       <div className="navbar-menu">

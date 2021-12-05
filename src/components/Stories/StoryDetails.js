@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
 import { useDispatch } from 'react-redux';
-import { updateStories } from '../store/actions/storiesActions';
-import { criticidadStyle } from '../utils/classStyles';
-import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../utils/constants';
-import { newStory } from '../utils/functions';
+import { updateStories } from '../../store/actions/storiesActions';
+import { criticidadStyle } from '../../utils/classStyles';
+import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../../utils/constants';
+import { newStory } from '../../utils/functions';
 
 const StoryDetails = ({story, isActive, closeModal}) => {  
   const modalBodyRef = useRef();

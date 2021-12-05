@@ -2,7 +2,7 @@ import React from "react";
 import { DragDropContext} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import StateDroppable from "./StateDroppable";
-import { updateStories } from "../store/actions/storiesActions";
+import { updateStories } from "../../store/actions/storiesActions";
 
 const Board = ({columns}) => {
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const Board = ({columns}) => {
         {columns.map(column => {
           return (
             <div className="column" key={column}>
-              <h2 className="is-size-4 has-text-left has-text-weight-medium is-family-primary">
+              <h2 className="is-size-4 has-text-weight-medium">
                 {column}
               </h2>
               <StateDroppable stateItems={stories_by_column[column]} id={column}/>
