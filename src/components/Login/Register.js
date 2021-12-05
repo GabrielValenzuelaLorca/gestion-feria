@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
+import AES from 'crypto-js/aes'
 import { validate } from '../../utils/functions';
 import { Input } from '../Forms';
-import AES from 'crypto-js/aes'
+import { createUser } from '../../services/user';
 
 const Register = ({modalState, closeModal}) => {
   const fields = ["correo", "nombre", "contraseña", "contraseña_repeat"];
@@ -15,6 +16,7 @@ const Register = ({modalState, closeModal}) => {
     contraseña_repeat: "",
   });
   const [showWarning, setShow] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const formRef = useRef();
 
   const resetValid = () => {
@@ -38,7 +40,8 @@ const Register = ({modalState, closeModal}) => {
     resetValid();
   }
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+    setLoading(true);
     let values = {};
     const elements = formRef.current.elements;
     let customValidate = {
@@ -57,15 +60,18 @@ const Register = ({modalState, closeModal}) => {
     });
 
     if(validate(validState) && validate(customValidate)){
-      const user = {
-        correo:values.correo,
-        nombre:values.nombre,
-        contraseña: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
+      const user_to_send = {
+        email: values.correo,
+        name: values.nombre,
+        password: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
       }
-      console.log("el user", user)
+      let user = await createUser(user_to_send);
+      delete user.password;
+      window.sessionStorage.setItem("user", JSON.stringify(user));
       handleCancel();
     } else 
       setShow(true);
+    setLoading(false);
   }
 
   const handleCancel = () => {
@@ -134,7 +140,7 @@ const Register = ({modalState, closeModal}) => {
         </form>
 
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={handleCreate}>
+          <button className={`button is-success ${isLoading && "is-loading"}`} onClick={handleCreate}>
             Registrar
           </button>
 
