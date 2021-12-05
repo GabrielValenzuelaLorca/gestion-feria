@@ -1,23 +1,22 @@
 import React from 'react'
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect,withRouter } from 'react-router-dom';
 import StoriesView from './views/StoriesView';
 import ActivitiesView from './views/ActivitiesView';
+import LoginView from './views/LoginView';
+
+const NavbarWithRouter = withRouter(Navbar);
 
 function App() {
   return (
     <Router>
-      <header>
-        <Navbar/>
-      </header>
-
+      <NavbarWithRouter/>
       <Switch>
+        <Route path="/login" component={LoginView}/>
+        <Route path="/historias" component={StoriesView}/>
+        <Route path="/actividades" component={ActivitiesView}/>
         <Route exact path="/">
-          <StoriesView/>
-        </Route>
-
-        <Route path="/actividades">
-          <ActivitiesView/>
+          <Redirect to="/login"/>
         </Route>
       </Switch>
     </Router>
