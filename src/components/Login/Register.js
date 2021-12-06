@@ -68,7 +68,7 @@ const Register = ({modalState, closeModal}) => {
         name: values.nombre,
         password: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
       }
-      let user = await createUser(user_to_send);
+      const user = await createUser(user_to_send);
       window.sessionStorage.setItem("user", JSON.stringify(user));
       setMessage(true);
       await delay(3000);

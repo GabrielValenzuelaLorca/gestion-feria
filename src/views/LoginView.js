@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import '../css/login.css'
-import logo_di from '../assets/images/logo_di.png'
-import { Link } from 'react-router-dom';
 import Register from '../components/Login/Register';
 import { setModalState } from '../utils/functions';
+import LoginForm from '../components/Login/LoginForm';
+import logo_di from '../assets/images/logo_di.png'
+import '../css/login.css'
 
 const LoginView = () => {
   const [modalState, setModal] = useState(false);
@@ -29,39 +29,7 @@ const LoginView = () => {
               Aquí tendrás todo lo necesario para que tu proyecto sea un completo éxito!
             </h2>
           </div>
-          <form className="box column has-background-light">
-            <div className="field">
-              <h1 className="has-text-weight-bold is-size-4">Accede a la plataforma</h1>
-            </div>
-
-            <div className="field">
-              <label className="label">Correo</label>
-              <div className="control">
-                <input className="input" type="email" placeholder="Ingrese su correo"/>
-              </div>
-            </div>
-
-            <div className="field">
-              <label className="label">Contraseña</label>
-              <div className="control">
-                <input className="input" type="password" placeholder="********"/>
-              </div>
-            </div>
-
-            <div className="field">
-              <button className="button is-link" type="button">Acceder</button>
-            </div>
-
-            <div className="field">
-              <Link>¿Olvidó su nombre de usuario o contraseña?</Link>
-            </div>
-
-            <hr className="dropdown-divider"/>
-
-            <div className="field is-centered">
-              <button className="button is-success" type="button" onClick={() => setModalState(true, setModal)}>Crear usuario</button>
-            </div>
-          </form>
+          <LoginForm setModalState={() => setModalState(true, setModal)}/>
         </div>
       </section>
       <Register modalState={modalState} closeModal={() => setModalState(false, setModal)}/>
