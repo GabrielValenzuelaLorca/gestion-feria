@@ -1,4 +1,4 @@
-import { AES } from 'crypto-js';
+import { SHA3 } from 'crypto-js';
 import React, { useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import { login } from '../../services/user';
@@ -14,20 +14,21 @@ const LoginForm = ({ setModalState }) => {
     setLoading(true);
     const elements = formRef.current.elements;
     const values = {
-      correo: elements.correo.value,
+      correo: elements.correo.value.toLowerCase(),
       contraseña: elements.contraseña.value
     };
 
     if(values.correo !== "" && values.contraseña !== ""){
       const credentials = {
         email: values.correo,
-        password: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
+        password: SHA3(values.contraseña).toString()
       }
       try{
         const user = await login(credentials);
         window.sessionStorage.setItem("user", JSON.stringify(user));
         history.push('/actividades')
       } catch(e) {
+        console.log("Error", e)
         setError("Los datos ingresados no son válidos");
         setLoading(false);  
       }

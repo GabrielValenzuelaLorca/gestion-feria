@@ -27,7 +27,7 @@ const Navbar = (props) => {
               </span>
             </Link>
 
-            <Link className="navbar-item" to="/">
+            <Link className="navbar-item" to="/historias">
               <span className="icon-text">
                 <span className="icon">
                 <i className="fas fa-border-all"></i>

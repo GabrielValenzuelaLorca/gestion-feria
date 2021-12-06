@@ -22,7 +22,7 @@ function App() {
         </Route>
         <Route path="/historias" component={StoriesView}/>
         <Route path="/actividades" component={ActivitiesView}/>
-        <Route exact path="/">
+        <Route path="/*">
           <Redirect to="/login"/>
         </Route>
       </Switch>

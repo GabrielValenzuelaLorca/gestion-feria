@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
-import AES from 'crypto-js/aes'
 import { delay, validate } from '../../utils/functions';
 import { Input } from '../Forms';
 import { createUser } from '../../services/user';
 import { useHistory } from 'react-router';
+import { SHA3 } from 'crypto-js';
 
 const Register = ({modalState, closeModal}) => {
   const fields = ["correo", "nombre", "contraseña", "contraseña_repeat"];
@@ -64,18 +64,19 @@ const Register = ({modalState, closeModal}) => {
 
     if(validate(validState) && validate(customValidate)){
       const user_to_send = {
-        email: values.correo,
+        email: values.correo.toLowerCase(),
         name: values.nombre,
-        password: AES.encrypt(values.contraseña, process.env.REACT_APP_ENCRYPT_CODE).toString()
+        password: SHA3(values.contraseña).toString()
       }
       const user = await createUser(user_to_send);
       window.sessionStorage.setItem("user", JSON.stringify(user));
       setMessage(true);
       await delay(3000);
       history.push('/actividades')
-    } else 
+    } else {
       setShow(true);
-    setLoading(false);
+      setLoading(false);
+    }
   }
 
   const handleCancel = () => {
