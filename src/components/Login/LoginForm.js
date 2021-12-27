@@ -1,6 +1,6 @@
 import { SHA3 } from 'crypto-js';
 import React, { useRef, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/user';
 import { Input } from '../Forms';
 
@@ -8,7 +8,7 @@ const LoginForm = ({ setModalState }) => {
   const [isLoading, setLoading] = useState(false);
   const [loginError, setError] = useState("");
   const formRef = useRef();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -26,7 +26,7 @@ const LoginForm = ({ setModalState }) => {
       try{
         const user = await login(credentials);
         window.sessionStorage.setItem("user", JSON.stringify(user));
-        history.push('/actividades')
+        navigate('/actividades');
       } catch(e) {
         console.log("Error", e)
         setError("Los datos ingresados no son válidos");
@@ -67,7 +67,7 @@ const LoginForm = ({ setModalState }) => {
       </div>
 
       <div className="field">
-        <Link>¿Olvidó su nombre de usuario o contraseña?</Link>
+        <p>¿Olvidó su nombre de usuario o contraseña?</p>
       </div>
 
       <hr className="dropdown-divider"/>

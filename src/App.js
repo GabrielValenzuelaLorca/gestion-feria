@@ -1,31 +1,26 @@
 import React from 'react'
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Switch, Route, Redirect,withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import StoriesView from './views/StoriesView';
 import ActivitiesView from './views/ActivitiesView';
 import LoginView from './views/LoginView';
 
-const NavbarWithRouter = withRouter(Navbar);
-
 function App() {
   return (
     <Router>
-      <NavbarWithRouter/>
-      <Switch>
-        <Route path="/login">
-          {
+        <Navbar/>
+      <Routes>
+        <Route path="/" 
+          element={
             window.sessionStorage.getItem('user') ? 
-              <Redirect to="/actividades"/>
+              <Navigate to="actividades"/> 
             :
-              <LoginView/>
-          }
-        </Route>
-        <Route path="/historias" component={StoriesView}/>
-        <Route path="/actividades" component={ActivitiesView}/>
-        <Route path="/*">
-          <Redirect to="/login"/>
-        </Route>
-      </Switch>
+              <Navigate to='login'/>
+          }/>
+        <Route path="login" element={<LoginView/>}/>
+        <Route path="historias" element={<StoriesView/>}/>
+        <Route path="actividades" element={<ActivitiesView/>}/>
+      </Routes>
     </Router>
   );
 }

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { delay, validate } from '../../utils/functions';
 import { Input } from '../Forms';
 import { createUser } from '../../services/user';
-import { useHistory } from 'react-router';
+import { useNavigate } from "react-router-dom";
 import { SHA3 } from 'crypto-js';
 
 const Register = ({modalState, closeModal}) => {
@@ -20,7 +20,7 @@ const Register = ({modalState, closeModal}) => {
   const [isLoading, setLoading] = useState(false);
   const [showMessage, setMessage] = useState(false);
   const formRef = useRef();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const resetValid = () => {
     let valid = {}, warning={};
@@ -72,7 +72,7 @@ const Register = ({modalState, closeModal}) => {
       window.sessionStorage.setItem("user", JSON.stringify(user));
       setMessage(true);
       await delay(3000);
-      history.push('/actividades')
+      navigate('/actividades');
     } else {
       setShow(true);
       setLoading(false);
