@@ -4,6 +4,8 @@ import { Input } from '../Forms';
 import { createUser } from '../../services/user';
 import { useNavigate } from "react-router-dom";
 import { SHA3 } from 'crypto-js';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../../store/actions/userActions';
 
 const Register = ({modalState, closeModal}) => {
   const fields = ["correo", "nombre", "contraseña", "contraseña_repeat"];
@@ -19,6 +21,7 @@ const Register = ({modalState, closeModal}) => {
   const [showWarning, setShow] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [showMessage, setMessage] = useState(false);
+  const dispatch = useDispatch();
   const formRef = useRef();
   let navigate = useNavigate();
 
@@ -69,7 +72,8 @@ const Register = ({modalState, closeModal}) => {
         password: SHA3(values.contraseña).toString()
       }
       const user = await createUser(user_to_send);
-      window.sessionStorage.setItem("user", JSON.stringify(user));
+      window.sessionStorage.setItem('user', JSON.stringify(user));
+      dispatch(addUser(user));
       setMessage(true);
       await delay(3000);
       navigate('/actividades');

@@ -1,12 +1,15 @@
 import { SHA3 } from 'crypto-js';
 import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/user';
 import { Input } from '../Forms';
+import { addUser } from '../../store/actions/userActions';
 
 const LoginForm = ({ setModalState }) => {
   const [isLoading, setLoading] = useState(false);
   const [loginError, setError] = useState("");
+  const dispatch = useDispatch();
   const formRef = useRef();
   let navigate = useNavigate();
 
@@ -25,7 +28,8 @@ const LoginForm = ({ setModalState }) => {
       }
       try{
         const user = await login(credentials);
-        window.sessionStorage.setItem("user", JSON.stringify(user));
+        window.sessionStorage.setItem('user', JSON.stringify(user));
+        dispatch(addUser(user));
         navigate('/actividades');
       } catch(e) {
         console.log("Error", e)

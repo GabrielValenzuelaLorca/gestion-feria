@@ -1,8 +1,12 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { removeUser } from "../store/actions/userActions";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
+  let navigate = useNavigate();
   
   return (
     <header>
@@ -10,6 +14,7 @@ const Navbar = () => {
         location.pathname !== '/login' &&
         <nav className="navbar is-dark" aria-label="main navigation">
           <div className="navbar-brand">
+            <div className="navbar-burger"/>
             <a className="navbar-item" href="www.youtube.com">
               <img
                 src="https://bulma.io/images/bulma-logo-white.png"
@@ -45,7 +50,15 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-end">
-              {/* Aquí iría algo */}
+              <div className="navbar-item">
+                <button className="button is-danger" onClick={() => {
+                  window.sessionStorage.removeItem('user');
+                  dispatch(removeUser());
+                  navigate('login');
+                }}>
+                  Cerrar Sesión
+                </button>
+              </div>
             </div>
           </div>
         </nav>
