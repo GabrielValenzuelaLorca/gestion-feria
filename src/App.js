@@ -1,25 +1,33 @@
 import React from 'react'
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import StoriesView from './views/StoriesView';
 import ActivitiesView from './views/ActivitiesView';
+import LoginView from './views/LoginView';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const userState = useSelector(state => state.user);
   return (
     <Router>
-      <header>
-        <Navbar/>
-      </header>
-
-      <Switch>
-        <Route exact path="/">
-          <StoriesView/>
-        </Route>
-
-        <Route path="/actividades">
-          <ActivitiesView/>
-        </Route>
-      </Switch>
+      <Navbar/>
+      {
+        userState ? 
+          <Routes>
+            <Route path="/" element={<Navigate to="actividades"/>}>
+              <Route path="*" element={<Navigate to="actividades"/>}/>
+            </Route>
+            <Route path="historias" element={<StoriesView/>}/>
+            <Route path="actividades" element={<ActivitiesView/>}/>
+          </Routes>
+      :
+        <Routes>
+          <Route path="/" element={<Navigate to='login'/>}>
+            <Route path="*" element={<Navigate to='login'/>}/>
+          </Route>
+          <Route path="login" element={<LoginView/>}/>
+        </Routes>
+      }
     </Router>
   );
 }

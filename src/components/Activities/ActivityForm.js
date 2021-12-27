@@ -23,8 +23,10 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     let valid = {}, warning={};
     Object.keys(validState).forEach(field => {
       valid[field] = false;
+    });
+    Object.keys(customWarning).forEach(field => {
       warning[field] = "";
-    })
+    });
     setValid(valid);
     setWarning(warning);
     setShow(false);

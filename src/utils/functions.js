@@ -50,3 +50,9 @@ export const validate = (validState) => {
     return acc && next;
   }, true)
 }
+
+export const delay = async (timeout) => {
+  return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+  })
+}
