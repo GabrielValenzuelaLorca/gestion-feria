@@ -1,12 +1,19 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { removeUser } from "../store/actions/userActions";
 
 const Navbar = () => {
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch();
   const location = useLocation();
   let navigate = useNavigate();
+
+  const logout = () => {
+    window.sessionStorage.removeItem('user');
+    dispatch(removeUser());
+    navigate('login');
+  }
   
   return (
     <header>
@@ -27,7 +34,7 @@ const Navbar = () => {
             <Link className="navbar-item" to="/actividades">
               <span className="icon-text">
                 <span className="icon">
-                <i className="fas fa-list-ul"></i>
+                  <i className="fas fa-list-ul"></i>
                 </span>
                 <span>Actividades</span>
               </span>
@@ -36,7 +43,7 @@ const Navbar = () => {
             <Link className="navbar-item" to="/historias">
               <span className="icon-text">
                 <span className="icon">
-                <i className="fas fa-border-all"></i>
+                  <i className="fas fa-border-all"></i>
                 </span>
                 <span>Historias de Usuario</span>
               </span>
@@ -50,14 +57,30 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-end">
-              <div className="navbar-item">
-                <button className="button is-danger" onClick={() => {
-                  window.sessionStorage.removeItem('user');
-                  dispatch(removeUser());
-                  navigate('login');
-                }}>
-                  Cerrar Sesión
-                </button>
+              <div className="navbar-item has-dropdown is-hoverable">
+                <div className="navbar-link">
+                  {user.name}
+                </div>
+
+                <div className="navbar-dropdown">
+                  <Link className="navbar-item" to="/">
+                    <span className="icon-text">
+                      <span className="icon">
+                        <i className="fas fa-user"></i>
+                      </span>
+                      <span>Editar Perfil</span>
+                    </span>
+                  </Link>
+
+                  <hr className="navbar-divider"/>
+
+                  <div className="navbar-item">
+                    <button className="button is-danger" onClick={logout}>
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
