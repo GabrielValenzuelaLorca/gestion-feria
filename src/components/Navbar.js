@@ -59,7 +59,7 @@ const Navbar = () => {
                 {user.name}
               </div>
 
-              <div className="navbar-dropdown">
+              <div className="navbar-dropdown is-right">
                 <Link className="navbar-item" to="/usuario">
                   <span className="icon-text">
                     <span className="icon">
