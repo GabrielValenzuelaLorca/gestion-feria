@@ -6,6 +6,7 @@ import ActivitiesView from './views/ActivitiesView';
 import LoginView from './views/LoginView';
 import UserView from './views/UserView';
 import NavbarLayout from './components/NavbarLayout';
+import TeamView from './views/TeamView';
 
 function App() {
   const userState = useSelector(state => state.user);
@@ -21,6 +22,7 @@ function App() {
               <Route path="historias" element={<NavbarLayout component={<StoriesView/>}/>}/>
               <Route path="actividades" element={<NavbarLayout component={<ActivitiesView/>}/>}/>
               <Route path="usuario" element={<NavbarLayout component={<UserView/>}/>}/>
+              <Route path="equipo" element={<NavbarLayout component={<TeamView/>}/>}/>
             </Routes>
           </div> 
       :

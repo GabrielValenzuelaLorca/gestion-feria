@@ -65,7 +65,16 @@ const Navbar = () => {
                     <span className="icon">
                       <i className="fas fa-user"></i>
                     </span>
-                    <span>Editar Perfil</span>
+                    <span>Perfil</span>
+                  </span>
+                </Link>
+
+                <Link className="navbar-item" to="/equipo">
+                  <span className="icon-text">
+                    <span className="icon">
+                      <i className="fas fa-users"></i>
+                    </span>
+                    <span>Equipo</span>
                   </span>
                 </Link>
 
