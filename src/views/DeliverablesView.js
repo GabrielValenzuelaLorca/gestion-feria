@@ -55,14 +55,12 @@ const DeliverablesView = () => {
             </div>
           </div>
           <div className='level-right'>
-            <div className='box has-background-success'>
-              <span className="icon-text has-text-white">
-                <span className="icon">
-                  <i className="fas fa-check"></i>
-                </span>
-                <span>Entregado</span>
+            <button className='button is-static'>
+              <span class="icon">
+                <i class="fas fa-check"></i>
               </span>
-            </div>
+              <span>Enviado</span>
+            </button>
           </div>
         </div>
       </div>

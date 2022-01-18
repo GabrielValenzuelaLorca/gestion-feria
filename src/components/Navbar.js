@@ -54,6 +54,15 @@ const Navbar = () => {
               <span>Dashboard</span>
             </span>
           </Link>
+
+          <Link className="navbar-item" to="/rubricas">
+            <span className="icon-text">
+              <span className="icon">
+                <i className="fas fa-clipboard-list"></i>
+              </span>
+              <span>Rúbricas</span>
+            </span>
+          </Link>
         </div>
 
         <div className="navbar-menu">

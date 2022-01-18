@@ -1,11 +1,11 @@
 import React from 'react';
 
-const UserView = () => {
+const RubricView = () => {
   return (
     <section className='section'>
-      Perfil
+      Rúbricas
     </section>
   )
 }
 
-export default UserView;
+export default RubricView;
