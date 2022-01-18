@@ -24,7 +24,7 @@ const LoginView = () => {
       <section className="hero is-fullheight-with-navbar">
         <div className="hero-body columns">
           <div className="column is-three-fifths">
-            <h1 className="title has-text-white">Bienvenid@s a -nombre plataforma-</h1>
+            <h1 className="title has-text-white">Bienvenid@s a CASE</h1>
             <h2 className="subtitle has-text-white">
               Aquí tendrás todo lo necesario para que tu proyecto sea un completo éxito!
             </h2>
