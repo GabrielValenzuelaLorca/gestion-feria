@@ -8,6 +8,7 @@ import UserView from './views/UserView';
 import NavbarLayout from './components/NavbarLayout';
 import TeamView from './views/TeamView';
 import DashboardView from './views/DashboardView';
+import DeliverablesView from './views/DeliverablesView';
 
 function App() {
   const userState = useSelector(state => state.user);
@@ -25,6 +26,7 @@ function App() {
               <Route path="usuario" element={<NavbarLayout component={<UserView/>}/>}/>
               <Route path="equipo" element={<NavbarLayout component={<TeamView/>}/>}/>
               <Route path="dashboard" element={<NavbarLayout component={<DashboardView/>}/>}/>
+              <Route path="entregables" element={<NavbarLayout component={<DeliverablesView/>}/>}/>
             </Routes>
           </div> 
       :

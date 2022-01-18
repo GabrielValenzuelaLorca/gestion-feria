@@ -86,6 +86,15 @@ const Navbar = () => {
                   </span>
                 </Link>
 
+                <Link className="navbar-item" to="/entregables">
+                  <span className="icon-text">
+                    <span className="icon">
+                      <i className="fas fa-box"></i>
+                    </span>
+                    <span>Entregables</span>
+                  </span>
+                </Link>
+
                 <hr className="navbar-divider"/>
 
                 <div className="navbar-item">

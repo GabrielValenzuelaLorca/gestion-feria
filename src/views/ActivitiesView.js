@@ -8,10 +8,10 @@ const sample = {
   1:{
     id: 1,
     nombre: "Evento 1",
-    inicio: "2021-10-16",
-    termino: "2021-10-23",
+    inicio: "2022-01-16",
+    termino: "2022-01-30",
     atraso: false,
-    cierre: "2021-10-24",
+    cierre: "2022-01-30",
     descripcion: "evento para mover historias",
     duracion: false
   },
