@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
 import Activity from '../components/Activities/Activity';
 import ActivityForm from '../components/Activities/ActivityForm';
+import { getActivities } from '../services/activity';
 import { diffDates, setModalState } from '../utils/functions';
 
 const sample = {
@@ -40,6 +41,15 @@ const sample = {
 const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState(sample);
   const [modalState, setModal] = useState(false);
+
+  const fetchActivities = async () => {
+    const response = await getActivities();
+    console.log(response);
+  }
+
+  useEffect(() => {
+    fetchActivities();
+  }, [])
   
   return (
     <section>
