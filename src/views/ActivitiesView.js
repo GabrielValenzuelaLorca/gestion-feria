@@ -5,8 +5,8 @@ import ActivityForm from '../components/Activities/ActivityForm';
 import { getActivities } from '../services/activity';
 import { diffDates, setModalState } from '../utils/functions';
 
-const sample = {
-  1:{
+const sample = [
+  {
     id: 1,
     nombre: "Evento 1",
     inicio: "2022-01-16",
@@ -14,8 +14,7 @@ const sample = {
     atraso: false,
     cierre: "2022-01-30",
     descripcion: "evento para mover historias",
-  },
-  2:{
+  },{
     id: 2,
     nombre: "Evento 2",
     inicio: '2021-10-17',
@@ -23,8 +22,7 @@ const sample = {
     atraso: false,
     cierre: '2021-10-26',
     descripcion: "evento para crear historias",
-  },
-  3:{
+  },{
     id: 3,
     nombre: "Evento 3",
     inicio: '2022-03-28',
@@ -33,7 +31,7 @@ const sample = {
     cierre: '2022-03-24',
     descripcion: "evento para probar las tarjetas",
   },
-}
+]
 
 const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState(sample);
@@ -73,10 +71,10 @@ const ActivitiesView = () => {
             </div>
           </div>
           { 
-            Object.values(activitiesState)
+            activitiesState
               .filter(activity => diffDates(new Date(), activity.termino) > 0)
               .length > 0
-            ? Object.values(activitiesState)
+            ? activitiesState
                 .filter(activity => diffDates(new Date(), activity.termino) > 0)
                 .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
                 .map(activity => 
