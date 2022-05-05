@@ -86,12 +86,7 @@ const ActivityForm = ({isActive, closeModal, activitiesState, setActivities}) =>
     });
 
     if(validate(validState) && validate(customValidate)){
-      const new_id = Math.max(...Object.keys(activitiesState).map(id => parseInt(id, 10))) + 1;
-      const obj = {
-        id: new_id,
-        ...values
-      }
-      setActivities({...activitiesState, ...newActivity(obj)});
+      setActivities({...activitiesState, ...newActivity(values)});
       handleCancel();
     } else 
       setShow(true);

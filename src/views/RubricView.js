@@ -32,6 +32,12 @@ const RubricView = () => {
         <h2 className='subtitle is-6 has-text-white'>Descripción de actividad</h2>
         <p className='has-text-white'>Fecha de Inicio</p>
         <p className='has-text-white'>Fecha de Término</p>
+        <button className='button is-success' type='button'>
+          <span className="icon is-small">
+            <i className="fas fa-check" aria-hidden="true"/>
+          </span>
+          <span>Guardar Rúbrica</span>
+        </button>
       </header>
       <form>
         {

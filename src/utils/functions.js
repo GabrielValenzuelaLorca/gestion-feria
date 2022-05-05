@@ -17,11 +17,9 @@ export const newStory = (story) => {
 
 export const newActivity = (activity) => {
   return {
-    [activity.id]:{
-      atraso:false,
-      cierre:null,
-      ...activity
-    }
+    atraso:false,
+    cierre:null,
+    ...activity
   }
 }
 
