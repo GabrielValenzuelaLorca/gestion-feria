@@ -1,16 +1,25 @@
 import React from 'react';
 
-const Checkbox = ({text, name, setCheck=null}) => {
+const Checkbox = ({text, name, state, setState}) => {
+
+  const setCheck = (e) => {
+    const check = e.target.checked;
+    setState({
+      ...state,
+      [name]: check,
+    });
+  }
+
   return (
     <div className="field">
       <div className="control">
         <label className="checkbox">
-          {
-            setCheck ?
-              <input type="checkbox" name={name} onChange={e => setCheck(e.target.checked)}/>  
-            : 
-              <input type="checkbox" name={name}/>
-          }
+          <input 
+            type="checkbox"
+            name={name}
+            checked={state[name]}
+            onChange={setCheck}
+          />  
           <span className="ml-1">{text}</span>
         </label>
       </div>

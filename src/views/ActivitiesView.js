@@ -10,8 +10,6 @@ const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState([]);
   const [isLoading] = useFetch(getActivities, setActivities);
   const [modalState, setModal] = useState(false);
-
-  console.log("aer", isLoading);
   
   return (
     <section>
@@ -61,8 +59,6 @@ const ActivitiesView = () => {
       <ActivityForm 
         isActive={modalState} 
         closeModal={() => setModalState(false, setModal)}
-        activitiesState={activitiesState}
-        setActivities={setActivities}
       />
     </section>
   )

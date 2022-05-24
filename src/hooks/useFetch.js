@@ -6,7 +6,6 @@ const useFetch = (service, setState) => {
   useEffect(() => {
     const fetch = async () => {
       const response = await service();
-      console.log(response);
       setState(response);
       setLoading(false);
     };
@@ -14,7 +13,6 @@ const useFetch = (service, setState) => {
     fetch();
   }, [service, setState]);
 
-  console.log("aer dentro", isLoading);
   return [isLoading];
 }
 
