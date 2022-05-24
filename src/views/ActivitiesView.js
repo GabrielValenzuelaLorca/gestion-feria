@@ -1,59 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
 import Activity from '../components/Activities/Activity';
 import ActivityForm from '../components/Activities/ActivityForm';
+import useFetch from '../hooks/useFetch';
 import { getActivities } from '../services/activity';
 import { diffDates, setModalState } from '../utils/functions';
 
-const sample = [
-  {
-    id: 1,
-    nombre: "Evento 1",
-    inicio: "2022-01-16",
-    termino: "2022-01-30",
-    atraso: false,
-    cierre: "2022-01-30",
-    descripcion: "evento para mover historias",
-  },{
-    id: 2,
-    nombre: "Evento 2",
-    inicio: '2021-10-17',
-    termino: '2021-10-25',
-    atraso: false,
-    cierre: '2021-10-26',
-    descripcion: "evento para crear historias",
-  },{
-    id: 3,
-    nombre: "Evento 3",
-    inicio: '2022-03-28',
-    termino: '2022-03-29',
-    atraso: false,
-    cierre: '2022-03-24',
-    descripcion: "evento para probar las tarjetas",
-  },
-]
-
 const ActivitiesView = () => {
-  const [activitiesState, setActivities] = useState(sample);
+  const [activitiesState, setActivities] = useState([]);
+  const [isLoading] = useFetch(getActivities, setActivities);
   const [modalState, setModal] = useState(false);
 
-  const fetchActivities = async () => {
-    const response = await getActivities();
-    console.log(response);
-  }
-
-  useEffect(() => {
-    fetchActivities();
-  }, [])
+  console.log("aer", isLoading);
   
   return (
     <section>
-      <div className="section  columns">
+      <div className="section columns">
         <div className="column">
           <h1 className="title is-4">Calendario de Actividades</h1>
-          <ActivitiesCalendar 
-            activities={activitiesState} 
-          /> 
+            <ActivitiesCalendar 
+              activities={activitiesState}
+            /> 
         </div>
         <div className="column">
           <div className="level mb-3">
@@ -70,21 +37,23 @@ const ActivitiesView = () => {
               </button>
             </div>
           </div>
-          { 
-            activitiesState
-              .filter(activity => diffDates(new Date(), activity.termino) > 0)
-              .length > 0
-            ? activitiesState
+          {
+            isLoading 
+            ? <progress className='progress is-primary'/>
+            : activitiesState
                 .filter(activity => diffDates(new Date(), activity.termino) > 0)
-                .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
-                .map(activity => 
-                  <Activity 
-                    key={activity.id}
-                    activity={activity}
-                />)
-            : <p className="notification">
-                No hay actividades por realizar en este momento
-              </p>
+                .length > 0
+              ? activitiesState
+                  .filter(activity => diffDates(new Date(), activity.termino) > 0)
+                  .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
+                  .map(activity => 
+                    <Activity 
+                      key={activity.id}
+                      activity={activity}
+                  />)
+              : <p className="notification">
+                  No hay actividades por realizar en este momento
+                </p>
           }
         </div>
       </div>
