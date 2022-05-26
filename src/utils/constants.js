@@ -11,10 +11,6 @@ export const ACTIVITIES_TYPES = [
   "Sprint 3",
 ];
 
-export const VALIDATION_MESSAGES = {
-  required: 'Este campo es obligatorio'
-}
-
 export const RESPONSABLES_SAMPLE = [
   "Pedro Godoy", 
   "Gabriel Valenzuela", 

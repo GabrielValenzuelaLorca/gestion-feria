@@ -1,75 +1,42 @@
-import React, { useRef, useState } from 'react'
-import { delay, validate } from '../../utils/functions';
-import { Input } from '../Forms';
+import React, { useState } from 'react'
+import { delay } from '../../utils/functions';
+import { Input, Form } from '../Forms';
 import { createUser } from '../../services/user';
 import { useNavigate } from "react-router-dom";
 import { SHA3 } from 'crypto-js';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../store/actions/userActions';
+import useForm from '../../hooks/useForm';
 
 const Register = ({modalState, closeModal}) => {
-  const fields = ["correo", "nombre", "contraseña", "contraseña_repeat"];
-  const [validState, setValid] = useState({
-    correo: false,
-    nombre: false,
-    contraseña: false,
-    contraseña_repeat: false,
+  const [formState, setForm] = useState({
+    correo: '', 
+    nombre: '', 
+    contraseña: '', 
+    contraseña_repeat: ''
   });
-  const [customWarning, setWarning] = useState({
-    contraseña_repeat: "",
-  });
-  const [showWarning, setShow] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [showMessage, setMessage] = useState(false);
   const dispatch = useDispatch();
-  const formRef = useRef();
   let navigate = useNavigate();
-
-  const resetValid = () => {
-    let valid = {}, warning={};
-    Object.keys(validState).forEach(field => {
-      valid[field] = false;
-    });
-    Object.keys(customWarning).forEach(field => {
-      warning[field] = "";
-    });
-    setValid(valid);
-    setWarning(warning);
-    setShow(false);
-  }
+  const [validationState, setShowError, formProps] = useForm(formState, setForm);
 
   const clearForm = () => {
-    const elements = formRef.current.elements;
-    fields.forEach(field => {
-      elements[field].value = "";
-    })
-    resetValid();
+    const newState = Object.keys(formState).reduce((prev, acc) => {
+      prev[acc] = '';
+      return prev;
+    }, {});
+    setForm(newState);
   }
 
   const handleCreate = async () => {
     setLoading(true);
-    let values = {};
-    const elements = formRef.current.elements;
-    let customValidate = {
-      contraseña_repeat: false,
-    }
 
-    fields.forEach(field => {
-      values[field] = elements[field].value;
-      // Custom validation
-      if(field==="contraseña_repeat" && validState.contraseña && validState.contraseña_repeat){
-        const checkPass = elements["contraseña"].value === elements[field].value;
-        customValidate.contraseña_repeat = checkPass;
-        setValid({...validState, contraseña_repeat: checkPass});
-        setWarning({...customWarning, contraseña_repeat: "Las contraseñas deben ser iguales"});
-      }
-    });
-
-    if(validate(validState) && validate(customValidate)){
+    if (validationState) {
       const user_to_send = {
-        email: values.correo.toLowerCase(),
-        name: values.nombre,
-        password: SHA3(values.contraseña).toString()
+        email: formState.email.toLowerCase(),
+        name: formState.nombre,
+        password: SHA3(formState.contraseña).toString()
       }
       const user = await createUser(user_to_send);
       window.sessionStorage.setItem('user', JSON.stringify(user));
@@ -78,12 +45,13 @@ const Register = ({modalState, closeModal}) => {
       await delay(3000);
       navigate('/actividades');
     } else {
-      setShow(true);
+      setShowError(true);
       setLoading(false);
     }
   }
 
   const handleCancel = () => {
+    setShowError(false);
     clearForm();
     closeModal();
   }
@@ -105,57 +73,57 @@ const Register = ({modalState, closeModal}) => {
               </p>
             </header>
 
-            <form className="modal-card-body" ref={formRef}>
-              <Input name="correo"
+            <Form 
+              className="modal-card-body" 
+              formProps={formProps}
+            >
+              <Input 
+                name="correo"
                 label="Correo"  
                 type="email"
                 placeholder="Ingrese su correo"
-                validations={{
-                  required:true,
-                  email:true
-                }}
-                validState={validState}
-                show={showWarning}
-                setValid={setValid}
+                validations={[
+                  'required',
+                  'email'
+                ]}
               />
 
-              <Input name="nombre"
+              <Input 
+                name="nombre"
                 label="Nombre"  
                 type="text"
                 placeholder="Ingrese su nombre"
-                validations={{required:true}}
-                validState={validState}
-                show={showWarning}
-                setValid={setValid}
+                validations={['required']}
               />
 
-              <Input name="contraseña"
+              <Input 
+                name="contraseña"
                 label="Contraseña"  
                 type="password"
                 placeholder="********"
-                validations={{
-                  required:true,
-                  passLen:true
-                }}
-                validState={validState}
-                show={showWarning}
-                setValid={setValid}
+                validations={[
+                  'required',
+                  'passLen'
+                ]}
               />
 
-              <Input name="contraseña_repeat"
-                label="Repetir Contraseña"  
-                type="password"
-                placeholder="********"
-                validations={{required:true}}
-                validState={validState}
-                show={showWarning}
-                setValid={setValid}
-                customWarning={customWarning.contraseña_repeat}
-                onKeyDown={(e) => {
-                  e.keyCode === 13 && handleCreate();
-                }}
+              <Input 
+                name = "contraseña_repeat"
+                label = "Repetir Contraseña"  
+                type = "password"
+                placeholder = "********"
+                validations = {['required']}
+                customValidations = {[
+                  (value) => {
+                    if (formState.contraseña !== '' && formState.contraseña === value) {
+                      return null;
+                    }
+                    return 'Las contraseñas deben ser iguales'
+                  }
+                ]}
+                onKeyDown = {handleCreate}
               />
-            </form>
+            </Form>
 
             <footer className="modal-card-foot">
               <button className={`button is-success ${isLoading && "is-loading"}`} onClick={handleCreate}>
@@ -168,7 +136,6 @@ const Register = ({modalState, closeModal}) => {
             </footer>
           </article>
         
-          
       }
     </section>
   )

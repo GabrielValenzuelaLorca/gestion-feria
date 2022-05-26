@@ -43,12 +43,6 @@ export const diffDates = (initial, final) => {
   return Math.ceil(diff / (1000 * 3600 * 24) + 1)
 }
 
-export const validate = (validState) => {
-  return Object.values(validState).reduce((acc,next) => {
-    return acc && next;
-  }, true)
-}
-
 export const delay = async (timeout) => {
   return new Promise(resolve => {
       setTimeout(resolve, timeout);

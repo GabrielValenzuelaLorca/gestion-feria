@@ -5,29 +5,27 @@ import { Checkbox, Input, Select, Textarea } from '../Forms';
 
 const ActivityForm = ({isActive, closeModal}) => {
   const [showErrorState, setShowError] = useState(false);
-  const [errorState, setError] = useState(false);
+  const [errorState, setError] = useState(0);
   const [formState, setForm] = useState({
-    nombre: null,
-    tipo: null,
-    inicio: null,
-    termino: null,
+    nombre: '',
+    tipo: '',
+    inicio: '',
+    termino: '',
     atraso: false,
-    cierre: null,
-    descripcion: null
+    cierre: '',
+    descripcion: ''
   });
 
   const clearForm = () => {
     const newState = Object.keys(formState).reduce((prev, acc) => {
-      prev[acc] = acc === 'atraso' ? false : null;
+      prev[acc] = acc === 'atraso' ? false : '';
       return prev;
     }, {});
     setForm(newState);
   }
 
   const handleCreate = () => {
-    console.log(formState);
     if (errorState) {
-      console.log('hay errores');
       setShowError(true);
     } else {
       // setActivities({...activitiesState, ...newActivity()});
@@ -36,6 +34,8 @@ const ActivityForm = ({isActive, closeModal}) => {
   }
 
   const handleCancel = () => {
+    setShowError(false);
+    setError(0);
     clearForm();
     closeModal();
   }
@@ -94,9 +94,9 @@ const ActivityForm = ({isActive, closeModal}) => {
             customValidations={[
               (value) => {
                 if (formState.inicio && diffDates(formState.inicio, value) > 0) {
-                  return 'La fecha debe ser posterior o igual al día de inicio'
+                  return null;
                 }
-                return null;
+                return 'La fecha debe ser posterior o igual al día de inicio'
               }
             ]}
             state={formState}
@@ -123,9 +123,9 @@ const ActivityForm = ({isActive, closeModal}) => {
               customValidations={[
                 (value) => {
                   if (formState.termino && diffDates(formState.termino, value) > 0) {
-                    return 'La fecha debe ser posterior o igual al día de termino'
+                    return null;
                   }
-                  return null;
+                  return 'La fecha debe ser posterior o igual al día de termino'
                 }
               ]}
               state={formState}
