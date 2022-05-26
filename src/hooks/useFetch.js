@@ -1,19 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const useFetch = (service, setState) => {
-  const [isLoading, setLoading] = useState(true);
+const useFetch = (service, callback, params = null, errorMessage = null, to = null) => {
+  const [isLoading, setLoading] = useState(false);
+  const [messageState, setMessage] = useState(null)
+  let navigate = useNavigate();
 
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await service();
-      setState(response);
+  const doFetch = async () => {
+    setLoading(true)
+    try {
+      const response = await service(params);
+      callback(response);
+      if (to) {
+        navigate(to)
+      } else {
+        setLoading(false);    
+      }
+    } catch (e) {
+      console.log("Error", e)
+      setMessage(errorMessage);
       setLoading(false);
-    };
+    }
+  }
 
-    fetch();
-  }, [service, setState]);
-
-  return [isLoading];
+  return [doFetch, isLoading, messageState];
 }
 
 export default useFetch;

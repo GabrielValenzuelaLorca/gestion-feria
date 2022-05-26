@@ -1,42 +1,37 @@
 import { SHA3 } from 'crypto-js';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/user';
 import { Input } from '../Forms';
 import { addUser } from '../../store/actions/userActions';
+import useFetch from '../../hooks/useFetch';
 
 const LoginForm = ({ setModalState }) => {
   const [formState, setForm] = useState({
     correo: '',
     contraseña: ''
   });
-  const [isLoading, setLoading] = useState(false);
   const [loginErrorState, setLoginError] = useState("");
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+
+  const loginCallback = (user) => {
+    window.sessionStorage.setItem('user', JSON.stringify(user));
+    dispatch(addUser(user));
+  }
+
+  const [loginFetch, isLoading, messageState] = useFetch(login, loginCallback, {
+      email: formState.correo,
+      password: SHA3(formState.contraseña).toString()
+    },
+    'Los datos ingresados no son válidos',
+    '/actividades'
+  );
 
   const handleLogin = async () => {
-    setLoading(true);
-
     if(formState.correo !== '' && formState.contraseña !== ''){
-      const credentials = {
-        email: formState.correo,
-        password: SHA3(formState.contraseña).toString()
-      }
-      try{
-        const user = await login(credentials);
-        window.sessionStorage.setItem('user', JSON.stringify(user));
-        dispatch(addUser(user));
-        navigate('/actividades');
-      } catch(e) {
-        console.log("Error", e)
-        setLoginError("Los datos ingresados no son válidos");
-        setLoading(false);  
-      }
+      await loginFetch();
     } else {
       setLoginError("Porfavor ingrese su correo y contraseña");
-      setLoading(false);
     }
   }
 
@@ -68,7 +63,7 @@ const LoginForm = ({ setModalState }) => {
       <div className="field">
         <button className={`button is-link ${isLoading && "is-loading"}`} type="button" onClick={handleLogin}>Acceder</button>
         <p className="help is-danger">
-          {loginErrorState}
+          {messageState || loginErrorState}
         </p>
       </div>
 
