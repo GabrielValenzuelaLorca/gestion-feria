@@ -19,17 +19,17 @@ const LoginForm = ({ setModalState }) => {
     dispatch(addUser(user));
   }
 
-  const [loginFetch, isLoading, messageState] = useFetch(login, loginCallback, {
-      email: formState.correo,
-      password: SHA3(formState.contraseña).toString()
-    },
-    'Los datos ingresados no son válidos',
-    '/actividades'
+  const [loginFetch, isLoading, messageState] = useFetch(login, loginCallback,
+    true,
+    'Los datos ingresados no son válidos'
   );
 
   const handleLogin = async () => {
     if(formState.correo !== '' && formState.contraseña !== ''){
-      await loginFetch();
+      await loginFetch({
+        email: formState.correo,
+        password: SHA3(formState.contraseña).toString()
+      });
     } else {
       setLoginError("Porfavor ingrese su correo y contraseña");
     }

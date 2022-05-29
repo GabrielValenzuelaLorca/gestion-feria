@@ -1,19 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
 
-const useFetch = (service, callback, params = null, errorMessage = null, to = null) => {
+const useFetch = (service, callback, redirect = false, errorMessage = null) => {
   const [isLoading, setLoading] = useState(false);
   const [messageState, setMessage] = useState(null)
-  let navigate = useNavigate();
 
-  const doFetch = async () => {
+  const doFetch = useCallback(async (params) => {
     setLoading(true)
     try {
       const response = await service(params);
-      callback(response);
-      if (to) {
-        navigate(to)
-      } else {
+      await callback(response);
+      if (!redirect) {
         setLoading(false);    
       }
     } catch (e) {
@@ -21,7 +17,7 @@ const useFetch = (service, callback, params = null, errorMessage = null, to = nu
       setMessage(errorMessage);
       setLoading(false);
     }
-  }
+  }, [callback, errorMessage, redirect, service])
 
   return [doFetch, isLoading, messageState];
 }

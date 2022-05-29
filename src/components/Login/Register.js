@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { delay } from '../../utils/functions';
 import { Input, Form } from '../Forms';
 import { createUser } from '../../services/user';
-import { useNavigate } from "react-router-dom";
 import { SHA3 } from 'crypto-js';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../store/actions/userActions';
 import useForm from '../../hooks/useForm';
+import useFetch from '../../hooks/useFetch';
 
 const Register = ({modalState, closeModal}) => {
   const [formState, setForm] = useState({
@@ -15,11 +15,19 @@ const Register = ({modalState, closeModal}) => {
     contraseña: '', 
     contraseña_repeat: ''
   });
-  const [isLoading, setLoading] = useState(false);
   const [showMessage, setMessage] = useState(false);
   const dispatch = useDispatch();
-  let navigate = useNavigate();
   const [validationState, setShowError, formProps] = useForm(formState, setForm);
+
+  const createCallback = async (user) => {
+    window.sessionStorage.setItem('user', JSON.stringify(user));
+    setMessage(true);
+    await delay(3000);
+    closeModal();
+    dispatch(addUser(user));
+  }
+
+  const [fetchRegister, isLoading] = useFetch(createUser, createCallback, true);
 
   const clearForm = () => {
     const newState = Object.keys(formState).reduce((prev, acc) => {
@@ -30,23 +38,14 @@ const Register = ({modalState, closeModal}) => {
   }
 
   const handleCreate = async () => {
-    setLoading(true);
-
     if (validationState) {
-      const user_to_send = {
-        email: formState.email.toLowerCase(),
+      await fetchRegister({
+        email: formState.correo.toLowerCase(),
         name: formState.nombre,
         password: SHA3(formState.contraseña).toString()
-      }
-      const user = await createUser(user_to_send);
-      window.sessionStorage.setItem('user', JSON.stringify(user));
-      dispatch(addUser(user));
-      setMessage(true);
-      await delay(3000);
-      navigate('/actividades');
+      });
     } else {
       setShowError(true);
-      setLoading(false);
     }
   }
 
