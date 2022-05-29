@@ -3,7 +3,6 @@ import Register from '../components/Login/Register';
 import { setModalState } from '../utils/functions';
 import LoginForm from '../components/Login/LoginForm';
 import logo_di from '../assets/images/logo_di.png'
-import '../css/login.css'
 
 const LoginView = () => {
   const [modalState, setModal] = useState(false);
@@ -21,10 +20,10 @@ const LoginView = () => {
           </div>
         </div>
       </nav>
-      <section className="hero is-fullheight-with-navbar">
+      <section className="hero is-primary is-fullheight-with-navbar">
         <div className="hero-body columns">
           <div className="column is-three-fifths">
-            <h1 className="title has-text-white">Bienvenid@s a -nombre plataforma-</h1>
+            <h1 className="title has-text-white">Bienvenid@s a CASE</h1>
             <h2 className="subtitle has-text-white">
               Aquí tendrás todo lo necesario para que tu proyecto sea un completo éxito!
             </h2>

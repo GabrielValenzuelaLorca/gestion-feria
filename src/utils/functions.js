@@ -17,11 +17,9 @@ export const newStory = (story) => {
 
 export const newActivity = (activity) => {
   return {
-    [activity.id]:{
-      atraso:false,
-      cierre:null,
-      ...activity
-    }
+    atraso:false,
+    cierre:null,
+    ...activity
   }
 }
 
@@ -43,12 +41,6 @@ export const addToRefs = (ref, element) => {
 export const diffDates = (initial, final) => {
   const diff = new Date(final).getTime() - new Date(initial).getTime();
   return Math.ceil(diff / (1000 * 3600 * 24) + 1)
-}
-
-export const validate = (validState) => {
-  return Object.values(validState).reduce((acc,next) => {
-    return acc && next;
-  }, true)
 }
 
 export const delay = async (timeout) => {

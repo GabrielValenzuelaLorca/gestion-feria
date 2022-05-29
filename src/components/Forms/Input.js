@@ -1,84 +1,75 @@
-import React, { useRef, useState } from 'react';
-import { diffDates } from '../../utils/functions';
+import React, { useEffect, useState } from 'react';
+import validator from '../../utils/validations';
 
 const Input = ({
   name, 
   label, 
   type, 
-  placeholder, 
-  validations={
-    required:false,
-    fromNow:false,
-    email:false,
-    passLen: false
-  } ,
-  validState, 
-  setValid, 
-  show=false,
-  customWarning="",
-  onKeyDown=null
+  placeholder = '', 
+  validations = [],
+  customValidations = [],
+  state,
+  setState,
+  showErrorState = false,
+  setError = null,
+  onKeyDown = false
 }) => {
-  const {required, fromNow, email, passLen} = validations;
-  const ref = useRef();
-  const [warningState, setWarning] = useState(
-    required ? "Este campo es obligatorio" : "Campo no válido"
-  );
+  const [warningState, setWarning] = useState(validations.includes('required') ? 'Este campo es obligatorio' : '');
+  const [localErrorState, setLocalError] = useState(validations.includes('required'));
 
-  const handleChange = () => {
-    const value = ref.current.value;
-    let valid = true;
+  const handleChange = (e) => {
+    const value = e.target.value;
 
-    if (valid && passLen){
-      valid = value.length >= 8;
-      setValid({...validState, [name]:valid});
-      if (!valid)
-        setWarning("La contraseña debe tener un largo mínimo de 8 caracteres");
-    }
-    if (valid && fromNow) {
-      valid = value !== "" && diffDates(new Date(), value) > 0;
-      setValid({...validState, [name]:valid});
-      if (!valid)
-        setWarning("La fecha debe ser posterior o igual al día de hoy");
-    }
-    if (valid && email) {
-      valid = value !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      setValid({...validState, [name]:valid});
-      if (!valid)
-        setWarning("Ingrese un correo válido");
-    }
-    if (valid && required){
-      valid = value !== "";
-      setValid({...validState, [name]:valid});
-      if(!valid)
-        setWarning("Este campo es obligatorio");
-    } 
+    setState({
+      ...state,
+      [name]: value
+    });
   }
+
+  useEffect(() => {
+    const validation = validator(state[name], validations, customValidations);
+    if (validation === true) {
+      setLocalError(false);
+      if(setError) setError(error => ({...error, [name]: true}));
+    } else {
+      setLocalError(true);
+      setWarning(validation);
+      setError(error => ({...error, [name]: false}));
+    }
+    // eslint-disable-next-line
+  }, [name, state, setError])
 
   return (
     <div className="field">
       <label className="label">
-        {label} 
+        {label}
         {
-          required &&
+          validations.includes('required') &&
           <span className={"has-text-danger"}>*</span>
         } 
       </label>
       <div className="control">
-        <input 
-          ref={ref}
+        <input
           name={name}
-          className={`input ${show && !validState[name] ? "is-danger" : ""}`} 
+          className={`input ${showErrorState && localErrorState ? "is-danger" : ""}`} 
+          value = {state[name]}
           type={type} 
           placeholder={placeholder}
           onChange={handleChange}
-          onKeyDown={onKeyDown}
+          onKeyDown={
+            onKeyDown 
+            ? (e) => {
+              e.key === 'Enter' && onKeyDown();
+            }
+            : undefined
+          }
         />
       </div>
 
       {
-        show && !validState[name] && 
+        showErrorState && localErrorState && 
         <p className="help is-danger">
-          {customWarning !== "" ? customWarning : warningState}
+          {warningState}
         </p>
       }
     </div>

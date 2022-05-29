@@ -14,4 +14,15 @@ export const handleResponse = async (response) => {
   }
 
   return data;
-}
+};
+
+export const authHeader = () => {
+  const token = JSON.parse(window.sessionStorage.getItem('user'));
+  if (token) {
+    return {
+      Authorization: `Bearer ${token.auth_token}`
+    }
+  }
+
+  return null;
+};

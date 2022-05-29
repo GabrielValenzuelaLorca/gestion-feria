@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from '@fullcalendar/core/locales/es';
-import '../../css/calendar.css'
+import '../../sass/calendar.sass'
 import ActivityDetails from './ActivityDetails';
 import { setModalState } from '../../utils/functions';
 
@@ -11,7 +11,7 @@ const ActivitiesCalendar = ({activities}) => {
   const [clickedState, setClick] = useState();
   const [modalState, setModal] = useState();
 
-  const parseActivities = () => Object.values(activities).map(activity => (
+  const parseActivities = () => activities.map(activity => (
     {
       id: activity.id,
       start: activity.inicio !== activity.termino ? activity.inicio : activity.termino,
@@ -41,7 +41,10 @@ const ActivitiesCalendar = ({activities}) => {
       <ActivityDetails
         isActive={modalState}
         closeModal={() => setModalState(false, setModal)}
-        activity={clickedState ? activities[clickedState] : null}
+        activity={clickedState
+          ? activities.filter(activity => activity.id === clickedState)
+          : null
+        }
       />
     </section>
   )

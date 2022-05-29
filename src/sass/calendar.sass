@@ -1,0 +1,24 @@
+@use 'index'
+  
+.calendar
+  .fc-toolbar-title::first-letter
+    text-transform: uppercase
+
+  .fc-day-today
+    background-color: index.$di_grey !important
+
+  .fc-button-primary
+    background-color: index.$orange !important
+    border-color: index.$orange !important
+
+  .fc-view-harness:hover *:not(.fc-daygrid-day-events *)
+    cursor: default
+
+  .fc-daygrid-day-number:hover
+    color: index.$orange
+
+  .fc-daygrid-day-number
+    color: index.$orange
+
+  .fc-col-header-cell-cushion
+    color: rgba(0, 0, 0, 0.65)
