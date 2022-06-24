@@ -1,61 +1,59 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import validator from '../../utils/validations';
 
 const Textarea = ({
   name, 
   label, 
   placeholder,
-  validation={
-    required:false,
-    minLength:0
-  }, 
-  validState,
-  setValid,
-  show 
+  validations=[],
+    // required:false,
+    // minLength:0 
+  customValidations = [],
+  state,
+  setState,
+  showErrorState = false,
+  setError = null,
 }) => {
-  const {required, minLength} = validation;
-  const ref = useRef();
-  const [warningState, setWarning] = useState(
-    required ? "Este campo es obligatorio" : "Campo no válido"
-  );
+  const [warningState, setWarning] = useState(validations.includes('required') ? 'Este campo es obligatorio' : '');
+  const [localErrorState, setLocalError] = useState(validations.includes('required'));
 
-  const handleChange = () => {
-    const value = ref.current.value;
-    let valid = true;
-    if (valid && minLength > 0) {
-      valid = value > minLength;
-      setValid({...validState, [name]:valid});
-      if (!valid)
-        setWarning(`El texto debe ser mayor a ${minLength} carácteres`);
-    }
-    if (valid && required){
-      valid = value !== "";
-      setValid({...validState, [name]:valid});
-      if(!valid)
-        setWarning("Este campo es obligatorio");
-    } 
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    setState({
+      ...state,
+      [name]: value
+    });
   }
+
+  useEffect(() => {
+    const validation = validator(state[name], validations, customValidations);
+    if (validation !== true) setWarning(validation);
+    setError(error => ({...error, [name]: validation === true}));
+    setLocalError(validation !== true);
+    // eslint-disable-next-line
+  }, [name, state, setError]);
 
   return (
     <div className="field">
       <label className="label">
         {label}
         {
-          required &&
+          validations.includes('required') &&
           <span className={"has-text-danger"}>*</span>
         } 
       </label>
       <div className="control">
         <textarea 
-          ref={ref}
           name={name}
-          className={`textarea ${show && !validState[name] ? "is-danger" : ""}`}  
+          className={`textarea ${showErrorState && localErrorState ? "is-danger" : ""}`}  
           placeholder={placeholder}
           onChange={handleChange}
         />
       </div>
 
       {
-        show && !validState[name] && 
+        showErrorState && localErrorState&& 
         <p className="help is-danger">
           {warningState}
         </p>

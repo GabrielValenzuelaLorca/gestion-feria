@@ -4,12 +4,7 @@ import { validateArray } from '../utils/validations';
 const useForm = (state, setState) => {
   const [showErrorState, setShowError] = useState(false);
   const [validationState, setValidation] = useState(true);
-  const [errorState, setError] = useState(
-    Object.keys(state).reduce((prev, acc) => {
-      prev[acc] = true;
-      return prev;
-    }, {})
-  );
+  const [errorState, setError] = useState({});
 
   useEffect(() => {
     setValidation(validateArray(errorState));
@@ -21,6 +16,7 @@ const useForm = (state, setState) => {
     {
       state,
       setState,
+      errorState,
       showErrorState,
       setError
     }

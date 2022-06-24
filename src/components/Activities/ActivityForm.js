@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import useForm from '../../hooks/useForm';
 import { ACTIVITIES_TYPES } from '../../utils/constants';
 import { diffDates, newActivity } from '../../utils/functions';
-import { Checkbox, Input, Select, Textarea } from '../Forms';
+import { Checkbox, Form, Input, Select, Textarea } from '../Forms';
 
 const ActivityForm = ({isActive, closeModal}) => {
-  const [showErrorState, setShowError] = useState(false);
-  const [errorState, setError] = useState(0);
   const [formState, setForm] = useState({
     nombre: '',
     tipo: '',
@@ -15,6 +14,7 @@ const ActivityForm = ({isActive, closeModal}) => {
     cierre: '',
     descripcion: ''
   });
+  const [validationState, setShowError, formProps] = useForm(formState, setForm);
 
   const clearForm = () => {
     const newState = Object.keys(formState).reduce((prev, acc) => {
@@ -25,17 +25,16 @@ const ActivityForm = ({isActive, closeModal}) => {
   }
 
   const handleCreate = () => {
-    if (errorState) {
-      setShowError(true);
-    } else {
+    if (validationState) {
       // setActivities({...activitiesState, ...newActivity()});
       handleCancel();
+    } else {
+      setShowError(true);
     }
   }
 
   const handleCancel = () => {
     setShowError(false);
-    setError(0);
     clearForm();
     closeModal();
   }
@@ -51,17 +50,13 @@ const ActivityForm = ({isActive, closeModal}) => {
           </p>
         </header>
 
-        <form className="modal-card-body">
+        <Form className="modal-card-body" formProps={formProps}>
           <Input
             name="nombre"
             label="Titulo Actividad"  
             type="text"
             placeholder="Creación de informes..."
             validations={['required']}
-            state={formState}
-            setState={setForm}
-            showError = {showErrorState}
-            setError = {setError}
           />
 
           <Select
@@ -69,10 +64,6 @@ const ActivityForm = ({isActive, closeModal}) => {
             label="Tipo Actividad"
             options={ACTIVITIES_TYPES}
             validations={['required']}
-            state={formState}
-            setState={setForm}
-            showError = {showErrorState}
-            setError = {setError}
           />
 
           <Input
@@ -80,10 +71,6 @@ const ActivityForm = ({isActive, closeModal}) => {
             label="Fecha de Inicio"  
             type="date"
             validations={['required', 'dateFromNow']}
-            state={formState}
-            setState={setForm}
-            showError = {showErrorState}
-            setError = {setError}
           />
 
           <Input
@@ -93,23 +80,17 @@ const ActivityForm = ({isActive, closeModal}) => {
             validations={['required']}
             customValidations={[
               (value) => {
-                if (formState.inicio && diffDates(formState.inicio, value) > 0) {
+                if (formState.inicio !== '' && diffDates(formState.inicio, value) > 0) {
                   return null;
                 }
                 return 'La fecha debe ser posterior o igual al día de inicio'
               }
             ]}
-            state={formState}
-            setState={setForm}
-            showError = {showErrorState}
-            setError = {setError}
           />
 
           <Checkbox
             name="atraso"
             text="¿Acepta atrasos?"
-            state={formState}
-            setState={setForm}
           />
 
           {
@@ -128,10 +109,6 @@ const ActivityForm = ({isActive, closeModal}) => {
                   return 'La fecha debe ser posterior o igual al día de termino'
                 }
               ]}
-              state={formState}
-              setState={setForm}
-              showError = {showErrorState}
-              setError = {setError}
             />
           }
           
@@ -139,13 +116,9 @@ const ActivityForm = ({isActive, closeModal}) => {
             name="descripcion"
             label="Descripción Actividad"
             placeholder="Los alumnos tendrán que crear sus historias de usuario para..."
-            validations={['required']}
-            state={formState}
-            setState={setForm}
-            showError = {showErrorState}
-            setError = {setError}
+            validations={['required', 'min-8']}
           />
-        </form>
+        </Form>
 
         <footer className="modal-card-foot">
           <button className="button is-success" onClick={handleCreate}>

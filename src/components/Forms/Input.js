@@ -28,16 +28,11 @@ const Input = ({
 
   useEffect(() => {
     const validation = validator(state[name], validations, customValidations);
-    if (validation === true) {
-      setLocalError(false);
-      if(setError) setError(error => ({...error, [name]: true}));
-    } else {
-      setLocalError(true);
-      setWarning(validation);
-      setError(error => ({...error, [name]: false}));
-    }
+    if (validation !== true) setWarning(validation);
+    setError(error => ({...error, [name]: validation === true}));
+    setLocalError(validation !== true);
     // eslint-disable-next-line
-  }, [name, state, setError])
+  }, [name, state, setError]);
 
   return (
     <div className="field">

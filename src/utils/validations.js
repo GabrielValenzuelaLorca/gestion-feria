@@ -4,8 +4,9 @@ const validator = (value, validations, customValidations) => {
   let hasErrors = false;
   let message = ''
   validations.every(validation => {
-    if (!VALIDATION_PROPERTIES[validation].condition(value)) {
-      message = VALIDATION_PROPERTIES[validation].message;
+    const [property, param] = validation.split('-');
+    if (!VALIDATION_PROPERTIES[property].condition(value, param)) {
+      message = VALIDATION_PROPERTIES[property].message(param);
       hasErrors = true;
       return false;
     }
@@ -34,19 +35,23 @@ export const validateArray = (state) => {
 const VALIDATION_PROPERTIES = {
   passLen: {
     condition: (value) => value.length >= 8,
-    message: 'La contraseña debe tener un largo mínimo de 8 caracteres'
+    message: () => 'La contraseña debe tener un largo mínimo de 8 caracteres'
   },
   dateFromNow: {
     condition: (value) => value !== '' && diffDates(new Date(), value) > 0,
-    message: 'La fecha debe ser posterior o igual al día de hoy'
+    message: () => 'La fecha debe ser posterior o igual al día de hoy'
   },
   email: {
     condition: (value) => value !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    message: 'Ingrese un correo válido'
+    message: () => 'Ingrese un correo válido'
+  },
+  min: {
+    condition: (value, param) => value !== '' && value.length >= parseInt(param),
+    message: (param) => `El texto debe tener como mínimo ${param} carácteres`
   },
   required: {
     condition: (value) => value !== '' && value !== null,
-    message: 'Este campo es obligatorio'
+    message: () => 'Este campo es obligatorio'
   }
 }
 
