@@ -14,7 +14,7 @@ const ActivityForm = ({isActive, closeModal}) => {
     cierre: '',
     descripcion: ''
   });
-  const [validationState, setShowError, formProps] = useForm(formState, setForm);
+  const form = useForm(formState, setForm);
 
   const clearForm = () => {
     const newState = Object.keys(formState).reduce((prev, acc) => {
@@ -25,16 +25,16 @@ const ActivityForm = ({isActive, closeModal}) => {
   }
 
   const handleCreate = () => {
-    if (validationState) {
+    if (form.validationState) {
       // setActivities({...activitiesState, ...newActivity()});
       handleCancel();
     } else {
-      setShowError(true);
+      form.setShowError(true);
     }
   }
 
   const handleCancel = () => {
-    setShowError(false);
+    form.setShowError(false);
     clearForm();
     closeModal();
   }
@@ -50,7 +50,7 @@ const ActivityForm = ({isActive, closeModal}) => {
           </p>
         </header>
 
-        <Form className="modal-card-body" formProps={formProps}>
+        <Form className="modal-card-body" form={form}>
           <Input
             name="nombre"
             label="Titulo Actividad"  

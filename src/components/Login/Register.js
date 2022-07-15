@@ -17,7 +17,7 @@ const Register = ({modalState, closeModal}) => {
   });
   const [showMessage, setMessage] = useState(false);
   const dispatch = useDispatch();
-  const [validationState, setShowError, formProps] = useForm(formState, setForm);
+  const form = useForm(formState, setForm);
 
   const createCallback = async (user) => {
     window.sessionStorage.setItem('user', JSON.stringify(user));
@@ -38,19 +38,19 @@ const Register = ({modalState, closeModal}) => {
   }
 
   const handleCreate = async () => {
-    if (validationState) {
+    if (form.validationState) {
       await fetchRegister({
         email: formState.correo.toLowerCase(),
         name: formState.nombre,
         password: SHA3(formState.contraseña).toString()
       });
     } else {
-      setShowError(true);
+      form.setShowError(true);
     }
   }
 
   const handleCancel = () => {
-    setShowError(false);
+    form.setShowError(false);
     clearForm();
     closeModal();
   }
@@ -74,7 +74,7 @@ const Register = ({modalState, closeModal}) => {
 
             <Form 
               className="modal-card-body" 
-              formProps={formProps}
+              form={form}
             >
               <Input 
                 name="correo"

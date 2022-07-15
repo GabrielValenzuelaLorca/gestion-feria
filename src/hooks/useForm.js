@@ -10,17 +10,17 @@ const useForm = (state, setState) => {
     setValidation(validateArray(errorState));
   }, [errorState])
 
-  return [
+  return {
     validationState,
     setShowError,
-    {
+    formProps: {
       state,
       setState,
       errorState,
       showErrorState,
       setError
     }
-  ];
+  };
 }
 
 export default useForm;

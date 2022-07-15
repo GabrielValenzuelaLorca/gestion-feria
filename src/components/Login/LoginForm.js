@@ -2,9 +2,10 @@ import { SHA3 } from 'crypto-js';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { login } from '../../services/user';
-import { Input } from '../Forms';
+import { Form, Input } from '../Forms';
 import { addUser } from '../../store/actions/userActions';
 import useFetch from '../../hooks/useFetch';
+import useForm from '../../hooks/useForm';
 
 const LoginForm = ({ setModalState }) => {
   const [formState, setForm] = useState({
@@ -12,6 +13,7 @@ const LoginForm = ({ setModalState }) => {
     contraseña: ''
   });
   const [loginErrorState, setLoginError] = useState("");
+  const form = useForm(formState, setForm);
   const dispatch = useDispatch();
 
   const loginCallback = (user) => {
@@ -36,7 +38,7 @@ const LoginForm = ({ setModalState }) => {
   }
 
   return (
-    <form className="box column has-background-light">
+    <Form className="box column has-background-light" form={form}>
       <div className="field">
         <h1 className="has-text-weight-bold is-size-4">Accede a la plataforma</h1>
       </div>
@@ -76,7 +78,7 @@ const LoginForm = ({ setModalState }) => {
       <div className="field is-centered">
         <button className="button is-success" type="button" onClick={setModalState}>Crear usuario</button>
       </div>
-    </form>
+    </Form>
   )
 }
 

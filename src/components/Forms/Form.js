@@ -1,15 +1,13 @@
 import React, { Children, cloneElement, useEffect } from 'react'
 
-const Form = ({className, formProps, children}) => {
-  const { setError, errorState } = formProps;
-
+const Form = ({className, form, children}) => {
   useEffect(() => {
     const filteredChildren = Children.toArray(children).filter(child => 
       child.props.validations || child.props.customValidations
     );
 
-    if(filteredChildren.length !== Object.keys(errorState).length ){
-      setError(state => {
+    if(filteredChildren.length !== Object.keys(form.formProps.errorState).length ){
+      form.formProps.setError(state => {
         const newState = {};
         filteredChildren.forEach(child => {
           const name = child.props.name;
@@ -19,13 +17,13 @@ const Form = ({className, formProps, children}) => {
       });
     }
 
-  }, [children, errorState, setError])
+  }, [children, form.formProps])
 
   return (
     <form className={className}>
       {Children.map(children, child => {
-        if (child) {
-          return cloneElement(child, formProps);
+        if (child && typeof child.type !== 'string' ) {
+          return cloneElement(child, form.formProps);
         } 
         return child;
       })}
