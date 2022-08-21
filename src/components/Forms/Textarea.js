@@ -6,8 +6,6 @@ const Textarea = ({
   label, 
   placeholder,
   validations=[],
-    // required:false,
-    // minLength:0 
   customValidations = [],
   state,
   setState,
@@ -46,8 +44,9 @@ const Textarea = ({
       <div className="control">
         <textarea 
           name={name}
-          className={`textarea ${showErrorState && localErrorState ? "is-danger" : ""}`}  
+          className={`textarea ${showErrorState && localErrorState ? "is-danger" : ""}`} 
           placeholder={placeholder}
+          value={state[name]}
           onChange={handleChange}
         />
       </div>

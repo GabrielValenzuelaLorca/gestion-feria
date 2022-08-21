@@ -12,7 +12,6 @@ const Select = ({
   setState,
   showErrorState = false,
   setError = null,
-  errorState,
 }) => {
   const [warningState, setWarning] = useState(validations.includes('required') ? 'Este campo es obligatorio' : '');
   const [localErrorState, setLocalError] = useState(validations.includes('required'));
@@ -47,7 +46,7 @@ const Select = ({
         <div className={`select ${showErrorState && localErrorState ? "is-danger" : ""}`}>
           <select 
             name={name} 
-            defaultValue=""
+            value = {state[name]}
             onChange={handleChange}
           >
             <option value="" hidden>{placeholder}</option>

@@ -8,7 +8,7 @@ const useFetch = (service, callback, redirect = false, errorMessage = null) => {
     setLoading(true)
     try {
       const response = await service(params);
-      await callback(response);
+      await callback(response.data);
       if (!redirect) {
         setLoading(false);    
       }
