@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { diffDates, setModalState } from '../../utils/functions';
-import ActivityDetails from './ActivityDetails';
 
-const Activity = ({activity}) => {
-  const [modalState, setModal] = useState(false);
-
+const Activity = ({activity, setModal, setCurrentActivity}) => {
   return (
     <div className="card block">
       <div className="card-header">
@@ -13,7 +10,10 @@ const Activity = ({activity}) => {
         </h2>
 
         <button className="mt-1 mr-1 button is-light is-rounded" 
-          onClick={() => setModalState(true, setModal)}
+          onClick={() => {
+            setCurrentActivity(activity);
+            setModalState(true, setModal);
+          }}
         >
           <span className="icon" >
             <i className="fas fa-lg fa-ellipsis-v"></i>
@@ -29,12 +29,6 @@ const Activity = ({activity}) => {
         <p className="card-footer-item">Duración: {diffDates(activity.inicio, activity.termino)} día(s)</p>
         <p className="card-footer-item">Tiempo Restante: {diffDates(new Date(), activity.termino)} día(s)</p>
       </div>
-
-      <ActivityDetails
-        isActive={modalState}
-        closeModal={() => setModalState(false, setModal)}
-        activity={activity}
-      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ const Textarea = ({
   placeholder,
   validations=[],
   customValidations = [],
+  disabled = false,
   state,
   setState,
   showErrorState = false,
@@ -48,6 +49,7 @@ const Textarea = ({
           placeholder={placeholder}
           value={state[name]}
           onChange={handleChange}
+          disabled={disabled}
         />
       </div>
 

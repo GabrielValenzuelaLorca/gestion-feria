@@ -8,6 +8,7 @@ const Select = ({
   placeholder="Seleccione una opción",
   validations = [],
   customValidations = [],
+  disabled = false,
   state,
   setState,
   showErrorState = false,
@@ -48,6 +49,7 @@ const Select = ({
             name={name} 
             value = {state[name]}
             onChange={handleChange}
+            disabled={disabled}
           >
             <option value="" hidden>{placeholder}</option>
             {options && options.map((option, i) => {

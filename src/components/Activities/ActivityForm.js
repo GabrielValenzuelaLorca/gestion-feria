@@ -1,43 +1,39 @@
 import React, { useState } from 'react';
 import useForm from '../../hooks/useForm';
+import { createActivity, editActivity } from '../../services/activity';
 import { ACTIVITIES_TYPES } from '../../utils/constants';
-import { diffDates, newActivity } from '../../utils/functions';
+import { diffDates } from '../../utils/functions';
 import { Checkbox, Form, Input, Select, Textarea } from '../Forms';
 
-const ActivityForm = ({isActive, closeModal}) => {
-  const [formState, setForm] = useState({
-    nombre: '',
-    tipo: '',
-    inicio: '',
-    termino: '',
-    atraso: false,
-    cierre: '',
-    descripcion: ''
-  });
-  const form = useForm(formState, setForm);
+const ActivityForm = ({isActive, fetchActivities, closeModal, currentActivity, setCurrentActivity}) => {
+  const [loading, setLoading] = useState(false);
+  
+  const form = useForm(currentActivity, setCurrentActivity);
 
-  const clearForm = () => {
-    const newState = Object.keys(formState).reduce((prev, acc) => {
-      prev[acc] = acc === 'atraso' ? false : '';
-      return prev;
-    }, {});
-    setForm(newState);
-  }
-
-  const handleCreate = () => {
+  const save = async (service) => {
+    setLoading(true);
     if (form.validationState) {
-      // setActivities({...activitiesState, ...newActivity()});
+      await service(currentActivity);
+      await fetchActivities();
       handleCancel();
     } else {
       form.setShowError(true);
     }
-  }
+    setLoading(false);
+  };
+
+  const handleCreate = async () => {
+    save(createActivity);
+  };
+
+  const handleEdit = async () => {
+    save(editActivity);
+  };
 
   const handleCancel = () => {
     form.setShowError(false);
-    clearForm();
     closeModal();
-  }
+  };
 
   return (
     <section className={`modal ${ isActive ? "is-active" : "" }`}>
@@ -57,6 +53,7 @@ const ActivityForm = ({isActive, closeModal}) => {
             type="text"
             placeholder="Creación de informes..."
             validations={['required']}
+            // disabled={currentActivity.id}
           />
 
           <Select
@@ -64,13 +61,15 @@ const ActivityForm = ({isActive, closeModal}) => {
             label="Tipo Actividad"
             options={ACTIVITIES_TYPES}
             validations={['required']}
+            // disabled={currentActivity.id}
           />
 
           <Input
             name="inicio"
             label="Fecha de Inicio"  
             type="date"
-            validations={['required', 'dateFromNow']}
+            validations={['required']}
+            // disabled={currentActivity.id}
           />
 
           <Input
@@ -80,21 +79,23 @@ const ActivityForm = ({isActive, closeModal}) => {
             validations={['required']}
             customValidations={[
               (value) => {
-                if (formState.inicio !== '' && diffDates(formState.inicio, value) > 0) {
+                if (currentActivity.inicio !== '' && diffDates(currentActivity.inicio, value) > 0) {
                   return null;
                 }
                 return 'La fecha debe ser posterior o igual al día de inicio'
               }
             ]}
+            // disabled={currentActivity.id}
           />
 
           <Checkbox
             name="atraso"
             text="¿Acepta atrasos?"
+            // disabled={currentActivity.id}
           />
 
           {
-            formState.atraso &&
+            currentActivity.atraso &&
             <Input
               name="cierre"
               label="Fecha de Cierre"  
@@ -103,12 +104,13 @@ const ActivityForm = ({isActive, closeModal}) => {
               validations={['required']}
               customValidations={[
                 (value) => {
-                  if (formState.termino && diffDates(formState.termino, value) > 0) {
+                  if (currentActivity.termino && diffDates(currentActivity.termino, value) > 0) {
                     return null;
                   }
                   return 'La fecha debe ser posterior o igual al día de termino'
                 }
               ]}
+              // disabled={currentActivity.id}
             />
           }
           
@@ -117,15 +119,23 @@ const ActivityForm = ({isActive, closeModal}) => {
             label="Descripción Actividad"
             placeholder="Los alumnos tendrán que crear sus historias de usuario para..."
             validations={['required', 'min-8']}
+            // disabled={currentActivity.id}
           />
         </Form>
-
+        
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={handleCreate}>
-            Crear
-          </button>
+          {
+            currentActivity.id ? 
+              <button className={`button is-info ${loading && 'is-loading'}`} onClick={handleEdit} disabled={loading}>
+                Editar
+              </button>
+            :
+              <button className={`button is-success ${loading && 'is-loading'}`} onClick={handleCreate} disabled={loading}>
+                Crear
+              </button>
+          }
 
-          <button className="button is-danger" onClick={handleCancel}>
+          <button className={`button is-danger ${loading && 'is-loading'}`} onClick={handleCancel} disabled={loading}>
             Cancelar
           </button>
         </footer>

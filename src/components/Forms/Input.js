@@ -8,6 +8,7 @@ const Input = ({
   placeholder = '', 
   validations = [],
   customValidations = [],
+  disabled = false,
   state,
   setState,
   showErrorState = false,
@@ -51,6 +52,7 @@ const Input = ({
           type={type} 
           placeholder={placeholder}
           onChange={handleChange}
+          disabled={disabled}
           onKeyDown={
             onKeyDown 
             ? (e) => {

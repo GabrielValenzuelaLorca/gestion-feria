@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Checkbox = ({text, name, state, setState}) => {
+const Checkbox = ({text, name, state, setState, disabled = false}) => {
 
   const setCheck = (e) => {
     const check = e.target.checked;
@@ -19,6 +19,7 @@ const Checkbox = ({text, name, state, setState}) => {
             name={name}
             checked={state[name]}
             onChange={setCheck}
+            disabled={disabled}
           />  
           <span className="ml-1">{text}</span>
         </label>
