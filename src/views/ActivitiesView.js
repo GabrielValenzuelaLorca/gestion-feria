@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
-import Activity from '../components/Activities/Activity';
+import Activity from '../components/Activities/ActivityCard';
 import ActivityForm from '../components/Activities/ActivityForm';
 import useFetch from '../hooks/useFetch';
 import { getActivities } from '../services/activity';

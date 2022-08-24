@@ -1,7 +1,7 @@
 import React from 'react';
 import { diffDates, setModalState } from '../../utils/functions';
 
-const Activity = ({activity, setModal, setCurrentActivity}) => {
+const ActivityCard = ({activity, setModal, setCurrentActivity}) => {
   return (
     <div className="card block">
       <div className="card-header">
@@ -33,4 +33,4 @@ const Activity = ({activity, setModal, setCurrentActivity}) => {
   )
 }
 
-export default Activity;
+export default ActivityCard;
