@@ -38,7 +38,7 @@ const Navbar = () => {
           <Link className="navbar-item" to="/historias">
             <span className="icon-text">
               <span className="icon">
-                <i className="fas fa-border-all"></i>
+                <i className="fas fa-table-columns"></i>
               </span>
               <span>Historias de Usuario</span>
             </span>
@@ -47,7 +47,7 @@ const Navbar = () => {
           <Link className="navbar-item" to="/dashboard">
             <span className="icon-text">
               <span className="icon">
-                <i className="fas fa-chart-line"></i>
+                <i className="fas fa-chalkboard-user"></i>
               </span>
               <span>Dashboard</span>
             </span>
@@ -56,9 +56,18 @@ const Navbar = () => {
           <Link className="navbar-item" to="/rubricas">
             <span className="icon-text">
               <span className="icon">
-                <i className="fas fa-clipboard-list"></i>
+                <i className="fas fa-table-list"></i>
               </span>
               <span>Rúbricas</span>
+            </span>
+          </Link>
+
+          <Link className="navbar-item" to="/usuarios">
+            <span className="icon-text">
+              <span className="icon">
+                <i className="fa-solid fa-users-gear"></i>
+              </span>
+              <span>Usuarios</span>
             </span>
           </Link>
         </div>

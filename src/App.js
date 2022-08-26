@@ -10,6 +10,7 @@ import TeamView from './views/TeamView';
 import DashboardView from './views/DashboardView';
 import DeliverablesView from './views/DeliverablesView';
 import RubricView from './views/RubricView';
+import UserListView from './views/UserListView';
 
 function App() {
   const userState = useSelector(state => state.user);
@@ -17,20 +18,19 @@ function App() {
     <Router>
       {
         userState ?
-          <div>
-            <Routes>
-              <Route path="/" element={<Navigate to="actividades"/>}>
-                <Route path="*" element={<Navigate to="actividades"/>}/>
-              </Route>
-              <Route path="historias" element={<NavbarLayout component={<StoriesView/>}/>}/>
-              <Route path="actividades" element={<NavbarLayout component={<ActivitiesView/>}/>}/>
-              <Route path="usuario" element={<NavbarLayout component={<UserView/>}/>}/>
-              <Route path="equipo" element={<NavbarLayout component={<TeamView/>}/>}/>
-              <Route path="dashboard" element={<NavbarLayout component={<DashboardView/>}/>}/>
-              <Route path="entregables" element={<NavbarLayout component={<DeliverablesView/>}/>}/>
-              <Route path="rubricas" element={<NavbarLayout component={<RubricView/>}/>}/>
-            </Routes>
-          </div> 
+          <Routes>
+            <Route path="/" element={<Navigate to="actividades"/>}>
+              <Route path="*" element={<Navigate to="actividades"/>}/>
+            </Route>
+            <Route path="historias" element={<NavbarLayout component={<StoriesView/>}/>}/>
+            <Route path="actividades" element={<NavbarLayout component={<ActivitiesView/>}/>}/>
+            <Route path="usuario" element={<NavbarLayout component={<UserView/>}/>}/>
+            <Route path="equipo" element={<NavbarLayout component={<TeamView/>}/>}/>
+            <Route path="dashboard" element={<NavbarLayout component={<DashboardView/>}/>}/>
+            <Route path="entregables" element={<NavbarLayout component={<DeliverablesView/>}/>}/>
+            <Route path="rubricas" element={<NavbarLayout component={<RubricView/>}/>}/>
+            <Route path="usuarios" element={<NavbarLayout component={<UserListView/>}/>}/>
+          </Routes>
       :
         <Routes>
           <Route path="/" element={<Navigate to='login'/>}>
