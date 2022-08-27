@@ -1,4 +1,4 @@
-import { handleResponse } from "./helper";
+import { authHeader, handleResponse } from "./helper";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -23,5 +23,17 @@ export const login = async (credentials) => {
     body: JSON.stringify(credentials)
   };
   const url = new URL(`${API_URL}/user/login`);
+  return handleResponse(await fetch(url, requestOptions));
+}
+
+export const getUsers = async () => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/user/all`);
   return handleResponse(await fetch(url, requestOptions));
 }

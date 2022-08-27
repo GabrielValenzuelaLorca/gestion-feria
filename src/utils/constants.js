@@ -18,3 +18,11 @@ export const RESPONSABLES_SAMPLE = [
   "Luis Hevia", 
   "Liubov Dombrovskaia"
 ];
+
+export const ROLES = [
+  'Administrador',
+  'Profesor',
+  'Ayudante',
+  'Juez',
+  'Alumno',
+]
