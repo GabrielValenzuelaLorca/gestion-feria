@@ -50,7 +50,7 @@ const VALIDATION_PROPERTIES = {
     message: (param) => `El texto debe tener como mínimo ${param} carácteres`
   },
   required: {
-    condition: (value) => value !== '' && value !== null,
+    condition: (value) => value !== null && typeof value === 'string' ? value !== '' : value.length > 0,
     message: () => 'Este campo es obligatorio'
   }
 }

@@ -6,6 +6,7 @@ const Select = ({
   label, 
   options, 
   placeholder="Seleccione una opción",
+  multiple=false,
   validations = [],
   customValidations = [],
   disabled = false,
@@ -20,10 +21,10 @@ const Select = ({
   const handleChange = (e) => {
     const value = e.target.value;
 
-    setState({
+    setState(state => ({
       ...state,
-      [name]: value
-    });
+      [name]: multiple ? [...state[name], value] : value
+    }));
   }
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const Select = ({
         <div className={`select ${showErrorState && localErrorState ? "is-danger" : ""}`}>
           <select 
             name={name} 
-            value = {state[name]}
+            value = {!multiple && state[name]}
             onChange={handleChange}
             disabled={disabled}
           >

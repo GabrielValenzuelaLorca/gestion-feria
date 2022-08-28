@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import StoriesView from './views/StoriesView';
 import ActivitiesView from './views/ActivitiesView';
 import LoginView from './views/LoginView';
-import UserView from './views/UserView';
+import ProfileView from './views/ProfileView';
 import NavbarLayout from './components/NavbarLayout';
-import TeamView from './views/TeamView';
 import DashboardView from './views/DashboardView';
 import DeliverablesView from './views/DeliverablesView';
 import RubricView from './views/RubricView';
@@ -24,8 +23,7 @@ function App() {
             </Route>
             <Route path="historias" element={<NavbarLayout component={<StoriesView/>}/>}/>
             <Route path="actividades" element={<NavbarLayout component={<ActivitiesView/>}/>}/>
-            <Route path="usuario" element={<NavbarLayout component={<UserView/>}/>}/>
-            <Route path="equipo" element={<NavbarLayout component={<TeamView/>}/>}/>
+            <Route path="usuario" element={<NavbarLayout component={<ProfileView/>}/>}/>
             <Route path="dashboard" element={<NavbarLayout component={<DashboardView/>}/>}/>
             <Route path="entregables" element={<NavbarLayout component={<DeliverablesView/>}/>}/>
             <Route path="rubricas" element={<NavbarLayout component={<RubricView/>}/>}/>
