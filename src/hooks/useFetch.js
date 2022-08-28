@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-const useFetch = (service, callback, redirect = false, errorMessage = null) => {
+const useFetch = (service, callback = null, redirect = false, errorMessage = null) => {
   const [isLoading, setLoading] = useState(false);
   const [messageState, setMessage] = useState(null)
 
@@ -8,7 +8,9 @@ const useFetch = (service, callback, redirect = false, errorMessage = null) => {
     setLoading(true)
     try {
       const response = await service(params);
-      await callback(response.data);
+      if (callback) {
+        await callback(response.data);
+      }
       if (!redirect) {
         setLoading(false);    
       }

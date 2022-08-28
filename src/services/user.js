@@ -24,7 +24,7 @@ export const login = async (credentials) => {
   };
   const url = new URL(`${API_URL}/user/login`);
   return handleResponse(await fetch(url, requestOptions));
-}
+};
 
 export const getUsers = async () => {
   const requestOptions = {
@@ -36,4 +36,17 @@ export const getUsers = async () => {
   };
   const url = new URL(`${API_URL}/user/all`);
   return handleResponse(await fetch(url, requestOptions));
-}
+};
+
+export const updateUser = async (params) => {
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader(),
+    },
+    body: JSON.stringify(params.body),
+  };
+  const url = new URL(`${API_URL}/user/update`);
+  return handleResponse(await fetch(url, requestOptions));
+};
