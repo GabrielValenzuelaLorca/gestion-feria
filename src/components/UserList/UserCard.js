@@ -25,7 +25,7 @@ const UserCard = ({user, index}) => {
 
   return (
     <article className={`box ${index % 2 ? 'has-background-primary' : ''}`}>
-      <div className='columns' key={user.id}>
+      <div className='columns is-vcentered' key={user.id}>
         <div className={rowStyle(index)}>Foto</div>
         <div className={rowStyle(index)}>{user.name}</div>
         <div className={rowStyle(index)}>{user.email}</div>
