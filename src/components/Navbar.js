@@ -25,59 +25,66 @@ const Navbar = () => {
               alt="Logo"
             />
           </a>
-          
-          <Link className="navbar-item" to="/actividades">
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fas fa-list-ul"></i>
-              </span>
-              <span>Actividades</span>
-            </span>
-          </Link>
-
-          <Link className="navbar-item" to="/historias">
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fas fa-table-columns"></i>
-              </span>
-              <span>Historias de Usuario</span>
-            </span>
-          </Link>
-          
-          <Link className="navbar-item" to="/dashboard">
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fas fa-chalkboard-user"></i>
-              </span>
-              <span>Dashboard</span>
-            </span>
-          </Link>
-
-          <Link className="navbar-item" to="/rubricas">
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fas fa-table-list"></i>
-              </span>
-              <span>Rúbricas</span>
-            </span>
-          </Link>
-
-          {
-            ['Administrador', 'Profesor'].includes(user.rol) &&
-              <Link className="navbar-item" to="/usuarios">
-                <span className="icon-text">
-                  <span className="icon">
-                    <i className="fa-solid fa-users-gear"></i>
-                  </span>
-                  <span>Usuarios</span>
-                </span>
-              </Link>
-          }
         </div>
 
         <div className="navbar-menu">
           <div className="navbar-start">
-            {/* Aquí iría algo */}
+            <Link className="navbar-item" to="/actividades">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fas fa-list-ul"></i>
+                </span>
+                <span>Actividades</span>
+              </span>
+            </Link>
+
+            <Link className="navbar-item" to="/historias">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fas fa-table-columns"></i>
+                </span>
+                <span>Historias de Usuario</span>
+              </span>
+            </Link>
+            
+            <Link className="navbar-item" to="/dashboard">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fas fa-chalkboard-user"></i>
+                </span>
+                <span>Dashboard</span>
+              </span>
+            </Link>
+
+            <Link className="navbar-item" to="/rubricas">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fas fa-table-list"></i>
+                </span>
+                <span>Rúbricas</span>
+              </span>
+            </Link>
+
+            <Link className="navbar-item" to="/entregables">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fas fa-box"></i>
+                </span>
+                <span>Entregables</span>
+              </span>
+            </Link>
+
+            {
+              ['Administrador', 'Profesor'].includes(user.rol) &&
+                <Link className="navbar-item" to="/usuarios">
+                  <span className="icon-text">
+                    <span className="icon">
+                      <i className="fa-solid fa-users-gear"></i>
+                    </span>
+                    <span>Usuarios</span>
+                  </span>
+                </Link>
+            }
           </div>
 
           <div className="navbar-end">
@@ -93,24 +100,6 @@ const Navbar = () => {
                       <i className="fas fa-user"></i>
                     </span>
                     <span>Perfil</span>
-                  </span>
-                </Link>
-
-                <Link className="navbar-item" to="/equipo">
-                  <span className="icon-text">
-                    <span className="icon">
-                      <i className="fas fa-users"></i>
-                    </span>
-                    <span>Equipo</span>
-                  </span>
-                </Link>
-
-                <Link className="navbar-item" to="/entregables">
-                  <span className="icon-text">
-                    <span className="icon">
-                      <i className="fas fa-box"></i>
-                    </span>
-                    <span>Entregables</span>
                   </span>
                 </Link>
 
