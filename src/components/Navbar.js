@@ -62,14 +62,17 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <Link className="navbar-item" to="/usuarios">
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fa-solid fa-users-gear"></i>
-              </span>
-              <span>Usuarios</span>
-            </span>
-          </Link>
+          {
+            ['Administrador', 'Profesor'].includes(user.rol) &&
+              <Link className="navbar-item" to="/usuarios">
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-users-gear"></i>
+                  </span>
+                  <span>Usuarios</span>
+                </span>
+              </Link>
+          }
         </div>
 
         <div className="navbar-menu">

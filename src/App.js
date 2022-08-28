@@ -29,7 +29,10 @@ function App() {
             <Route path="dashboard" element={<NavbarLayout component={<DashboardView/>}/>}/>
             <Route path="entregables" element={<NavbarLayout component={<DeliverablesView/>}/>}/>
             <Route path="rubricas" element={<NavbarLayout component={<RubricView/>}/>}/>
-            <Route path="usuarios" element={<NavbarLayout component={<UserListView/>}/>}/>
+            {
+              ['Administrador', 'Profesor'].includes(userState.rol) &&
+                <Route path="usuarios" element={<NavbarLayout component={<UserListView/>}/>}/>
+            }
           </Routes>
       :
         <Routes>
