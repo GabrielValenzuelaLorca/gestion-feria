@@ -1,0 +1,16 @@
+import { authHeader, handleResponse } from "./helper";
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+export const createTeam = async (team) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader(),
+    },
+    body: JSON.stringify(team)
+  };
+  const url = new URL(`${API_URL}/team/create`);
+  return handleResponse(await fetch(url, requestOptions));
+};

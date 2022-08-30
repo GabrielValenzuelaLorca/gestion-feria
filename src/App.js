@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       {
-        userState ?
+        userState.id ?
           <Routes>
             <Route path="/" element={<Navigate to="actividades"/>}>
               <Route path="*" element={<Navigate to="actividades"/>}/>

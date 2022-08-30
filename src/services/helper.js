@@ -1,3 +1,5 @@
+import store from "../store";
+
 export const handleResponse = async (response) => {
   const text = await response.text();
   let data = {};
@@ -17,10 +19,10 @@ export const handleResponse = async (response) => {
 };
 
 export const authHeader = () => {
-  const token = JSON.parse(window.sessionStorage.getItem('user'));
+  const token = store.getState().user.auth_token;
   if (token) {
     return {
-      Authorization: `Bearer ${token.auth_token}`
+      Authorization: `Bearer ${token}`
     }
   }
 

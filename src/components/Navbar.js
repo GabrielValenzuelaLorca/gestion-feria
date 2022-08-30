@@ -8,7 +8,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const logout = () => {
-    window.sessionStorage.removeItem('user');
     dispatch(removeUser());
   }
   

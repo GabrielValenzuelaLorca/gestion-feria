@@ -17,7 +17,6 @@ const LoginForm = ({ setModalState }) => {
   const dispatch = useDispatch();
 
   const loginCallback = (user) => {
-    window.sessionStorage.setItem('user', JSON.stringify(user));
     dispatch(addUser(user));
   }
 

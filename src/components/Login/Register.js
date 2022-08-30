@@ -20,7 +20,6 @@ const Register = ({modalState, closeModal}) => {
   const form = useForm(formState, setForm);
 
   const createCallback = async (user) => {
-    window.sessionStorage.setItem('user', JSON.stringify(user));
     setMessage(true);
     await delay(3000);
     closeModal();

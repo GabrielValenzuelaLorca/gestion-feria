@@ -23,7 +23,8 @@ const Select = ({
 
     setState(state => ({
       ...state,
-      [name]: multiple ? [...state[name], value] : value
+      [name]: !multiple ? value : 
+        !state[name].includes(value) ? [...state[name], value] : state[name]
     }));
   }
 
@@ -54,7 +55,9 @@ const Select = ({
           >
             <option value="" hidden>{placeholder}</option>
             {options && options.map((option, i) => {
-              return <option key={i} value={i}>{option}</option>
+              const value = typeof option === 'string' ? option : option.value;
+              const text = typeof option === 'string' ? option : option.text;
+              return <option key={i} value={value}>{text}</option>
             })}
           </select>
         </div>

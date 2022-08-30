@@ -26,7 +26,7 @@ export const login = async (credentials) => {
   return handleResponse(await fetch(url, requestOptions));
 };
 
-export const getUsers = async () => {
+export const getUsers = async (params = {}) => {
   const requestOptions = {
     method: 'GET',
     headers: {
@@ -35,6 +35,7 @@ export const getUsers = async () => {
     },
   };
   const url = new URL(`${API_URL}/user/all`);
+  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
   return handleResponse(await fetch(url, requestOptions));
 };
 

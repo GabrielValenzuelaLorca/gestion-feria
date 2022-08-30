@@ -1,11 +1,9 @@
 import { ADD_USER, REMOVE_USER } from "../actions/action-types";
 
-const defaultState = JSON.parse(window.sessionStorage.getItem('user'));
-
-const userReducer = (state = defaultState, {type, payload}) => {
+const userReducer = (state = {}, {type, payload}) => {
   switch (type){
     case REMOVE_USER:
-      return null;
+      return {};
 
     case ADD_USER:
       return payload;
