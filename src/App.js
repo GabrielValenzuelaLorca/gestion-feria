@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import StoriesView from './views/StoriesView';
@@ -13,6 +13,17 @@ import UserListView from './views/UserListView';
 
 function App() {
   const userState = useSelector(state => state.user);
+
+  useEffect(() => {
+    window.onbeforeunload = () => {
+      sessionStorage.setItem('user', JSON.stringify(userState));
+    };
+
+    return () => {
+      window.onbeforeunload = null;
+    }
+  }, [userState])
+
   return (
     <Router>
       {
