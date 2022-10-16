@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import ProjectCard from "../components/Profile/ProjectCard";
 import TeamCard from "../components/Profile/TeamCard";
 import UserCard from "../components/Profile/UserCard";
 
@@ -10,14 +11,24 @@ const ProfileView = () => {
       <section className='section'>
         <UserCard user={user}/>
       </section>
-      <section className='section'>
-        {
-          user.rol === "Alumno" &&
-            <TeamCard 
-              user={user}
-            />
-        }
-      </section>
+      {
+        user.rol === "Alumno" &&
+          <>
+            <section className='section'>
+              <TeamCard
+                user={user}
+              />
+            </section>
+            {
+              user.project.id &&
+                <section className='section'>
+                  <ProjectCard
+                    user={user}
+                  />
+                </section>
+            }
+          </>
+      }
     </section>
   )
 }

@@ -5,7 +5,7 @@ const useFetch = (service, callback = null, redirect = false, errorMessage = nul
   const [messageState, setMessage] = useState(null)
 
   const doFetch = useCallback(async (params) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await service(params);
       if (callback) {

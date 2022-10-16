@@ -19,7 +19,6 @@ const TeamForm = ({isActive, closeModal, userId}) => {
   const [team, setTeam] = useState(DEFAULT_TEAM);
   const [fetchStudents, loadingStudents] = useFetch(getUsers, setStudents);
   const [fetchCreateTeam, loadingTeam] = useFetch(createTeam, user => dispatch(addUser(user)));
-   
   const form = useForm(team, setTeam);
 
   useEffect(() => {
