@@ -58,6 +58,14 @@ const TeamCard = ({ user }) => {
                     type="text"
                     disabled={true}
                   />
+
+                  <Input
+                    name="linkedin"
+                    label="Linkedin"
+                    type="text"
+                    disabled={true}
+                    icon='fa-brands fa-linkedin'
+                  />
                 </Form>
               </article>
             </div>

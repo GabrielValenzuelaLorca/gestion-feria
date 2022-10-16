@@ -9,6 +9,7 @@ const Input = ({
   validations = [],
   customValidations = [],
   disabled = false,
+  icon,
   state,
   setState,
   showErrorState = false,
@@ -44,11 +45,11 @@ const Input = ({
           <span className={"has-text-danger"}>*</span>
         } 
       </label>
-      <div className="control">
+      <div className={`control ${icon ? 'has-icons-left' : ''}`}>
         <input
           name={name}
           className={`input ${showErrorState && localErrorState ? "is-danger" : ""}`} 
-          value = {state[name]}
+          value = {state[name] || ''}
           type={type} 
           placeholder={placeholder}
           onChange={handleChange}
@@ -61,6 +62,12 @@ const Input = ({
             : undefined
           }
         />
+        {
+          icon &&
+            <span className="icon is-small is-left">
+              <i className={icon}></i>
+            </span>
+        }
       </div>
 
       {

@@ -2,7 +2,7 @@ import useForm from "../../hooks/useForm";
 import { Form, Input } from "../Forms";
 
 const ProjectCard = ({ user }) => {
-  const form = useForm(user.team, ()=>{});
+  const form = useForm(user.project, ()=>{});
 
   return (
     <section className='container'>
@@ -37,6 +37,7 @@ const ProjectCard = ({ user }) => {
                 label="Correo"
                 type="text"
                 disabled={true}
+                icon='fa-solid fa-envelope'
               />
 
               <Input
@@ -44,6 +45,7 @@ const ProjectCard = ({ user }) => {
                 label="Facebook"
                 type="text"
                 disabled={true}
+                icon='fa-brands fa-facebook'
               />
 
               <Input
@@ -51,6 +53,7 @@ const ProjectCard = ({ user }) => {
                 label="Instagram"
                 type="text"
                 disabled={true}
+                icon='fa-brands fa-instagram'
               />
 
               <Input
@@ -58,6 +61,7 @@ const ProjectCard = ({ user }) => {
                 label="Youtube"
                 type="text"
                 disabled={true}
+                icon='fa-brands fa-youtube'
               />
 
               <Input
@@ -65,6 +69,7 @@ const ProjectCard = ({ user }) => {
                 label="Página Web"
                 type="text"
                 disabled={true}
+                icon='fa-solid fa-window-restore'
               />
             </Form>
           </article>
