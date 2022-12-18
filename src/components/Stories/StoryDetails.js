@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useDispatch } from 'react-redux';
-import { updateStories } from '../../store/actions/storiesActions';
+import { updateStories } from '../../store/slices/storySlice';
 import { criticidadStyle } from '../../utils/classStyles';
 import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../../utils/constants';
 import { newStory } from '../../utils/functions';

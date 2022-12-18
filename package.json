@@ -7,6 +7,7 @@
     "@fullcalendar/daygrid": "^5.10.0",
     "@fullcalendar/interaction": "^5.10.0",
     "@fullcalendar/react": "^5.10.0",
+    "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -19,7 +20,6 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
-    "redux": "^4.1.0",
     "sass": "^1.52.1"
   },
   "scripts": {

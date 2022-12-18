@@ -1,4 +1,6 @@
-const defaultState = [
+import { createSlice } from '@reduxjs/toolkit'
+
+const initialState = [
   {
     id:1,
     titulo: "Crear tablero de historias de usuario",
@@ -71,22 +73,20 @@ const defaultState = [
   }
 ];
 
-const storiesReducer = (state = defaultState, {type, payload}) => {
-  switch (type){
-    case "UPDATE_STORIES":
-      const modified_ids = payload.map(story => story.id)
-      state.forEach(elem => {
-        if(!modified_ids.includes(elem.id))
-          payload.push(elem)
-      })
-      return [...payload]
+export const storySlice = createSlice({
+  name: 'story',
+  initialState,
+  reducers: {
+    addStory: (state, action) => {
+      state.push(action.payload);
+    },
+    updateStories: (state, action) => {
+      const modified_ids = action.payload.map(story => story.id);
+      return [...action.payload, ...state.filter(story => !modified_ids.includes(story.id))];
+    },
+  },
+})
 
-    case "ADD_STORY":
-      return [...state, payload]
-      
-    default:
-      return state
-  }
-}
+export const { addStory, updateStories } = storySlice.actions;
 
-export default storiesReducer;
+export default storySlice.reducer

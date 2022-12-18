@@ -4,7 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import useForm from '../../hooks/useForm';
 import { createTeam } from '../../services/team';
 import { getUsers } from '../../services/user';
-import { addUser } from '../../store/actions/userActions';
+import { addUser } from '../../store/slices/userSlice';
 import { Form, Input, Select, } from '../Forms';
 
 const TeamForm = ({isActive, closeModal, userId}) => {

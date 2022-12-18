@@ -4,9 +4,9 @@ import { Input, Form } from '../Forms';
 import { createUser } from '../../services/user';
 import { SHA3 } from 'crypto-js';
 import { useDispatch } from 'react-redux';
-import { addUser } from '../../store/actions/userActions';
 import useForm from '../../hooks/useForm';
 import useFetch from '../../hooks/useFetch';
+import { addUser } from '../../store/slices/userSlice';
 
 const Register = ({modalState, closeModal}) => {
   const [formState, setForm] = useState({

@@ -1,8 +1,8 @@
 import useForm from "../../hooks/useForm";
-import { Form, Input } from "../Forms";
+import { Form, Input, Textarea } from "../Forms";
 
 const ProjectCard = ({ user }) => {
-  const form = useForm(user.project, ()=>{});
+  const form = useForm(user.team.project, ()=>{});
 
   return (
     <section className='container'>
@@ -29,6 +29,12 @@ const ProjectCard = ({ user }) => {
                 name="name"
                 label="Nombre"
                 type="text"
+                disabled={true}
+              />
+
+              <Textarea
+                name="description"
+                label="Descripción"
                 disabled={true}
               />
 

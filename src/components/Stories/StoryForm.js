@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addStory } from '../../store/actions/storiesActions';
+import { addStory } from '../../store/slices/storySlice';
 import { newStory } from '../../utils/functions'
 
 const StoryForm = ({isActive, handleClose}) => {  

@@ -1,7 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { removeUser } from "../store/actions/userActions";
+import { removeUser } from "../store/slices/userSlice";
+
 
 const Navbar = () => {
   const user = useSelector(state => state.user)

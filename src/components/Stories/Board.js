@@ -1,8 +1,8 @@
 import React from "react";
 import { DragDropContext} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
+import { updateStories } from "../../store/slices/storySlice";
 import StateDroppable from "./StateDroppable";
-import { updateStories } from "../../store/actions/storiesActions";
 
 const Board = ({columns}) => {
   const dispatch = useDispatch();

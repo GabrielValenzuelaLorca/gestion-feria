@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { login } from '../../services/user';
 import { Form, Input } from '../Forms';
-import { addUser } from '../../store/actions/userActions';
 import useFetch from '../../hooks/useFetch';
 import useForm from '../../hooks/useForm';
+import { addUser } from '../../store/slices/userSlice';
 
 const LoginForm = ({ setModalState }) => {
   const [formState, setForm] = useState({

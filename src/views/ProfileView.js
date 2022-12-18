@@ -20,7 +20,7 @@ const ProfileView = () => {
               />
             </section>
             {
-              user.project.id &&
+              user.team.project &&
                 <section className='section'>
                   <ProjectCard
                     user={user}
