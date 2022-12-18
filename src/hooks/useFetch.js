@@ -18,6 +18,7 @@ const useFetch = (service, callback = null, redirect = false, errorMessage = nul
       console.log("Error", e)
       setMessage(errorMessage);
       setLoading(false);
+      throw e;
     }
   }, [callback, errorMessage, redirect, service])
 
