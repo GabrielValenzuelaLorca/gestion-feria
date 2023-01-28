@@ -13,10 +13,8 @@ const UserCard = ({user, index}) => {
   const handleRolChange = async (e) => {
     try {
       update({
-        body: {
-          ...user,
-          rol: e.target.value
-        }
+        ...user,
+        rol: e.target.value
       });
     } catch (error) {
       console.log('Error', error);
