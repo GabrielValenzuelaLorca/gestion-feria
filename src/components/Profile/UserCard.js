@@ -15,24 +15,27 @@ const UserCard = ({ user }) => {
 
   const handleUpdate = async () => {
     try {
-      const newUserInfo = {
-        ...user,
-        name: userState.name,
-        email: userState.email,
-      };
-
-      await update({
-        body: newUserInfo,
-      });
-
-      dispatch(addUser(newUserInfo));
-      setEdit(false);
+      if (form.validationState) {
+        const newUserInfo = {
+          ...user,
+          name: userState.name,
+          email: userState.email,
+        };
+  
+        await update( newUserInfo );
+  
+        dispatch( addUser( newUserInfo ) );
+        setEdit(false);
+      } else {
+        form.setShowError(true);
+      }
     } catch (error) {
       console.log('Error', error);
     }
   };
 
   const handleCancel = () => {
+    form.setShowError(false);
     setEdit(false);
     setUser(user);
   }
@@ -62,6 +65,8 @@ const UserCard = ({ user }) => {
                 name="name"
                 label="Nombre"
                 type="text"
+                placeholder="Ingrese su nombre"
+                validations={['required']}
                 disabled={!editState}
               />
 
@@ -69,6 +74,11 @@ const UserCard = ({ user }) => {
                 name="email"
                 label="Email"
                 type="text"
+                placeholder="Ingrese su correo"
+                validations={[
+                  'required',
+                  'email'
+                ]}
                 disabled={!editState}
               />
 

@@ -46,7 +46,7 @@ export const updateUser = async (params) => {
       'Content-Type': 'application/json',
       ...authHeader(),
     },
-    body: JSON.stringify(params.body),
+    body: JSON.stringify(params),
   };
   const url = new URL(`${API_URL}/user/update`);
   return handleResponse(await fetch(url, requestOptions));
