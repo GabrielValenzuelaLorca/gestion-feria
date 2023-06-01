@@ -47,7 +47,7 @@ export const updateUser = async (params) => {
       ...authHeader(),
     },
     body: JSON.stringify(params),
-  };
+  }
   const url = new URL(`${API_URL}/user/update`);
   return handleResponse(await fetch(url, requestOptions));
 };

@@ -54,11 +54,15 @@ const Select = ({
             disabled={disabled}
           >
             <option value="" hidden>{placeholder}</option>
-            {options && options.map((option, i) => {
-              const value = typeof option === 'string' ? option : option.value;
-              const text = typeof option === 'string' ? option : option.text;
-              return <option key={i} value={value}>{text}</option>
-            })}
+            {
+              options && options.length 
+              ? options.map((option, i) => {
+                  const value = typeof option === 'string' ? option : option.value;
+                  const text = typeof option === 'string' ? option : option.text;
+                  return <option key={i} value={value}>{text}</option>
+                })
+              : <option value="" disabled>Sin opciones</option>
+            }
           </select>
         </div>
       </div>

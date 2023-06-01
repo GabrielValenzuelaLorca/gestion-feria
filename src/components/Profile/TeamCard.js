@@ -1,12 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import useFetch from "../../hooks/useFetch";
 import useForm from "../../hooks/useForm";
+import { updateTeam } from "../../services/team";
+import { addUser } from "../../store/slices/userSlice";
 import { setModalState } from "../../utils/functions";
 import { Form, Input } from "../Forms";
+import Members from "./Members";
 import TeamForm from "./TeamForm";
 
 const TeamCard = ({ user }) => {
   const [teamModal, setTeamModal] = useState(false);
-  const form = useForm(user.team, ()=>{});
+  const [teamState, setTeamState] = useState(user.team);
+  const [editState, setEdit] = useState(false);
+  const dispatch = useDispatch();
+  const form = useForm(teamState, setTeamState);
+  const [update, loading] = useFetch(updateTeam);
+
+  useEffect(() => {
+    setTeamState(user.team);
+  }, [user.team]);
+
+  const handleUpdate = async () => {
+    try {
+      if (form.validationState) {
+        await update( teamState );
+  
+        // dispatch( addUser({
+        //   ...user,
+        //   team: teamState, 
+        // }) );
+        setEdit(false);
+      } else {
+        form.setShowError(true);
+      }
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+
+  const handleCancel = () => {
+    form.setShowError(false);
+    setEdit(false);
+    setTeamState(user.team);
+  };
 
   return (
     <section className='container'>
@@ -15,7 +52,10 @@ const TeamCard = ({ user }) => {
           <>
             <div className="has-text-right">
               <button className="button is-success is-large" onClick={() => {setModalState(true, setTeamModal)}}>
-                Crear Equipo
+                <span className="icon">
+                  <i className="fas fa-plus"></i>
+                </span>
+                <span>Crear Equipo</span>
               </button>
             </div>
 
@@ -38,7 +78,7 @@ const TeamCard = ({ user }) => {
                   <h1 className="title is-4 level-item">Equipo</h1>
                 </div>
                 <div className="level-right">
-                  <button className="button is-link">
+                  <button className="button is-link" onClick={() => {setEdit(true)}} disabled={editState}>
                     Editar Equipo
                   </button>
                 </div>
@@ -49,23 +89,48 @@ const TeamCard = ({ user }) => {
                     name="name"
                     label="Nombre"
                     type="text"
-                    disabled={true}
+                    placeholder="Ingrese nombre del equipo"
+                    validations={['required']}
+                    disabled={!editState}
                   />
 
                   <Input
                     name="phrase"
                     label="Frase"
                     type="text"
-                    disabled={true}
+                    placeholder="Ingrese frase del equipo"
+                    disabled={!editState}
                   />
 
                   <Input
                     name="linkedin"
                     label="Linkedin"
                     type="text"
-                    disabled={true}
+                    placeholder="Ingrese linkedin del equipo"
+                    disabled={!editState}
                     icon='fa-brands fa-linkedin'
                   />
+
+                  <Members
+                    team={teamState}
+                    userId={user.id}
+                    setTeam={setTeamState}
+                    editable={editState}
+                  />
+
+                  <footer className={`field is-grouped ${ !editState ? 'is-hidden' : ''}`}>
+                    <div className='control'>  
+                      <button type='button' className={`button is-link ${loading && 'is-loading'}`} onClick={handleUpdate} disabled={loading}>
+                        Actualizar
+                      </button>
+                    </div>
+
+                    <div className='control'>
+                      <button type='button' className={`button is-danger ${loading && 'is-loading'}`} onClick={handleCancel} disabled={loading}>
+                        Cancelar
+                      </button>
+                    </div>
+                  </footer>
                 </Form>
               </article>
             </div>

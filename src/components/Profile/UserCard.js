@@ -6,38 +6,36 @@ import { updateUser } from "../../services/user";
 import { addUser } from "../../store/slices/userSlice";
 import { Form, Input } from "../Forms";
 
-const UserCard = ({ user }) => {
-  const [userState, setUser] = useState(user);
+const UserCard = ({ user: {auth_token, team, ...userData} }) => {
+  const [userState, setUserState] = useState(userData);
   const [editState, setEdit] = useState(false);
   const dispatch = useDispatch();
-  const form = useForm(userState, setUser);
+  const form = useForm(userState, setUserState);
   const [update, loading] = useFetch(updateUser);
 
   const handleUpdate = async () => {
     try {
       if (form.validationState) {
-        const newUserInfo = {
-          ...user,
-          name: userState.name,
-          email: userState.email,
-        };
+        await update( userState );
   
-        await update( newUserInfo );
-  
-        dispatch( addUser( newUserInfo ) );
+        dispatch( addUser({
+          ...userState,
+          auth_token,
+          team,
+        }) );
         setEdit(false);
       } else {
         form.setShowError(true);
       }
     } catch (error) {
-      console.log('Error', error);
+      console.error('Error', error);
     }
   };
 
   const handleCancel = () => {
     form.setShowError(false);
     setEdit(false);
-    setUser(user);
+    setUserState(userData);
   }
 
   return (

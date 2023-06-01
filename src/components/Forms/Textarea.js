@@ -47,7 +47,7 @@ const Textarea = ({
           name={name}
           className={`textarea ${showErrorState && localErrorState ? "is-danger" : ""}`} 
           placeholder={placeholder}
-          value={state[name]}
+          value={state[name] || ''}
           onChange={handleChange}
           disabled={disabled}
         />

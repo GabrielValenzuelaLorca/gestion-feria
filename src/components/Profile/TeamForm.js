@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useFetch from '../../hooks/useFetch';
 import useForm from '../../hooks/useForm';
 import { createTeam } from '../../services/team';
-import { getUsers } from '../../services/user';
 import { addUser } from '../../store/slices/userSlice';
-import { Form, Input, Select, } from '../Forms';
+import { Form, Input } from '../Forms';
+import Members from './Members';
 
 const TeamForm = ({isActive, closeModal, userId}) => {
   const DEFAULT_TEAM = {
@@ -15,15 +15,9 @@ const TeamForm = ({isActive, closeModal, userId}) => {
   };
 
   const dispatch = useDispatch();
-  const [students, setStudents] = useState([]);
   const [team, setTeam] = useState(DEFAULT_TEAM);
-  const [fetchStudents, loadingStudents] = useFetch(getUsers, setStudents);
   const [fetchCreateTeam, loadingTeam] = useFetch(createTeam, user => dispatch(addUser(user)));
   const form = useForm(team, setTeam);
-
-  useEffect(() => {
-    fetchStudents({"rol": "Alumno"});
-  }, [fetchStudents])
 
   const handleCreate = async () => {
     if (form.validationState) {
@@ -67,40 +61,12 @@ const TeamForm = ({isActive, closeModal, userId}) => {
             placeholder="Ingrese frase"
           />
 
-          <Select
-            name="members"
-            label="Miembros"
-            placeholder='Seleccione a los miembros/as de su equipo'
-            options={students
-              .filter(student => !student.team.id && !team.members.includes(student.id))
-              .map(student => ({text: student.name, value: student.id}))
-            }
-            validations={['required']}
-            multiple={true}
-            disabled={loadingStudents}
+          <Members
+            team={team}
+            userId={userId}
+            setTeam={setTeam}
+            editable
           />
-
-          <div className="field">   
-            <label className="label">Miembros Seleccionados</label>  
-            <div className="control">
-              <div className="tags">
-                {
-                  students.length &&
-                    team.members.map((id, index) =>
-                      <span className="tag is-primary is-medium" key={index}>
-                        {students.find(student => student.id === id).name}
-                        {
-                          id !== userId &&
-                            <button className="delete is-small" type='button' onClick={() =>
-                              setTeam(team => ({...team, members: team.members.filter(member => member !== id)}))
-                            }/>
-                        }
-                      </span>
-                    )
-                }
-              </div>
-            </div>
-          </div>
         </Form>
         
         <footer className="modal-card-foot">

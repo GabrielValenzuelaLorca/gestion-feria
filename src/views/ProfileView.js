@@ -9,7 +9,9 @@ const ProfileView = () => {
   return (
     <section>
       <section className='section'>
-        <UserCard user={user}/>
+        <UserCard
+          user={user}
+        />
       </section>
       {
         user.rol === "Alumno" &&
