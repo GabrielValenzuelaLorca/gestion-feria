@@ -8,8 +8,15 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    addUser: (state, action) => ({...state, ...action.payload}),
-    removeUser: _ => ({}),
+    addUser: (state, action) => {
+      const newState = {...state, ...action.payload};
+      sessionStorage.setItem('user', JSON.stringify(newState));
+      return newState;
+    },
+    removeUser: _ => {
+      sessionStorage.removeItem('user');
+      return {};
+    },
   },
 })
 
