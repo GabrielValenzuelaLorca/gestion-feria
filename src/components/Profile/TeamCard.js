@@ -15,7 +15,7 @@ const TeamCard = ({ user }) => {
   const [editState, setEdit] = useState(false);
   const dispatch = useDispatch();
   const form = useForm(teamState, setTeamState);
-  const [update, loading] = useFetch(updateTeam);
+  const [update, loading] = useFetch(updateTeam, (response) => {dispatch( addUser(response) )});
 
   useEffect(() => {
     setTeamState(user.team);
@@ -25,11 +25,6 @@ const TeamCard = ({ user }) => {
     try {
       if (form.validationState) {
         await update( teamState );
-  
-        // dispatch( addUser({
-        //   ...user,
-        //   team: teamState, 
-        // }) );
         setEdit(false);
       } else {
         form.setShowError(true);

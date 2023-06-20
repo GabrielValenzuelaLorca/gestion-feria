@@ -26,6 +26,4 @@ export const updateTeam = async (team) => {
   };
   const url = new URL(`${API_URL}/team/update`);
   return handleResponse(await fetch(url, requestOptions));
-
-  // TODO probar casos de usuarios que se agregan o eliminan
 };

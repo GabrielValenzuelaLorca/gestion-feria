@@ -70,7 +70,7 @@ const UserCard = ({ user: {auth_token, team, ...userData} }) => {
 
               <Input
                 name="email"
-                label="Email"
+                label="Correo"
                 type="text"
                 placeholder="Ingrese su correo"
                 validations={[
