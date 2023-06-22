@@ -1,15 +1,14 @@
 import { authHeader, handleResponse } from "./helper";
-
-const API_URL = process.env.REACT_APP_API_URL;
+import { API_URL } from "../config";
 
 export const createTeam = async (team) => {
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...authHeader(),
     },
-    body: JSON.stringify(team)
+    body: JSON.stringify(team),
   };
   const url = new URL(`${API_URL}/team/create`);
   return handleResponse(await fetch(url, requestOptions));
@@ -17,12 +16,12 @@ export const createTeam = async (team) => {
 
 export const updateTeam = async (team) => {
   const requestOptions = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...authHeader(),
     },
-    body: JSON.stringify(team)
+    body: JSON.stringify(team),
   };
   const url = new URL(`${API_URL}/team/update`);
   return handleResponse(await fetch(url, requestOptions));
