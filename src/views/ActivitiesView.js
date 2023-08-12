@@ -7,13 +7,13 @@ import { getActivities } from '../services/activity';
 import { diffDates, setModalState } from '../utils/functions';
 
 const defaultActivity = {
-  nombre: '',
-  tipo: '',
-  inicio: '',
-  termino: '',
-  atraso: false,
-  cierre: '',
-  descripcion: '',
+  name: '',
+  type: '',
+  start: '',
+  end: '',
+  delay: false,
+  close: '',
+  description: '',
 };
 
 const ActivitiesView = () => {
@@ -61,11 +61,11 @@ const ActivitiesView = () => {
           isLoading 
           ? <progress className='progress is-primary'/>
           : activitiesState
-              .filter(activity => diffDates(new Date(), activity.termino) > 0)
+              .filter(activity => diffDates(new Date(), activity.end) > 0)
               .length
             ? activitiesState
-                .filter(activity => diffDates(new Date(), activity.termino) > 0)
-                .sort((a,b) => new Date(a.termino).getTime() - new Date(b.termino).getTime())
+                .filter(activity => diffDates(new Date(), activity.end) > 0)
+                .sort((a,b) => new Date(a.end).getTime() - new Date(b.end).getTime())
                 .map(activity => 
                   <Activity
                     key={activity.id}
