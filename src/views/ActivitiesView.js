@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import ActivitiesCalendar from '../components/Activities/ActivitiesCalendar';
-import Activity from '../components/Activities/ActivityCard';
-import ActivityForm from '../components/Activities/ActivityForm';
-import useFetch from '../hooks/useFetch';
-import { getActivities } from '../services/activity';
-import { diffDates, setModalState } from '../utils/functions';
+import React, { useEffect, useState } from "react";
+import ActivitiesCalendar from "../components/Activities/ActivitiesCalendar";
+import Activity from "../components/Activities/ActivityCard";
+import ActivityForm from "../components/Activities/ActivityForm";
+import useFetch from "../hooks/useFetch";
+import { getActivities } from "../services/activity";
+import { diffDates, setModalState } from "../utils/functions";
+import { useSelector } from "react-redux";
 
 const defaultActivity = {
-  name: '',
-  type: '',
-  start: '',
-  end: '',
+  name: "",
+  type: "",
+  start: "",
+  end: "",
   delay: false,
-  close: '',
-  description: '',
+  close: "",
+  description: "",
 };
 
 const ActivitiesView = () => {
@@ -21,20 +22,21 @@ const ActivitiesView = () => {
   const [currentActivity, setCurrentActivity] = useState(defaultActivity);
   const [modalState, setModal] = useState(false);
   const [fetchActivities, isLoading] = useFetch(getActivities, setActivities);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     fetchActivities();
-  }, [fetchActivities])
-  
+  }, [fetchActivities]);
+
   return (
     <section className="section columns">
       <div className="column">
         <h1 className="title is-4">Calendario de Actividades</h1>
-          <ActivitiesCalendar 
-            activities={activitiesState}
-            setModal={setModal}
-            setCurrentActivity={setCurrentActivity}
-          /> 
+        <ActivitiesCalendar
+          activities={activitiesState}
+          setModal={setModal}
+          setCurrentActivity={setCurrentActivity}
+        />
       </div>
       <div className="column">
         <div className="level mb-3">
@@ -42,44 +44,49 @@ const ActivitiesView = () => {
             <h1 className="title is-4 level-item">Listado de Actividades</h1>
           </div>
           <div className="level-right">
-            <button 
-              className="button is-success"
-              onClick={() => {
-                setCurrentActivity(defaultActivity);
-                setModalState(true, setModal);
-              }}
-            >
-              <span className="icon is-small">
-                <i className="fas fa-plus"></i>
-              </span>
-              
-              <span>Nueva Actividad</span>
-            </button>
+            {["Administrador", "Profesor"].includes(user.rol) && (
+              <button
+                className="button is-success"
+                onClick={() => {
+                  setCurrentActivity(defaultActivity);
+                  setModalState(true, setModal);
+                }}
+              >
+                <span className="icon is-small">
+                  <i className="fas fa-plus"></i>
+                </span>
+
+                <span>Nueva Actividad</span>
+              </button>
+            )}
           </div>
         </div>
-        {
-          isLoading 
-          ? <progress className='progress is-primary'/>
-          : activitiesState
-              .filter(activity => diffDates(new Date(), activity.end) > 0)
-              .length
-            ? activitiesState
-                .filter(activity => diffDates(new Date(), activity.end) > 0)
-                .sort((a,b) => new Date(a.end).getTime() - new Date(b.end).getTime())
-                .map(activity => 
-                  <Activity
-                    key={activity.id}
-                    activity={activity}
-                    setModal={setModal}
-                    setCurrentActivity={setCurrentActivity}
-                />)
-            : <p className="notification">
-                No hay actividades por realizar en este momento
-              </p>
-        }
+        {isLoading ? (
+          <progress className="progress is-primary" />
+        ) : activitiesState.filter(
+            (activity) => diffDates(new Date(), activity.end) > 0
+          ).length ? (
+          activitiesState
+            .filter((activity) => diffDates(new Date(), activity.end) > 0)
+            .sort(
+              (a, b) => new Date(a.end).getTime() - new Date(b.end).getTime()
+            )
+            .map((activity) => (
+              <Activity
+                key={activity.id}
+                activity={activity}
+                setModal={setModal}
+                setCurrentActivity={setCurrentActivity}
+              />
+            ))
+        ) : (
+          <p className="notification">
+            No hay actividades por realizar en este momento
+          </p>
+        )}
       </div>
 
-      <ActivityForm 
+      <ActivityForm
         isActive={modalState}
         fetchActivities={fetchActivities}
         currentActivity={currentActivity}
@@ -87,7 +94,7 @@ const ActivitiesView = () => {
         closeModal={() => setModalState(false, setModal)}
       />
     </section>
-  )
-}
+  );
+};
 
 export default ActivitiesView;

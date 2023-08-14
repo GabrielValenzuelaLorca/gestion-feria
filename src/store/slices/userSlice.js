@@ -1,25 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = sessionStorage.getItem('user')
-  ? JSON.parse(sessionStorage.getItem('user'))
-  : {};
+const initialState = {};
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     addUser: (state, action) => {
-      const newState = {...state, ...action.payload};
-      sessionStorage.setItem('user', JSON.stringify(newState));
+      const newState = { ...state, ...action.payload };
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: newState.name,
+          id: newState.id,
+        })
+      );
       return newState;
     },
-    removeUser: _ => {
-      sessionStorage.removeItem('user');
+    removeUser: (_) => {
+      sessionStorage.removeItem("user");
       return {};
     },
   },
-})
+});
 
 export const { addUser, removeUser } = userSlice.actions;
 
-export default userSlice.reducer
+export default userSlice.reducer;

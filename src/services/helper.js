@@ -4,15 +4,15 @@ export const handleResponse = async (response) => {
   const text = await response.text();
   let data = {};
 
+  if (!response.ok) {
+    const error = text || response.statusText;
+    throw error;
+  }
+
   try {
     data = text && JSON.parse(text);
   } catch (error) {
-    console.log(error);
-  }
-
-  if (!response.ok) {
-    const error = (data && data.message) || response.statusText;
-    return Promise.reject(error);
+    console.error(error);
   }
 
   return data;
@@ -22,8 +22,8 @@ export const authHeader = () => {
   const token = store.getState().user.auth_token;
   if (token) {
     return {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    };
   }
 
   return null;

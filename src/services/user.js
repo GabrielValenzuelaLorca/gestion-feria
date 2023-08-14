@@ -25,6 +25,17 @@ export const login = async (credentials) => {
   return handleResponse(await fetch(url, requestOptions));
 };
 
+export const getUser = async (id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const url = new URL(`${API_URL}/user/${id}`);
+  return handleResponse(await fetch(url, requestOptions));
+};
+
 export const getUsers = async (params = {}) => {
   const requestOptions = {
     method: "GET",
