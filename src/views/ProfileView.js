@@ -5,13 +5,14 @@ import UserCard from "../components/Profile/UserCard";
 
 const ProfileView = () => {
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
 
   return (
     <section>
       <section className="section">
         <UserCard user={user} />
       </section>
-      {user.rol === "Alumno" && user.period.active && (
+      {user.rol === "Alumno" && user.period === period.id && (
         <>
           <section className="section">
             <TeamCard user={user} />

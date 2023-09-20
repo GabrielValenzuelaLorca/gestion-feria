@@ -49,7 +49,7 @@ const Members = ({ team, userId, setTeam, editable = false, ...rest }) => {
               {students.length > 0 &&
                 team.members.map((id, index) => (
                   <span className="tag is-primary is-medium" key={index}>
-                    {students.find((student) => student.id === id).name}
+                    {students.find((student) => student.id === id)?.name}
                     {editable && id !== userId && (
                       <button
                         className="delete is-small"

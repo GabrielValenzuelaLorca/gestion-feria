@@ -18,12 +18,18 @@ import UserListView from "./views/UserListView";
 import useFetch from "./hooks/useFetch";
 import { getUser } from "./services/user";
 import { addUser } from "./store/slices/userSlice";
+import { getActivePeriod } from "./services/period";
+import { addPeriod } from "./store/slices/periodSlice";
 
 function App() {
   const userState = useSelector((state) => state.user);
+  const periodState = useSelector((state) => state.period);
   const dispatch = useDispatch();
-  const [fetchUser, isLoading] = useFetch(getUser, (user) => {
+  const [fetchUser, isUserLoading] = useFetch(getUser, (user) => {
     dispatch(addUser(user));
+  });
+  const [fetchPeriod, isPeriodLoading] = useFetch(getActivePeriod, (period) => {
+    if (period) dispatch(addPeriod(period));
   });
 
   useEffect(() => {
@@ -31,9 +37,13 @@ function App() {
       fetchUser(JSON.parse(sessionStorage.getItem("user")).id);
   }, [fetchUser, userState.id]);
 
+  useEffect(() => {
+    if (userState.id && !periodState.id) fetchPeriod();
+  }, [fetchPeriod, periodState.id, userState.id]);
+
   return (
     <>
-      {isLoading ? (
+      {isUserLoading || isPeriodLoading ? (
         <progress className="progress is-primary" />
       ) : (
         <Router>
