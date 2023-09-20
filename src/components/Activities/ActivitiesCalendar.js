@@ -9,9 +9,9 @@ import { setModalState } from '../../utils/functions';
 const ActivitiesCalendar = ({activities, setModal, setCurrentActivity}) => {
   const parseActivities = () => activities.map(activity => ({
     id: activity.id,
-    start: activity.inicio !== activity.termino ? activity.inicio : activity.termino,
-    end: activity.inicio !== activity.termino ? new Date(new Date(activity.termino).getTime()+(2 * 86400000)) : null,
-    title: activity.nombre,
+    start: activity.start !== activity.end ? activity.start : activity.end,
+    end: activity.start !== activity.end ? new Date(new Date(activity.end).getTime()+(2 * 86400000)) : null,
+    title: activity.name,
     backgroundColor: "#999",
     borderColor: "#999",
     allDay: true
