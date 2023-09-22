@@ -6,6 +6,7 @@ import useFetch from "../hooks/useFetch";
 import { getActivities } from "../services/activity";
 import { diffDates, setModalState } from "../utils/functions";
 import { useSelector } from "react-redux";
+import { useMemo } from "react";
 
 const defaultActivity = {
   name: "",
@@ -28,15 +29,22 @@ const ActivitiesView = () => {
     fetchActivities();
   }, [fetchActivities]);
 
+  const calendar = useMemo(
+    () => (
+      <ActivitiesCalendar
+        activities={activitiesState}
+        setModal={setModal}
+        setCurrentActivity={setCurrentActivity}
+      />
+    ),
+    [activitiesState]
+  );
+
   return (
     <section className="section columns">
       <div className="column">
         <h1 className="title is-4">Calendario de Actividades</h1>
-        <ActivitiesCalendar
-          activities={activitiesState}
-          setModal={setModal}
-          setCurrentActivity={setCurrentActivity}
-        />
+        {calendar}
       </div>
       <div className="column">
         <div className="level mb-3">

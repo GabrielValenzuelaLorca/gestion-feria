@@ -1,18 +1,17 @@
 import { API_URL } from "../config";
 import { authHeader, handleResponse } from "./helper";
 
-// export const createActivity = async (activity) => {
-//   const requestOptions = {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       ...authHeader()
-//     },
-//     body: JSON.stringify(activity)
-//   };
-//   const url = new URL(`${API_URL}/activity/create`);
-//   return handleResponse(await fetch(url, requestOptions));
-// };
+export const createDeliverable = async (activity_id) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/deliverable/create/${activity_id}`);
+  return handleResponse(await fetch(url, requestOptions));
+};
 
 // export const editActivity = async (activity) => {
 //   const requestOptions = {

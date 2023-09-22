@@ -70,6 +70,7 @@ const ActivityForm = ({
             name="start"
             label="Fecha de Inicio"
             type="date"
+            placeholder="24/12/2012"
             validations={["required"]}
           />
 
@@ -77,6 +78,7 @@ const ActivityForm = ({
             name="end"
             label="Fecha de Término"
             type="date"
+            placeholder="24/12/2012"
             validations={["required"]}
             customValidations={[
               (value) => {
@@ -98,7 +100,7 @@ const ActivityForm = ({
               name="close"
               label="Fecha de Cierre"
               type="date"
-              placeholder="24-12-2012"
+              placeholder="24/12/2012"
               validations={["required"]}
               customValidations={[
                 (value) => {

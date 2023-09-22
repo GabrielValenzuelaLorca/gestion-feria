@@ -2,8 +2,11 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import useFetch from "../hooks/useFetch";
-import { diffDates } from "../utils/functions";
-import { getDeliverablesByTeam } from "../services/deliverable";
+import { diffDates, formatDatetimeToString } from "../utils/functions";
+import {
+  createDeliverable,
+  getDeliverablesByTeam,
+} from "../services/deliverable";
 import { useSelector } from "react-redux";
 
 const DeliverablesView = () => {
@@ -15,9 +18,16 @@ const DeliverablesView = () => {
     setDeliverables
   );
 
+  const [fetchCreateDeliverable, isLoadingCreate] = useFetch(createDeliverable);
+
   useEffect(() => {
     fetchDeliverables(user.team.id);
   }, [fetchDeliverables, user.team.id]);
+
+  const handleEndButton = async (activity_id) => {
+    await fetchCreateDeliverable(activity_id);
+    await fetchDeliverables(user.team.id);
+  };
 
   return (
     <section className="section">
@@ -35,7 +45,7 @@ const DeliverablesView = () => {
                     <>
                       <p>
                         Fecha de término:{" "}
-                        {activity.end.split("-").reverse().join("/")}
+                        {activity.end.split("/").reverse().join("/")}
                       </p>
                       <p>
                         Tiempo restante: {diffDates(new Date(), activity.end)}{" "}
@@ -46,7 +56,7 @@ const DeliverablesView = () => {
                     <>
                       <p>
                         Fecha de cierre:{" "}
-                        {activity.close.split("-").reverse().join("/")}
+                        {activity.close.split("/").reverse().join("/")}
                       </p>
                       <p>
                         Tiempo de atraso restante:{" "}
@@ -58,8 +68,8 @@ const DeliverablesView = () => {
                   ) : (
                     <>
                       <p>
-                        Fecha de envío:
-                        {activity.send_date.split("-").reverse().join("/")}
+                        Fecha de envío:{" "}
+                        {formatDatetimeToString(activity.send_date)}
                       </p>
                       <p>
                         Estado de envío:{" "}
@@ -114,7 +124,13 @@ const DeliverablesView = () => {
                     ) : ["pending", "pending_delayed"].includes(
                         activity.state
                       ) ? (
-                      <button className="button is-success is-pulled-right">
+                      <button
+                        className={`button is-success is-pulled-right ${
+                          isLoadingCreate && "is-loading"
+                        }`}
+                        onClick={() => handleEndButton(activity.id)}
+                        disabled={isLoadingCreate}
+                      >
                         Terminar
                       </button>
                     ) : (
