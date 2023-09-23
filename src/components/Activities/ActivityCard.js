@@ -7,6 +7,10 @@ const ActivityCard = ({ activity, setModal, setCurrentActivity }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+  const handleRubricButton = () => {
+    navigate(`/rubrica/${activity.id}`);
+  };
+
   return (
     <div className="card block">
       <div className="card-header level">
@@ -15,17 +19,27 @@ const ActivityCard = ({ activity, setModal, setCurrentActivity }) => {
         </div>
         {["Profesor", "Administrador"].includes(user.rol) && (
           <div className="level-right" style={{ paddingRight: 16 }}>
-            <button
-              className="is-primary button is-small is-rounded level-item"
-              onClick={() => {
-                navigate(`/rubrica/${activity.id}`);
-              }}
-            >
-              <span className="icon is-small">
-                <i className="fas fa-plus"></i>
-              </span>
-              <span>Crear Rúbrica</span>
-            </button>
+            {activity.rubric ? (
+              <button
+                className="is-link button is-small is-rounded level-item"
+                onClick={handleRubricButton}
+              >
+                <span className="icon is-small">
+                  <i className="fa-solid fa-eye"></i>
+                </span>
+                <span>Ver Rúbrica</span>
+              </button>
+            ) : (
+              <button
+                className="is-primary button is-small is-rounded level-item"
+                onClick={handleRubricButton}
+              >
+                <span className="icon is-small">
+                  <i className="fas fa-plus"></i>
+                </span>
+                <span>Crear Rúbrica</span>
+              </button>
+            )}
             <button
               className="is-link button is-small is-rounded level-item"
               onClick={() => {
