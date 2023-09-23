@@ -131,7 +131,7 @@ const ActivityForm = ({
               onClick={handleEdit}
               disabled={loading}
             >
-              Editar
+              Guardar
             </button>
           ) : (
             <button

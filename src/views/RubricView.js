@@ -1,108 +1,191 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import { getActivity } from "../services/activity";
+import { createRubric } from "../services/rubric";
+
+const defaultState = {
+  criteria: "",
+  columns: [
+    {
+      description: "",
+      score: 0,
+    },
+  ],
+};
 
 const RubricView = () => {
-  const [columns, setColumns] = useState([0])
+  const { activityId } = useParams();
+  const [activityState, setActivity] = useState({});
+  const [rows, setRows] = useState([defaultState]);
+  const [fetchActivity, isLoading] = useFetch(getActivity, setActivity);
+  const [doCreateRubric, loadingCreate] = useFetch(createRubric, null, true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchActivity(activityId);
+  }, [fetchActivity, activityId]);
 
   const addRow = () => {
-    setColumns(state => 
-      [
-        ...state, 
-        0
-      ]
-    )
+    setRows((state) => [
+      ...state,
+      {
+        criteria: "",
+        columns: [
+          {
+            description: "",
+            score: 0,
+          },
+        ],
+      },
+    ]);
   };
 
   const addColumn = (row) => {
-    const newState = [...columns];
-    newState[row] += 1;
-    setColumns(newState);
+    if (rows[row].columns.length < 10) {
+      const newState = [...rows];
+      newState[row].columns.push({
+        description: "",
+        score: 0,
+      });
+      setRows(newState);
+    }
   };
 
   const deleteRow = (row) => {
-    const newState = [...columns];
-    if(newState[row] > 0) newState[row] -= 1;
+    const newState = [...rows];
+    if (newState[row].columns.length > 1) newState[row].columns.pop();
     else newState.splice(row, 1);
-    setColumns(newState);
+    setRows(newState);
+  };
+
+  const handleOnChange = (row, column, value, type) => {
+    const newState = [...rows];
+    if (column === null) newState[row].criteria = value;
+    else {
+      newState[row].columns[column][type] =
+        type === "score" ? parseInt(value) : value;
+    }
+    setRows(newState);
+  };
+
+  const handleSendRubric = async () => {
+    await doCreateRubric(activityId, rows);
+    navigate(`/actividades`);
   };
 
   return (
-    <section className='section'>
-      <header className='box has-background-info'>
-        <h1 className='title is-4 has-text-white'>Plan de proyecto</h1>
-        <h2 className='subtitle is-6 has-text-white'>Descripción de actividad</h2>
-        <p className='has-text-white'>Fecha de Inicio</p>
-        <p className='has-text-white'>Fecha de Término</p>
-        <button className='button is-success' type='button'>
-          <span className="icon is-small">
-            <i className="fas fa-check" aria-hidden="true"/>
-          </span>
-          <span>Guardar Rúbrica</span>
-        </button>
-      </header>
+    <section className="section">
+      {isLoading ? (
+        <progress className="progress is-primary" />
+      ) : (
+        <header className="block">
+          <h1 className="title is-4">{activityState.name}</h1>
+          <h2 className="subtitle is-6">{activityState.description}</h2>
+          <button
+            className={`button is-success ${loadingCreate && "is-loading"}`}
+            type="button"
+            onClick={handleSendRubric}
+            disabled={loadingCreate}
+          >
+            <span className="icon is-small">
+              <i className="fas fa-check" aria-hidden="true" />
+            </span>
+            <span>Guardar Rúbrica</span>
+          </button>
+        </header>
+      )}
       <form>
-        {
-          columns.map((row, i) => 
-            <div className='columns is-variable is-1' key={i}>
-              <div className='column'>
-                <div className='box'>
+        {rows.map(({ criteria, columns }, i) => (
+          <div className="columns is-variable is-1" key={i}>
+            <div className="column">
+              <div className="box">
+                <div className="field">
+                  <label className="label">Criterio {i + 1}:</label>
+                  <div className="control">
+                    <textarea
+                      className="textarea is-small"
+                      placeholder="Ingrese descripción del criterio"
+                      value={criteria}
+                      onChange={(e) => handleOnChange(i, null, e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {columns.map(({ description, score }, j) => (
+              <div className="column" key={`${i}-column-${j}`}>
+                <div className="box">
                   <div className="field">
-                    <label className='label'>Criterio {i+1}:</label>
+                    <label className="label">Puntaje {j + 1}:</label>
                     <div className="control">
-                      <textarea className="textarea is-small" placeholder='Ingrese descripción'/>
+                      <textarea
+                        className="textarea is-small"
+                        placeholder="Ingrese descripción del puntaje"
+                        value={description}
+                        onChange={(e) =>
+                          handleOnChange(i, j, e.target.value, "description")
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="field">
+                    <label className="label">Puntuación:</label>
+                    <div className="control">
+                      <input
+                        className="input is-small is-rounded"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        value={score}
+                        onChange={(e) =>
+                          handleOnChange(i, j, e.target.value, "score")
+                        }
+                      />
                     </div>
                   </div>
                 </div>
-              </div>  
-
-              {
-                [...Array(row).keys()].map(column => 
-                  <div className='column' key={`${i}-column-${column}`}>
-                    <div className='box'>
-                      <div className="field">
-                        <label className='label'>Puntaje {column+1}:</label>
-                        <div className="control">
-                          <textarea className="textarea is-small" placeholder='Ingrese descripción'/>
-                        </div>
-                      </div>
-
-                      <div className="field">
-                        <label className='label'>Puntuación:</label>
-                        <div className="control">
-                          <input className="input is-small is-rounded" type='number' min='0' max='100' placeholder='0'/>
-                        </div>
-                      </div>
-                    </div>
-                  </div>  
-                )
-              }
-
-              <div className='column is-narrow '>
-                <button className='button is-success' type='button' onClick={() => addColumn(i)}>
-                  <span className="icon is-small">
-                    <i className="fas fa-plus" aria-hidden="true"/>
-                  </span>
-                </button>
               </div>
+            ))}
 
-              <div className='column is-narrow'>
-                <button className='button is-danger' type='button' onClick={() => deleteRow(i)}>
-                  <span className="icon is-small">
-                    <i className="fas fa-trash" aria-hidden="true"/>
-                  </span>
-                </button>
-              </div>
-            </div>  
-          )
-        }
-        <button className='button is-success' type='button' onClick={addRow}>
+            <div className="column is-narrow ">
+              <button
+                className="button is-primary"
+                type="button"
+                onClick={() => addColumn(i)}
+              >
+                <span className="icon is-small">
+                  <i className="fas fa-plus" aria-hidden="true" />
+                </span>
+              </button>
+            </div>
+
+            <div className="column is-narrow">
+              <button
+                className="button is-danger"
+                type="button"
+                onClick={() => deleteRow(i)}
+              >
+                <span className="icon is-small">
+                  <i className="fas fa-trash" aria-hidden="true" />
+                </span>
+              </button>
+            </div>
+          </div>
+        ))}
+        <button className="button is-primary" type="button" onClick={addRow}>
           <span className="icon is-small">
-            <i className="fas fa-plus" aria-hidden="true"/>
+            <i className="fas fa-plus" aria-hidden="true" />
           </span>
           <span>Añadir Criterio</span>
         </button>
       </form>
     </section>
-  )
-}
+  );
+};
 
 export default RubricView;

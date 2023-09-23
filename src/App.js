@@ -73,7 +73,7 @@ function App() {
                 element={<NavbarLayout component={<DeliverablesView />} />}
               />
               <Route
-                path="rubricas"
+                path="rubrica/:activityId"
                 element={<NavbarLayout component={<RubricView />} />}
               />
               {["Administrador", "Profesor"].includes(userState.rol) && (

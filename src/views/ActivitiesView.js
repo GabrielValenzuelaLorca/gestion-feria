@@ -29,16 +29,15 @@ const ActivitiesView = () => {
     fetchActivities();
   }, [fetchActivities]);
 
-  const calendar = useMemo(
-    () => (
+  const calendar = useMemo(() => {
+    return (
       <ActivitiesCalendar
         activities={activitiesState}
         setModal={setModal}
         setCurrentActivity={setCurrentActivity}
       />
-    ),
-    [activitiesState]
-  );
+    );
+  }, [activitiesState]);
 
   return (
     <section className="section columns">

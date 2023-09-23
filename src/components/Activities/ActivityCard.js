@@ -1,26 +1,41 @@
 import React from "react";
 import { diffDates, setModalState } from "../../utils/functions";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ActivityCard = ({ activity, setModal, setCurrentActivity }) => {
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   return (
     <div className="card block">
-      <div className="card-header">
-        <h2 className="card-header-title">{activity.name}</h2>
-
+      <div className="card-header level">
+        <div className="level-left">
+          <h2 className="level-item card-header-title">{activity.name}</h2>
+        </div>
         {["Profesor", "Administrador"].includes(user.rol) && (
-          <button
-            className="mt-1 mr-1 button is-light is-rounded"
-            onClick={() => {
-              setCurrentActivity(activity);
-              setModalState(true, setModal);
-            }}
-          >
-            <span className="icon">
-              <i className="fas fa-lg fa-ellipsis-v"></i>
-            </span>
-          </button>
+          <div className="level-right" style={{ paddingRight: 16 }}>
+            <button
+              className="is-primary button is-small is-rounded level-item"
+              onClick={() => {
+                navigate(`/rubrica/${activity.id}`);
+              }}
+            >
+              <span className="icon is-small">
+                <i className="fas fa-plus"></i>
+              </span>
+              <span>Crear Rúbrica</span>
+            </button>
+            <button
+              className="is-link button is-small is-rounded level-item"
+              onClick={() => {
+                setCurrentActivity(activity);
+                setModalState(true, setModal);
+              }}
+            >
+              Editar
+            </button>
+          </div>
         )}
       </div>
 

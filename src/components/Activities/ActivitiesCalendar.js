@@ -12,7 +12,10 @@ const ActivitiesCalendar = ({ activities, setModal, setCurrentActivity }) => {
     () =>
       activities.map((activity) => ({
         id: activity.id,
-        start: activity.start !== activity.end ? activity.start : activity.end,
+        start: (activity.start !== activity.end
+          ? activity.start
+          : activity.end
+        ).replaceAll("/", "-"),
         end:
           activity.start !== activity.end
             ? new Date(new Date(activity.end).getTime() + 2 * 86400000)
@@ -29,7 +32,6 @@ const ActivitiesCalendar = ({ activities, setModal, setCurrentActivity }) => {
     <section className="calendar box">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
-        rerenderDelay={5}
         events={parseActivities}
         eventClick={(e) => {
           setCurrentActivity(
@@ -39,6 +41,7 @@ const ActivitiesCalendar = ({ activities, setModal, setCurrentActivity }) => {
         }}
         locale={esLocale}
         height="auto"
+        contentHeight="auto"
         navLinks={false}
       />
     </section>

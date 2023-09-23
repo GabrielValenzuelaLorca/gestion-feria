@@ -3,20 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeUser } from "../store/slices/userSlice";
 
-
 const Navbar = () => {
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const logout = () => {
     dispatch(removeUser());
-  }
-  
+  };
+
   return (
-    <header>  
+    <header>
       <nav className="navbar is-dark" aria-label="main navigation">
         <div className="navbar-brand">
-          <div className="navbar-burger"/>
+          <div className="navbar-burger" />
           <a className="navbar-item" href="www.youtube.com">
             <img
               src="https://bulma.io/images/bulma-logo-white.png"
@@ -46,7 +45,7 @@ const Navbar = () => {
                 <span>Historias de Usuario</span>
               </span>
             </Link>
-            
+
             <Link className="navbar-item" to="/dashboard">
               <span className="icon-text">
                 <span className="icon">
@@ -56,7 +55,7 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <Link className="navbar-item" to="/rubricas">
+            <Link className="navbar-item">
               <span className="icon-text">
                 <span className="icon">
                   <i className="fas fa-table-list"></i>
@@ -74,24 +73,21 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {
-              ['Administrador', 'Profesor'].includes(user.rol) &&
-                <Link className="navbar-item" to="/usuarios">
-                  <span className="icon-text">
-                    <span className="icon">
-                      <i className="fa-solid fa-users-gear"></i>
-                    </span>
-                    <span>Usuarios</span>
+            {["Administrador", "Profesor"].includes(user.rol) && (
+              <Link className="navbar-item" to="/usuarios">
+                <span className="icon-text">
+                  <span className="icon">
+                    <i className="fa-solid fa-users-gear"></i>
                   </span>
-                </Link>
-            }
+                  <span>Usuarios</span>
+                </span>
+              </Link>
+            )}
           </div>
 
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable">
-              <div className="navbar-link">
-                {user.name}
-              </div>
+              <div className="navbar-link">{user.name}</div>
 
               <div className="navbar-dropdown is-right">
                 <Link className="navbar-item" to="/usuario">
@@ -103,7 +99,7 @@ const Navbar = () => {
                   </span>
                 </Link>
 
-                <hr className="navbar-divider"/>
+                <hr className="navbar-divider" />
 
                 <div className="navbar-item">
                   <button className="button is-danger" onClick={logout}>

@@ -3,12 +3,12 @@ import { authHeader, handleResponse } from "./helper";
 
 export const createActivity = async (activity) => {
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      ...authHeader()
+      "Content-Type": "application/json",
+      ...authHeader(),
     },
-    body: JSON.stringify(activity)
+    body: JSON.stringify(activity),
   };
   const url = new URL(`${API_URL}/activity/create`);
   return handleResponse(await fetch(url, requestOptions));
@@ -16,12 +16,12 @@ export const createActivity = async (activity) => {
 
 export const editActivity = async (activity) => {
   const requestOptions = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
-      ...authHeader()
+      "Content-Type": "application/json",
+      ...authHeader(),
     },
-    body: JSON.stringify(activity)
+    body: JSON.stringify(activity),
   };
   const url = new URL(`${API_URL}/activity/edit`);
   return handleResponse(await fetch(url, requestOptions));
@@ -29,12 +29,24 @@ export const editActivity = async (activity) => {
 
 export const getActivities = async () => {
   const requestOptions = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      ...authHeader()
+      "Content-Type": "application/json",
+      ...authHeader(),
     },
   };
   const url = new URL(`${API_URL}/activity`);
   return handleResponse(await fetch(url, requestOptions));
-}
+};
+
+export const getActivity = async (activityId) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/activity/${activityId}`);
+  return handleResponse(await fetch(url, requestOptions));
+};

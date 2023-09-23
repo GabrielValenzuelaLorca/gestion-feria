@@ -10,10 +10,10 @@ const useFetch = (
   const [messageState, setMessage] = useState(null);
 
   const doFetch = useCallback(
-    async (params) => {
+    async (...params) => {
       setLoading(true);
       try {
-        const response = await service(params);
+        const response = await service(...params);
         if (callback) {
           await callback(response.data);
         }
