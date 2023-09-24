@@ -20,6 +20,7 @@ import { getUser } from "./services/user";
 import { addUser } from "./store/slices/userSlice";
 import { getActivePeriod } from "./services/period";
 import { addPeriod } from "./store/slices/periodSlice";
+import AllDeliverablesView from "./views/AllDeliverablesView";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -70,7 +71,17 @@ function App() {
               />
               <Route
                 path="entregables"
-                element={<NavbarLayout component={<DeliverablesView />} />}
+                element={
+                  <NavbarLayout
+                    component={
+                      userState.rol === "Alumno" ? (
+                        <DeliverablesView />
+                      ) : (
+                        <AllDeliverablesView />
+                      )
+                    }
+                  />
+                }
               />
               <Route
                 path="rubrica/:activityId"

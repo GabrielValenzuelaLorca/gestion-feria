@@ -42,13 +42,13 @@ const ActivitiesView = () => {
   return (
     <section className="section columns">
       <div className="column">
-        <h1 className="title is-4">Calendario de Actividades</h1>
+        <h1 className="title is-3">Calendario de Actividades</h1>
         {calendar}
       </div>
       <div className="column">
         <div className="level mb-3">
           <div className="level-left">
-            <h1 className="title is-4 level-item">Listado de Actividades</h1>
+            <h1 className="title is-3 level-item">Listado de Actividades</h1>
           </div>
           <div className="level-right">
             {["Administrador", "Profesor"].includes(user.rol) && (

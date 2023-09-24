@@ -55,15 +55,6 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <Link className="navbar-item">
-              <span className="icon-text">
-                <span className="icon">
-                  <i className="fas fa-table-list"></i>
-                </span>
-                <span>Rúbricas</span>
-              </span>
-            </Link>
-
             <Link className="navbar-item" to="/entregables">
               <span className="icon-text">
                 <span className="icon">
