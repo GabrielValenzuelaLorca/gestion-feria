@@ -2,17 +2,13 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import useFetch from "../hooks/useFetch";
-import { diffDates, formatDatetimeToString } from "../utils/functions";
-import { createDeliverable } from "../services/deliverable";
-import { useSelector } from "react-redux";
+import { diffDates } from "../utils/functions";
 import { getActivities } from "../services/activity";
 import { useNavigate } from "react-router-dom";
 
 const AllDeliverablesView = () => {
-  // const user = useSelector((state) => state.user);
   const [activitiesState, setActivities] = useState([]);
   const [fetchActivities, isLoading] = useFetch(getActivities, setActivities);
-  const [fetchCreateDeliverable, isLoadingCreate] = useFetch(createDeliverable);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,10 +19,9 @@ const AllDeliverablesView = () => {
     navigate(`/rubrica/${activityId}`);
   };
 
-  // const handleEndButton = async (activity_id) => {
-  //   await fetchCreateDeliverable(activity_id);
-  //   await fetchDeliverables(user.team.id);
-  // };
+  const handleEvaluationButton = (activityId) => {
+    navigate(`/evaluaciones/${activityId}`);
+  };
 
   return (
     <section className="section">
@@ -76,7 +71,7 @@ const AllDeliverablesView = () => {
                         </button>
                         <button
                           className="is-link button is-pulled-right"
-                          // onClick={() => handleRubricButton(activity.id)}
+                          onClick={() => handleEvaluationButton(activity.id)}
                         >
                           <span className="icon is-small">
                             <i className="fa-solid fa-list-check"></i>

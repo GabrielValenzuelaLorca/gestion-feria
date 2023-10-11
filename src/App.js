@@ -21,6 +21,7 @@ import { addUser } from "./store/slices/userSlice";
 import { getActivePeriod } from "./services/period";
 import { addPeriod } from "./store/slices/periodSlice";
 import AllDeliverablesView from "./views/AllDeliverablesView";
+import EvaluationsView from "./views/EvaluationsView";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -88,10 +89,16 @@ function App() {
                 element={<NavbarLayout component={<RubricView />} />}
               />
               {["Administrador", "Profesor"].includes(userState.rol) && (
-                <Route
-                  path="usuarios"
-                  element={<NavbarLayout component={<UserListView />} />}
-                />
+                <>
+                  <Route
+                    path="usuarios"
+                    element={<NavbarLayout component={<UserListView />} />}
+                  />
+                  <Route
+                    path="evaluaciones/:activityId"
+                    element={<NavbarLayout component={<EvaluationsView />} />}
+                  />
+                </>
               )}
             </Routes>
           ) : (
