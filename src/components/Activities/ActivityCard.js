@@ -47,7 +47,10 @@ const ActivityCard = ({ activity, setModal, setCurrentActivity }) => {
                 setModalState(true, setModal);
               }}
             >
-              Editar
+              <span className="icon is-small">
+                <i className="fas fa-pen-to-square"></i>
+              </span>
+              <span>Editar</span>
             </button>
           </div>
         )}

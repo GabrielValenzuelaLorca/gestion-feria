@@ -7,11 +7,11 @@ import { getEvaluationsByActivity } from "../services/evaluation";
 
 const EvaluationsView = () => {
   const { activityId } = useParams();
-  const [evaluationsState, setEvaluations] = useState([]);
+  const [teamsState, setTeams] = useState([]);
   const [activityState, setActivity] = useState({});
 
   const fetchCallback = useCallback((data) => {
-    setEvaluations(data.evaluations);
+    setTeams(data.evaluations);
     setActivity(data.activity);
   }, []);
 
@@ -25,8 +25,8 @@ const EvaluationsView = () => {
     fetchEvaluations(activityId);
   }, [fetchEvaluations, activityId]);
 
-  const handleEvaluationButton = (activityId) => {
-    navigate(`/rubrica/${activityId}`);
+  const handleEvaluationButton = (teamId) => {
+    navigate(`/evaluacion/${activityId}/${teamId}`);
   };
 
   return (
@@ -37,26 +37,32 @@ const EvaluationsView = () => {
         ) : (
           <>
             <h1 className="title is-3">
-              Evaluaciones Actividad: {activityState.name}
+              Evaluaciones de actividad: {activityState.name}
             </h1>
-            {evaluationsState.length ? (
-              evaluationsState.map((evaluation, index) => {
+            {teamsState.length ? (
+              teamsState.map((team, index) => {
                 return (
                   <div key={index} className="box">
                     <div className="level">
                       <div className="level-left">
                         <div className="level-item">
-                          {evaluation.name} / {evaluation.project.name}
+                          <span>
+                            Equipo: <strong>{team.name}</strong> | Proyecto:{" "}
+                            <strong>{team.project.name}</strong>
+                          </span>
                         </div>
                       </div>
                       <div className="level-right">
                         <div className="level-item">
-                          {evaluation.evaluation_id
-                            ? `Nota: ${evaluation.score || "-"}`
+                          {team.evaluation_id
+                            ? `Nota: ${team.score || "-"}`
                             : "Sin Evaluar"}
                         </div>
                         <div className="level-item">
-                          <button className="button is-primary">
+                          <button
+                            className="button is-primary"
+                            onClick={() => handleEvaluationButton(team.id)}
+                          >
                             <span className="icon is-small">
                               <i className="fa-solid fa-check"></i>
                             </span>

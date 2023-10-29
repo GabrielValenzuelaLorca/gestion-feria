@@ -22,6 +22,7 @@ import { getActivePeriod } from "./services/period";
 import { addPeriod } from "./store/slices/periodSlice";
 import AllDeliverablesView from "./views/AllDeliverablesView";
 import EvaluationsView from "./views/EvaluationsView";
+import EvaluateView from "./views/EvaluateView";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -55,10 +56,6 @@ function App() {
                 <Route path="*" element={<Navigate to="actividades" />} />
               </Route>
               <Route
-                path="historias"
-                element={<NavbarLayout component={<StoriesView />} />}
-              />
-              <Route
                 path="actividades"
                 element={<NavbarLayout component={<ActivitiesView />} />}
               />
@@ -70,26 +67,19 @@ function App() {
                 path="dashboard"
                 element={<NavbarLayout component={<DashboardView />} />}
               />
-              <Route
-                path="entregables"
-                element={
-                  <NavbarLayout
-                    component={
-                      userState.rol === "Alumno" ? (
-                        <DeliverablesView />
-                      ) : (
-                        <AllDeliverablesView />
-                      )
-                    }
-                  />
-                }
-              />
-              <Route
-                path="rubrica/:activityId"
-                element={<NavbarLayout component={<RubricView />} />}
-              />
+
               {["Administrador", "Profesor"].includes(userState.rol) && (
                 <>
+                  <Route
+                    path="entregables"
+                    element={
+                      <NavbarLayout component={<AllDeliverablesView />} />
+                    }
+                  />
+                  <Route
+                    path="rubrica/:activityId"
+                    element={<NavbarLayout component={<RubricView />} />}
+                  />
                   <Route
                     path="usuarios"
                     element={<NavbarLayout component={<UserListView />} />}
@@ -97,6 +87,22 @@ function App() {
                   <Route
                     path="evaluaciones/:activityId"
                     element={<NavbarLayout component={<EvaluationsView />} />}
+                  />
+                  <Route
+                    path="evaluacion/:activityId/:teamId"
+                    element={<NavbarLayout component={<EvaluateView />} />}
+                  />
+                </>
+              )}
+              {"Alumno" === userState.rol && (
+                <>
+                  <Route
+                    path="historias"
+                    element={<NavbarLayout component={<StoriesView />} />}
+                  />
+                  <Route
+                    path="entregables"
+                    element={<NavbarLayout component={<DeliverablesView />} />}
                   />
                 </>
               )}
