@@ -77,7 +77,7 @@ const RubricView = () => {
 
   const handleSendRubric = async () => {
     await doCreateRubric(activityId, rows);
-    navigate(`/actividades`);
+    navigate(`/entregables/${activityId}`);
   };
 
   const handleUpdateRubric = async () => {
@@ -85,7 +85,7 @@ const RubricView = () => {
       id: activityState.rubric.id,
       rows,
     });
-    navigate(`/actividades`);
+    navigate(`/entregables/${activityId}`);
   };
 
   return (

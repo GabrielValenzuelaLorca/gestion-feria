@@ -3,20 +3,22 @@ import { useEffect } from "react";
 import { useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { useNavigate, useParams } from "react-router-dom";
-import { getEvaluationsByActivity } from "../services/evaluation";
+import { getDeliverablesByActivity } from "../services/evaluation";
+import { DELIVERABLE_STATE } from "../utils/constants";
+import { formatDatetimeToString } from "../utils/functions";
 
 const EvaluationsView = () => {
   const { activityId } = useParams();
-  const [teamsState, setTeams] = useState([]);
+  const [deliverablesState, setDeliverables] = useState([]);
   const [activityState, setActivity] = useState({});
 
   const fetchCallback = useCallback((data) => {
-    setTeams(data.evaluations);
+    setDeliverables(data.deliverables);
     setActivity(data.activity);
   }, []);
 
   const [fetchEvaluations, isLoading] = useFetch(
-    getEvaluationsByActivity,
+    getDeliverablesByActivity,
     fetchCallback
   );
   const navigate = useNavigate();
@@ -24,6 +26,10 @@ const EvaluationsView = () => {
   useEffect(() => {
     fetchEvaluations(activityId);
   }, [fetchEvaluations, activityId]);
+
+  const handleRubricButton = (activityId) => {
+    navigate(`/rubrica/${activityId}`);
+  };
 
   const handleEvaluationButton = (teamId) => {
     navigate(`/evaluacion/${activityId}/${teamId}`);
@@ -36,37 +42,93 @@ const EvaluationsView = () => {
           <progress className="progress is-primary" />
         ) : (
           <>
-            <h1 className="title is-3">
-              Evaluaciones de actividad: {activityState.name}
-            </h1>
-            {teamsState.length ? (
-              teamsState.map((team, index) => {
+            {activityState.id && (
+              <>
+                <h1 className="title is-3">
+                  Estado de actividad: {activityState.name}
+                </h1>
+                <div className="block">
+                  <h2 className="is-size-6">
+                    Fecha de inicio:{" "}
+                    {formatDatetimeToString(activityState.start)}
+                  </h2>
+                  <h2 className="is-size-6">
+                    Fecha de término:{" "}
+                    {formatDatetimeToString(activityState.end)}
+                  </h2>
+                  {activityState.delay && (
+                    <h2 className="is-size-6">
+                      Fecha de cierre:{" "}
+                      {formatDatetimeToString(activityState.close)}
+                    </h2>
+                  )}
+                </div>
+                {
+                  <div className="block">
+                    <button
+                      className={`button ${
+                        activityState.rubric ? "is-link" : "is-success"
+                      }`}
+                      onClick={() => handleRubricButton(activityState.id)}
+                    >
+                      <span className="icon is-small">
+                        <i
+                          className={`fa-solid ${
+                            activityState.rubric ? "fa-eye" : "fa-plus"
+                          } `}
+                        ></i>
+                      </span>
+                      <span>
+                        {activityState.rubric ? "Ver Rúbrica" : "Crear Rúbrica"}
+                      </span>
+                    </button>
+                  </div>
+                }
+              </>
+            )}
+            {deliverablesState.length ? (
+              deliverablesState.map((deliverable, index) => {
                 return (
                   <div key={index} className="box">
                     <div className="level">
                       <div className="level-left">
                         <div className="level-item">
                           <span>
-                            Equipo: <strong>{team.name}</strong> | Proyecto:{" "}
-                            <strong>{team.project.name}</strong>
+                            Equipo: <strong>{deliverable.team.name}</strong> |
+                            Proyecto:{" "}
+                            <strong>{deliverable.team.project.name}</strong>
                           </span>
                         </div>
                       </div>
                       <div className="level-right">
-                        <div className="level-item">
-                          {team.evaluation_id
-                            ? `Nota: ${team.score || "-"}`
-                            : "Sin Evaluar"}
+                        <div
+                          className={`level-item tag is-rounded ${
+                            DELIVERABLE_STATE[deliverable.state].color
+                          }`}
+                        >
+                          {deliverable.state === "evaluated"
+                            ? `${DELIVERABLE_STATE[deliverable.state].text}: ${
+                                deliverable.score
+                              }`
+                            : DELIVERABLE_STATE[deliverable.state].text}
                         </div>
                         <div className="level-item">
                           <button
                             className="button is-primary"
-                            onClick={() => handleEvaluationButton(team.id)}
+                            onClick={() =>
+                              handleEvaluationButton(deliverable.team.id)
+                            }
+                            disabled={
+                              deliverable.state !== "done" ||
+                              !activityState.rubric
+                            }
                           >
                             <span className="icon is-small">
                               <i className="fa-solid fa-check"></i>
                             </span>
-                            <span>Evaluar</span>
+                            <span>
+                              {activityState.rubric ? "Evaluar" : "Sin Rúbrica"}
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -75,9 +137,7 @@ const EvaluationsView = () => {
                 );
               })
             ) : (
-              <p className="notification">
-                No hay evaluaciones en este momento
-              </p>
+              <p className="notification">No hay entregables en este momento</p>
             )}
           </>
         )}

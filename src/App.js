@@ -85,7 +85,7 @@ function App() {
                     element={<NavbarLayout component={<UserListView />} />}
                   />
                   <Route
-                    path="evaluaciones/:activityId"
+                    path="entregables/:activityId"
                     element={<NavbarLayout component={<EvaluationsView />} />}
                   />
                   <Route

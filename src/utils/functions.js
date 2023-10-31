@@ -41,6 +41,6 @@ export const delay = async (timeout) => {
 export const formatDatetimeToString = (datetime) => {
   const [date, hour] = datetime.split("T");
   const newDate = date.split("/").reverse().join("/");
-  const newHour = hour.split(".")[0];
-  return `${newDate}, ${newHour}`;
+  const newHour = hour && hour.split(".")[0];
+  return `${newDate}${newHour ? `, ${newHour}` : ""}`;
 };

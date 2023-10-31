@@ -15,18 +15,14 @@ const AllDeliverablesView = () => {
     fetchActivities();
   }, [fetchActivities]);
 
-  const handleRubricButton = (activityId) => {
-    navigate(`/rubrica/${activityId}`);
-  };
-
   const handleEvaluationButton = (activityId) => {
-    navigate(`/evaluaciones/${activityId}`);
+    navigate(`/entregables/${activityId}`);
   };
 
   return (
     <section className="section">
       <section className="container">
-        <h1 className="title is-3">Estado de Entregables</h1>
+        <h1 className="title is-3">Estado de entregables</h1>
         {isLoading ? (
           <progress className="progress is-primary" />
         ) : activitiesState.length ? (
@@ -58,38 +54,15 @@ const AllDeliverablesView = () => {
                   </div>
 
                   <div className="column is-narrow">
-                    {activity.rubric ? (
-                      <div className="buttons">
-                        <button
-                          className="is-link button is-pulled-right is-outlined"
-                          onClick={() => handleRubricButton(activity.id)}
-                        >
-                          <span className="icon is-small">
-                            <i className="fa-solid fa-eye"></i>
-                          </span>
-                          <span>Ver Rúbrica</span>
-                        </button>
-                        <button
-                          className="is-link button is-pulled-right"
-                          onClick={() => handleEvaluationButton(activity.id)}
-                        >
-                          <span className="icon is-small">
-                            <i className="fa-solid fa-list-check"></i>
-                          </span>
-                          <span> Ver Evaluaciones</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="is-primary button is-pulled-right"
-                        onClick={() => handleRubricButton(activity.id)}
-                      >
-                        <span className="icon is-small">
-                          <i className="fas fa-plus"></i>
-                        </span>
-                        <span>Crear Rúbrica</span>
-                      </button>
-                    )}
+                    <button
+                      className="is-link button is-pulled-right"
+                      onClick={() => handleEvaluationButton(activity.id)}
+                    >
+                      <span className="icon is-small">
+                        <i className="fa-solid fa-list-check"></i>
+                      </span>
+                      <span> Ver Entregables</span>
+                    </button>
                   </div>
                 </div>
               </div>

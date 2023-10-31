@@ -1,7 +1,7 @@
 import { API_URL } from "../config";
 import { authHeader, handleResponse } from "./helper";
 
-export const getEvaluationsByActivity = async (activityId) => {
+export const getDeliverablesByActivity = async (activityId) => {
   const requestOptions = {
     method: "GET",
     headers: {
@@ -9,6 +9,6 @@ export const getEvaluationsByActivity = async (activityId) => {
       ...authHeader(),
     },
   };
-  const url = new URL(`${API_URL}/evaluation/all/${activityId}`);
+  const url = new URL(`${API_URL}/deliverable/getByActivity/${activityId}`);
   return handleResponse(await fetch(url, requestOptions));
 };
