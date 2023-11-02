@@ -29,7 +29,7 @@ const RubricView = () => {
   }, [fetchActivity, activityId]);
 
   useEffect(() => {
-    if (activityState.rubric) setRows(activityState.rubric.rows);
+    if (activityState.rubric) setRows(activityState.rubric);
   }, [activityState.rubric]);
 
   const addRow = () => {
@@ -81,10 +81,7 @@ const RubricView = () => {
   };
 
   const handleUpdateRubric = async () => {
-    await doUpdateRubric(activityId, {
-      id: activityState.rubric.id,
-      rows,
-    });
+    await doUpdateRubric(activityId, rows);
     navigate(`/entregables/${activityId}`);
   };
 

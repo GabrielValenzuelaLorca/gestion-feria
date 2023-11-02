@@ -30,27 +30,46 @@ const AllDeliverablesView = () => {
             const toEndTime = diffDates(new Date(), activity.end);
             return (
               <div key={activity.id} className="box">
-                <div className="columns">
+                <div className="columns is-vcentered">
                   <div className="column">
                     <h1 className="title is-4">{activity.name}</h1>
                     <p className="subtitle is-6">{activity.description}</p>
-                    <p>
-                      Fecha de término:{" "}
-                      {activity.end.split("/").reverse().join("/")}
-                    </p>
-                    {activity.delay && (
-                      <p>
-                        Fecha de cierre:{" "}
-                        {activity.close.split("/").reverse().join("/")}
-                      </p>
-                    )}
-                    <p>
-                      Tiempo restante:{" "}
-                      {toEndTime > 0
-                        ? `${toEndTime} día(s)`
-                        : "Plazo completado"}
-                    </p>
-                    <p>Estado de envío: 23/50 envíos</p>
+                    <div className="field is-grouped is-grouped-multiline">
+                      <div className="control">
+                        <div className="tags has-addons">
+                          <span className="tag is-primary is-rounded">
+                            Fecha de término
+                          </span>
+                          <span className="tag is-primary is-light is-rounded">
+                            {activity.end.split("/").reverse().join("/")}
+                          </span>
+                        </div>
+                      </div>
+                      {activity.delay && (
+                        <div className="control">
+                          <div className="tags has-addons">
+                            <span className="tag is-primary is-rounded">
+                              Fecha de cierre
+                            </span>
+                            <span className="tag is-primary is-light is-rounded">
+                              {activity.close.split("/").reverse().join("/")}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      <div className="control">
+                        <div className="tags has-addons">
+                          <span className="tag is-primary is-rounded">
+                            Tiempo restante
+                          </span>
+                          <span className="tag is-primary is-light is-rounded">
+                            {toEndTime > 0
+                              ? `${toEndTime} día(s)`
+                              : "Plazo completado"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="column is-narrow">

@@ -60,7 +60,7 @@ const UserListView = () => {
           <>
             {filteredUsers.length ? (
               filteredUsers.map((user, index) => (
-                <UserCard key={index} user={user} index={index} />
+                <UserCard key={index} user={user} />
               ))
             ) : (
               <p className="notification has-text-centered">

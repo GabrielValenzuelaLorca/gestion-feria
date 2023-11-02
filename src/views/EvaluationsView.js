@@ -31,8 +31,8 @@ const EvaluationsView = () => {
     navigate(`/rubrica/${activityId}`);
   };
 
-  const handleEvaluationButton = (teamId) => {
-    navigate(`/evaluacion/${activityId}/${teamId}`);
+  const handleEvaluationButton = (deliverableId) => {
+    navigate(`/evaluacion/${deliverableId}`);
   };
 
   return (
@@ -42,49 +42,64 @@ const EvaluationsView = () => {
           <progress className="progress is-primary" />
         ) : (
           <>
+            <h1 className="title is-3">
+              Estado de actividad: {activityState.name}
+            </h1>
             {activityState.id && (
-              <>
-                <h1 className="title is-3">
-                  Estado de actividad: {activityState.name}
-                </h1>
-                <div className="block">
-                  <h2 className="is-size-6">
-                    Fecha de inicio:{" "}
-                    {formatDatetimeToString(activityState.start)}
-                  </h2>
-                  <h2 className="is-size-6">
-                    Fecha de término:{" "}
-                    {formatDatetimeToString(activityState.end)}
-                  </h2>
-                  {activityState.delay && (
-                    <h2 className="is-size-6">
-                      Fecha de cierre:{" "}
-                      {formatDatetimeToString(activityState.close)}
-                    </h2>
-                  )}
-                </div>
-                {
+              <article className="message is-primary">
+                <div className="message-body">
                   <div className="block">
-                    <button
-                      className={`button ${
-                        activityState.rubric ? "is-link" : "is-success"
-                      }`}
-                      onClick={() => handleRubricButton(activityState.id)}
-                    >
-                      <span className="icon is-small">
-                        <i
-                          className={`fa-solid ${
-                            activityState.rubric ? "fa-eye" : "fa-plus"
-                          } `}
-                        ></i>
-                      </span>
-                      <span>
-                        {activityState.rubric ? "Ver Rúbrica" : "Crear Rúbrica"}
-                      </span>
-                    </button>
+                    <h2 className="is-size-6">
+                      <strong>Fecha de inicio:</strong>{" "}
+                      {formatDatetimeToString(activityState.start)}
+                    </h2>
+                    <h2 className="is-size-6">
+                      <strong>Fecha de término: </strong>
+                      {formatDatetimeToString(activityState.end)}
+                    </h2>
+                    {activityState.delay && (
+                      <h2 className="is-size-6">
+                        <strong>Fecha de cierre:</strong>{" "}
+                        {formatDatetimeToString(activityState.close)}
+                      </h2>
+                    )}
+                    {deliverablesState.length && (
+                      <h2 className="is-size-6">
+                        <strong>Estado de envíos:</strong>{" "}
+                        {
+                          deliverablesState.filter((deliverable) =>
+                            ["done", "evaluated"].includes(deliverable.state)
+                          ).length
+                        }{" "}
+                        de {deliverablesState.length}
+                      </h2>
+                    )}
                   </div>
-                }
-              </>
+                  {
+                    <div className="block">
+                      <button
+                        className={`button ${
+                          activityState.rubric ? "is-link" : "is-success"
+                        }`}
+                        onClick={() => handleRubricButton(activityState.id)}
+                      >
+                        <span className="icon is-small">
+                          <i
+                            className={`fa-solid ${
+                              activityState.rubric ? "fa-eye" : "fa-plus"
+                            } `}
+                          ></i>
+                        </span>
+                        <span>
+                          {activityState.rubric
+                            ? "Ver Rúbrica"
+                            : "Crear Rúbrica"}
+                        </span>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </article>
             )}
             {deliverablesState.length ? (
               deliverablesState.map((deliverable, index) => {
@@ -108,7 +123,7 @@ const EvaluationsView = () => {
                         >
                           {deliverable.state === "evaluated"
                             ? `${DELIVERABLE_STATE[deliverable.state].text}: ${
-                                deliverable.score
+                                deliverable.evaluation.score
                               }`
                             : DELIVERABLE_STATE[deliverable.state].text}
                         </div>
@@ -116,11 +131,12 @@ const EvaluationsView = () => {
                           <button
                             className="button is-primary"
                             onClick={() =>
-                              handleEvaluationButton(deliverable.team.id)
+                              handleEvaluationButton(deliverable.id)
                             }
                             disabled={
-                              deliverable.state !== "done" ||
-                              !activityState.rubric
+                              !["done", "evaluated"].includes(
+                                deliverable.state
+                              ) || !activityState.rubric
                             }
                           >
                             <span className="icon is-small">

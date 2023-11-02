@@ -13,19 +13,6 @@ export const createDeliverable = async (activity_id) => {
   return handleResponse(await fetch(url, requestOptions));
 };
 
-// export const editActivity = async (activity) => {
-//   const requestOptions = {
-//     method: 'PUT',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       ...authHeader()
-//     },
-//     body: JSON.stringify(activity)
-//   };
-//   const url = new URL(`${API_URL}/activity/edit`);
-//   return handleResponse(await fetch(url, requestOptions));
-// };
-
 export const getDeliverablesByTeam = async (team_id) => {
   const requestOptions = {
     method: "GET",
@@ -34,6 +21,31 @@ export const getDeliverablesByTeam = async (team_id) => {
       ...authHeader(),
     },
   };
-  const url = new URL(`${API_URL}/deliverable/${team_id}`);
+  const url = new URL(`${API_URL}/deliverable/getByTeamId/${team_id}`);
+  return handleResponse(await fetch(url, requestOptions));
+};
+
+export const getDeliverableById = async (deliverable_id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/deliverable/${deliverable_id}`);
+  return handleResponse(await fetch(url, requestOptions));
+};
+
+export const evaluate = async (deliverable_id, evaluation) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+    body: JSON.stringify(evaluation),
+  };
+  const url = new URL(`${API_URL}/deliverable/evaluate/${deliverable_id}`);
   return handleResponse(await fetch(url, requestOptions));
 };

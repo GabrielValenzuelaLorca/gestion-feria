@@ -89,7 +89,7 @@ function App() {
                     element={<NavbarLayout component={<EvaluationsView />} />}
                   />
                   <Route
-                    path="evaluacion/:activityId/:teamId"
+                    path="evaluacion/:deliverableId"
                     element={<NavbarLayout component={<EvaluateView />} />}
                   />
                 </>
