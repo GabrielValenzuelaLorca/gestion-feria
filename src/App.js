@@ -24,21 +24,26 @@ import AllDeliverablesView from "./views/AllDeliverablesView";
 import EvaluationsView from "./views/EvaluationsView";
 import EvaluateView from "./views/EvaluateView";
 import { useCallback } from "react";
+import { getAppActivities } from "./services/activity";
+import { addActivity } from "./store/slices/activitySlice";
 
 function App() {
   const userState = useSelector((state) => state.user);
   const periodState = useSelector((state) => state.period);
+  const activityState = useSelector((state) => state.activity);
   const dispatch = useDispatch();
-  const fetchUserCallback = useCallback(
-    (user) => {
-      dispatch(addUser(user));
-    },
-    [dispatch]
+  const [fetchUser] = useFetch(
+    getUser,
+    useCallback((user) => dispatch(addUser(user)), [dispatch])
   );
-  const [fetchUser] = useFetch(getUser, fetchUserCallback);
-  const [fetchPeriod] = useFetch(getActivePeriod, (period) => {
-    if (period) dispatch(addPeriod(period));
-  });
+  const [fetchPeriod] = useFetch(
+    getActivePeriod,
+    useCallback((period) => dispatch(addPeriod(period)), [dispatch])
+  );
+  const [fetchActivities] = useFetch(
+    getAppActivities,
+    useCallback((activity) => dispatch(addActivity(activity)), [dispatch])
+  );
 
   useEffect(() => {
     if (userState.id && !userState.rol) fetchUser(userState.id);
@@ -47,6 +52,10 @@ function App() {
   useEffect(() => {
     if (!periodState.id) fetchPeriod();
   }, [fetchPeriod, periodState.id]);
+
+  useEffect(() => {
+    if (!activityState) fetchActivities();
+  }, [fetchActivities, activityState]);
 
   return (
     <Router>
@@ -57,7 +66,7 @@ function App() {
           </Route>
           <Route path="login" element={<LoginView />} />
         </Routes>
-      ) : !userState.rol || !periodState.id ? (
+      ) : !userState.rol || !periodState.id || !activityState ? (
         <progress className="progress is-primary" />
       ) : (
         <Routes>
