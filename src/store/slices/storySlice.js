@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [
   {
-    id:1,
+    id: 1,
     titulo: "Crear tablero de historias de usuario",
     estado: "Backlog",
     numero: 1,
@@ -13,10 +13,10 @@ const initialState = [
     descripcion: "Esto es una descripción",
     criterios: "Esto es un criterio",
     responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
-    index: 0
+    index: 0,
   },
   {
-    id:2,
+    id: 2,
     titulo: "item 2",
     estado: "Backlog",
     numero: 2,
@@ -27,10 +27,10 @@ const initialState = [
     descripcion: "Esto es una descripción",
     criterios: "Esto es un criterio",
     responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
-    index: 1
+    index: 1,
   },
   {
-    id:3,
+    id: 3,
     titulo: "item 3",
     estado: "Backlog",
     numero: 3,
@@ -41,10 +41,10 @@ const initialState = [
     descripcion: "Esto es una descripción",
     criterios: "Esto es un criterio",
     responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
-    index: 2
+    index: 2,
   },
   {
-    id:4,
+    id: 4,
     titulo: "item 4",
     estado: "Por Hacer",
     numero: 4,
@@ -54,11 +54,17 @@ const initialState = [
     sprint: "Sin Definir",
     descripcion: "Esto es una descripción",
     criterios: "Esto es un criterio",
-    responsables: ["Pedro Godoy", "Gabriel Valenzuela", "Cecilia Reyes", "Luis Hevia", "Liubov Dombrovskaia"],
-    index: 0
+    responsables: [
+      "Pedro Godoy",
+      "Gabriel Valenzuela",
+      "Cecilia Reyes",
+      "Luis Hevia",
+      "Liubov Dombrovskaia",
+    ],
+    index: 0,
   },
   {
-    id:5,
+    id: 5,
     titulo: "item 5",
     estado: "Por Hacer",
     numero: 5,
@@ -69,24 +75,27 @@ const initialState = [
     descripcion: "Esto es una descripción",
     criterios: "Esto es un criterio",
     responsables: ["Pedro Godoy", "Gabriel Valenzuela"],
-    index: 1
-  }
+    index: 1,
+  },
 ];
 
 export const storySlice = createSlice({
-  name: 'story',
+  name: "stories",
   initialState,
   reducers: {
     addStory: (state, action) => {
       state.push(action.payload);
     },
     updateStories: (state, action) => {
-      const modified_ids = action.payload.map(story => story.id);
-      return [...action.payload, ...state.filter(story => !modified_ids.includes(story.id))];
+      const modified_ids = action.payload.map((story) => story.id);
+      return [
+        ...action.payload,
+        ...state.filter((story) => !modified_ids.includes(story.id)),
+      ];
     },
   },
-})
+});
 
 export const { addStory, updateStories } = storySlice.actions;
 
-export default storySlice.reducer
+export default storySlice.reducer;

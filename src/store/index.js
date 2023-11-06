@@ -7,7 +7,7 @@ import activitySlice from "./slices/activitySlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
-    story: storyReducer,
+    stories: storyReducer,
     period: periodSlice,
     activity: activitySlice,
   },

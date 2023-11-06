@@ -1,120 +1,102 @@
-import React, { useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { addStory } from '../../store/slices/storySlice';
-import { newStory } from '../../utils/functions'
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import useForm from "../../hooks/useForm";
+import { Form, Input, Textarea } from "../Forms";
+import useFetch from "../../hooks/useFetch";
+import { createStory } from "../../services/story";
 
-const StoryForm = ({isActive, handleClose}) => {  
-  const stories = useSelector(state => state.stories);
-  const dispatch = useDispatch();
-  const formRef = useRef({}); 
-  const warningRef = useRef({});
+const StoryForm = ({ isActive, handleClose }) => {
+  const user = useSelector((state) => state.user);
+  const defaultStoryState = {
+    number: "",
+    title: "",
+    description: "",
+    team_id: user.team.id,
+  };
+  const [storyState, setStory] = useState(defaultStoryState);
+  const form = useForm(storyState, setStory);
+  const [doCreate, loadingCreate] = useFetch(createStory);
 
-  const save = () => {
-    let result = {};
-    let validation = true;
-
-    Object.keys(formRef.current).forEach(field => {
-      const element = formRef.current[field];
-      const inputClass = element.classList;
-      const warningMessageClass = warningRef.current[field].classList;
-
-      if(element.value === ""){
-        inputClass.add('is-danger')
-        warningMessageClass.remove('is-hidden');     
-        validation = false; 
-      } else {
-        result[field] = element.value;
-        inputClass.remove('is-danger')
-        warningMessageClass.add('is-hidden');   
-      }
-    });
-
-    if (validation){
-      const max_index = Math.max(...stories.filter(s => s.estado === 'Backlog').map(s => s.index));
-      const max_id = Math.max(...stories.map(s => s.id));
-      const new_story = newStory({
-        ...result,
-        id: max_id + 1,
-        index: max_index + 1,
-      });
-
-      dispatch(addStory(new_story));
-
+  const save = async () => {
+    if (form.validationState) {
+      await doCreate(storyState);
+      handleClose();
       clearForm();
-    } 
-  }
+    } else {
+      form.setShowError(true);
+    }
+  };
+
+  const cancel = () => {
+    form.setShowError(false);
+    handleClose();
+    clearForm();
+  };
 
   const clearForm = () => {
-    Object.keys(formRef.current).forEach(field => {
-      formRef.current[field].value = "";
-    });
-
-    handleClose();
-  }
+    setStory(defaultStoryState);
+  };
 
   return (
-    <section className={`modal ${ isActive ? "is-active" : "" }`}>
-      <div className="modal-background" onClick={handleClose}/>
+    <section className={`modal ${isActive ? "is-active" : ""}`}>
+      <div className="modal-background" onClick={handleClose} />
 
       <article className="modal-card">
         <header className="modal-card-head">
           <p className="has-text-weight-bold is-size-4">
-            Definición de Historias
+            Crear Historia de Usuario
           </p>
         </header>
 
         <section className="modal-card-body">
-          <div className="field">
-            <label className="label">Número Historia</label>
-            <div className="control">
-              <div className="field has-addons">
-                <div className="control">
-                  <button className="button is-static">HU</button>
-                </div>
+          <Form form={form}>
+            <Input
+              name="number"
+              label="Número Historia"
+              type="number"
+              placeholder="10"
+              min="0"
+              validations={["required"]}
+              addons={<button className="button is-static">HU</button>}
+            />
 
-                <div className="control">
-                  <input ref={el => formRef.current.numero = el} className="input" type="number" placeholder="10" min="0" />
-                </div>
-              </div>
-            </div>
-            <p ref={el => warningRef.current.numero = el} className="help is-danger is-hidden">
-              Este campo es obligatorio
-            </p>
-          </div>
+            <Input
+              name="title"
+              label="Título Historia"
+              type="text"
+              placeholder="Creación de usuarios, CRUD perfiles, etc..."
+              validations={["required"]}
+            />
 
-          <div className="field">
-            <label className="label">Título Historia</label>
-            <div className="control">
-              <input ref={el => formRef.current.titulo = el} className="input" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..."/>
-            </div>
-            <p ref={el => warningRef.current.titulo = el} className="help is-danger is-hidden">
-              Este campo es obligatorio
-            </p>
-          </div>
-
-          <div className="field">
-            <label className="label">Descripción Historia</label>
-            <div className="control">
-              <textarea ref={el => formRef.current.descripcion = el} className="textarea" placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."/>
-            </div>
-            <p ref={el => warningRef.current.descripcion = el} className="help is-danger is-hidden">
-              Este campo es obligatorio
-            </p>
-          </div>
+            <Textarea
+              name="description"
+              label="Descripción Historia"
+              placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
+              validations={["required"]}
+            />
+          </Form>
         </section>
 
         <footer className="modal-card-foot">
-          <button className="button is-success" onClick={save}>
+          <button
+            className={`button is-success ${loadingCreate ? "is-loading" : ""}`}
+            onClick={save}
+            disabled={loadingCreate}
+          >
             Crear
           </button>
 
-          <button className="button is-danger" onClick={clearForm}>
+          <button
+            className={`button is-danger ${loadingCreate ? "is-loading" : ""}`}
+            onClick={cancel}
+            disabled={loadingCreate}
+          >
             Cancelar
           </button>
         </footer>
       </article>
     </section>
-  )
-}
+  );
+};
 
 export default StoryForm;

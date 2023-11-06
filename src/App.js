@@ -108,6 +108,10 @@ function App() {
                 path="evaluacion/:deliverableId"
                 element={<NavbarLayout component={<EvaluateView />} />}
               />
+              <Route
+                path="historias"
+                element={<NavbarLayout component={<StoriesView />} />}
+              />
             </>
           )}
           {"Alumno" === userState.rol && (

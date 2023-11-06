@@ -10,6 +10,9 @@ const Input = ({
   customValidations = [],
   disabled = false,
   icon,
+  min = "",
+  max = "",
+  addons,
   state,
   setState,
   showErrorState = false,
@@ -49,34 +52,40 @@ const Input = ({
           <span className={"has-text-danger"}>*</span>
         )}
       </label>
-      <div className={`control ${icon ? "has-icons-left" : ""}`}>
-        <input
-          name={name}
-          className={`input ${
-            showErrorState && localErrorState ? "is-danger" : ""
-          }`}
-          value={
-            (type !== "date"
-              ? state[name]
-              : state[name].replaceAll("/", "-")) || ""
-          }
-          type={type}
-          placeholder={placeholder}
-          onChange={handleChange}
-          disabled={disabled}
-          onKeyDown={
-            onKeyDown
-              ? (e) => {
-                  e.key === "Enter" && onKeyDown();
-                }
-              : undefined
-          }
-        />
-        {icon && (
-          <span className="icon is-small is-left">
-            <i className={icon}></i>
-          </span>
-        )}
+      <div className="control">
+        <div className={`field ${addons ? "has-addons" : ""}`}>
+          {addons && <div className="control">{addons}</div>}
+          <div className={`control ${icon ? "has-icons-left" : ""}`}>
+            <input
+              name={name}
+              className={`input ${
+                showErrorState && localErrorState ? "is-danger" : ""
+              }`}
+              value={
+                (type !== "date"
+                  ? state[name]
+                  : state[name].replaceAll("/", "-")) || ""
+              }
+              type={type}
+              {...(type === "number" ? { min, max } : {})}
+              placeholder={placeholder}
+              onChange={handleChange}
+              disabled={disabled}
+              onKeyDown={
+                onKeyDown
+                  ? (e) => {
+                      e.key === "Enter" && onKeyDown();
+                    }
+                  : undefined
+              }
+            />
+            {icon && (
+              <span className="icon is-small is-left">
+                <i className={icon}></i>
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       {showErrorState && localErrorState && (
