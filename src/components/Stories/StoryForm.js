@@ -5,7 +5,7 @@ import { Form, Input, Textarea } from "../Forms";
 import useFetch from "../../hooks/useFetch";
 import { createStory } from "../../services/story";
 
-const StoryForm = ({ isActive, handleClose }) => {
+const StoryForm = ({ isActive, handleClose, refresh }) => {
   const user = useSelector((state) => state.user);
   const defaultStoryState = {
     number: "",
@@ -20,6 +20,7 @@ const StoryForm = ({ isActive, handleClose }) => {
   const save = async () => {
     if (form.validationState) {
       await doCreate(storyState);
+      await refresh();
       handleClose();
       clearForm();
     } else {

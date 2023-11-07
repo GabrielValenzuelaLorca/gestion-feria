@@ -1,5 +1,12 @@
 export const CRITICIDAD = ["Importante", "Esencial", "Deseable", "Opcional"];
 
+export const STORY_STATES = [
+  "Por Hacer",
+  "En Progreso",
+  "Testing",
+  "Terminado",
+];
+
 export const ACTIVITIES_TYPES = [
   "Documento",
   "Presentación",

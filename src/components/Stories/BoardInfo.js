@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import StoryForm from "./StoryForm";
 import { setModalState } from "../../utils/functions";
 
-const BoardInfo = () => {
+const BoardInfo = ({ refresh }) => {
   const [modalState, setModal] = useState(false);
 
   return (
@@ -16,10 +16,9 @@ const BoardInfo = () => {
             el titulo y la descripción.
           </p>
         </div>
+
         <div className="block">
           <p>Fecha de Cierre: 05/09/2021</p>
-        </div>
-        <div className="block">
           <p>Tiempo Restante: 5 días</p>
         </div>
         <button
@@ -36,6 +35,7 @@ const BoardInfo = () => {
       <StoryForm
         isActive={modalState}
         handleClose={() => setModalState(false, setModal)}
+        refresh={refresh}
       />
     </section>
   );
