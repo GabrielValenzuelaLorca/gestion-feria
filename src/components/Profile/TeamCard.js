@@ -9,9 +9,19 @@ import { Form, Input } from "../Forms";
 import Members from "./Members";
 import TeamForm from "./TeamForm";
 
+const flatMembers = (team) => {
+  if (team.id) {
+    return {
+      ...team,
+      members: team.members.map((member) => member.id),
+    };
+  }
+  return team;
+};
+
 const TeamCard = ({ user }) => {
   const [teamModal, setTeamModal] = useState(false);
-  const [teamState, setTeamState] = useState(user.team);
+  const [teamState, setTeamState] = useState(flatMembers(user.team));
   const [editState, setEdit] = useState(false);
   const dispatch = useDispatch();
   const form = useForm(teamState, setTeamState);
@@ -20,7 +30,7 @@ const TeamCard = ({ user }) => {
   });
 
   useEffect(() => {
-    setTeamState(user.team);
+    setTeamState(flatMembers(user.team));
   }, [user.team]);
 
   const handleUpdate = async () => {
@@ -39,7 +49,7 @@ const TeamCard = ({ user }) => {
   const handleCancel = () => {
     form.setShowError(false);
     setEdit(false);
-    setTeamState(user.team);
+    setTeamState(flatMembers(user.team));
   };
 
   return (

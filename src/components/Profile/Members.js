@@ -11,12 +11,10 @@ const Members = ({ team, userId, setTeam, editable = false, ...rest }) => {
     () =>
       students
         .filter(
-          (student) =>
-            (!student.team.id || student.team.id === team.id) &&
-            !team.members.includes(student.id)
+          (student) => !student.team.id && !team.members.includes(student.id)
         )
         .map((student) => ({ text: student.name, value: student.id })),
-    [students, team.members, team.id]
+    [students, team.members]
   );
 
   useEffect(() => {

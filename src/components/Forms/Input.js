@@ -9,10 +9,12 @@ const Input = ({
   validations = [],
   customValidations = [],
   disabled = false,
+  style = {},
   icon,
   min = "",
   max = "",
   addons,
+  rightAddons,
   state,
   setState,
   showErrorState = false,
@@ -45,7 +47,7 @@ const Input = ({
   }, [name, state, setError]);
 
   return (
-    <div className="field">
+    <div className="field" style={style}>
       <label className="label">
         {label}
         {validations.includes("required") && (
@@ -53,9 +55,11 @@ const Input = ({
         )}
       </label>
       <div className="control">
-        <div className={`field ${addons ? "has-addons" : ""}`}>
+        <div className={`field ${addons || rightAddons ? "has-addons" : ""}`}>
           {addons && <div className="control">{addons}</div>}
-          <div className={`control ${icon ? "has-icons-left" : ""}`}>
+          <div
+            className={`control ${icon ? "has-icons-left" : ""} is-expanded`}
+          >
             <input
               name={name}
               className={`input ${
@@ -85,6 +89,7 @@ const Input = ({
               </span>
             )}
           </div>
+          {rightAddons && <div className="control">{rightAddons}</div>}
         </div>
       </div>
 

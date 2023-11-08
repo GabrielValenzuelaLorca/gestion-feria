@@ -1,68 +1,44 @@
-import React, { useRef } from 'react'
-import { useDispatch } from 'react-redux';
-import { updateStories } from '../../store/slices/storySlice';
-import { criticidadStyle } from '../../utils/classStyles';
-import { CRITICIDAD, RESPONSABLES_SAMPLE } from '../../utils/constants';
-import { newStory } from '../../utils/functions';
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateStories } from "../../store/slices/storySlice";
+import { criticidadStyle } from "../../utils/classStyles";
+import { CRITICIDAD, RESPONSABLES_SAMPLE } from "../../utils/constants";
+import { newStory } from "../../utils/functions";
+import useForm from "../../hooks/useForm";
+import { Form, Input, Select, Textarea } from "../Forms";
+import { useMemo } from "react";
 
-const StoryDetails = ({story, isActive, closeModal}) => {  
+const StoryDetails = ({ story, isActive, closeModal }) => {
   const modalBodyRef = useRef();
   const dispatch = useDispatch();
+  const [editState, setEdit] = useState(false);
+  const [storyState, setStory] = useState(story);
+  const form = useForm(storyState, setStory);
+  const user = useSelector((state) => state.user);
 
-  const selectResponsable = (element) => {
-    const classList = element.classList;
-    classList.toggle('selected');
-    classList.toggle('is-link');
-  }
-
-  const changeColorSelect = (element) => {
-    element.classList = "";
-    const classList = element.classList;
-    classList.add("form-value");
-    classList.add(`has-background-${criticidadStyle[element.value]}`);
-    if (["Importante", "Deseable"].includes(element.value))
-      classList.add("has-text-white");
-  }
-
-  const toggleForm = () => {
-    const forHideEl = modalBodyRef.current.querySelectorAll('.for-hide');
-    const forReadEl = modalBodyRef.current.querySelectorAll('.for-read');
-    const select = modalBodyRef.current.querySelector('select');
-
-    forHideEl.forEach(element => 
-      element.classList.toggle("is-hidden")
-    )
-
-    forReadEl.forEach(element => 
-      element.toggleAttribute("readonly")
-    )
-    changeColorSelect(select);
-  }
-
-  const clearForm = () => {
-    const formData = modalBodyRef.current.querySelectorAll('.form-value');
-    formData.forEach(element => {
-      if (element.classList.contains("buttons")){
-        [...element.children].forEach(resp => {
-          resp.classList = "button";
-          if (story.responsables.includes(resp.innerText))
-            selectResponsable(resp);
-        })
-      } else 
-        element.value = story[element.name];
-    });
-  }
+  const teamMembersAsOptions = useMemo(
+    () =>
+      user.team.members
+        .filter((member) => !storyState.responsables.includes(member.id))
+        .map((member) => ({
+          value: member.id,
+          text: member.name,
+        })),
+    [storyState.responsables, user.team.members]
+  );
 
   const handleSave = () => {
     let result = {};
     let validation = true;
-    const formData = modalBodyRef.current.querySelectorAll('.form-value');
-    
-    formData.forEach(element => {
-      if(element.classList.contains("required")){
+    const formData = modalBodyRef.current.querySelectorAll(".form-value");
+
+    formData.forEach((element) => {
+      if (element.classList.contains("required")) {
         const inputClass = element.classList;
-        const warningMessageClass = modalBodyRef.current.querySelector(`.warning-${element.name}`).classList;
-        if(element.value === ""){
+        const warningMessageClass = modalBodyRef.current.querySelector(
+          `.warning-${element.name}`
+        ).classList;
+        if (element.value === "") {
           inputClass.add("is-danger");
           warningMessageClass.remove("is-hidden");
           validation = false;
@@ -73,8 +49,14 @@ const StoryDetails = ({story, isActive, closeModal}) => {
         }
       } else if (element.classList.contains("validate-number")) {
         const inputClass = element.classList;
-        const warningMessageClass = modalBodyRef.current.querySelector(`.warning-${element.name}`).classList;
-        if(parseInt(element.value, 10) < parseInt(element.min, 10) || (element.max !== "" && parseInt(element.value, 10) > parseInt(element.max, 10))){
+        const warningMessageClass = modalBodyRef.current.querySelector(
+          `.warning-${element.name}`
+        ).classList;
+        if (
+          parseInt(element.value, 10) < parseInt(element.min, 10) ||
+          (element.max !== "" &&
+            parseInt(element.value, 10) > parseInt(element.max, 10))
+        ) {
           inputClass.add("is-danger");
           warningMessageClass.remove("is-hidden");
           validation = false;
@@ -83,202 +65,237 @@ const StoryDetails = ({story, isActive, closeModal}) => {
           warningMessageClass.add("is-hidden");
           result[element.name] = element.value;
         }
-      } else if (element.classList.contains("buttons")){
+      } else if (element.classList.contains("buttons")) {
         result.responsables = [];
-        [...element.children].forEach(resp => {
-          if (resp.classList.contains('selected'))
-            result.responsables.push(resp.innerText)
-        })
-      } else 
-        result[element.name] = element.value === "" ? null : element.value;
+        [...element.children].forEach((resp) => {
+          if (resp.classList.contains("selected"))
+            result.responsables.push(resp.innerText);
+        });
+      } else result[element.name] = element.value === "" ? null : element.value;
     });
 
-    if(validation){
-      result = newStory({...story, ...result});
+    if (validation) {
+      result = newStory({ ...story, ...result });
       dispatch(updateStories([result]));
-      toggleForm();
     }
-  }
+  };
+
+  const clearForm = () => {
+    setStory(story);
+  };
 
   const handleCancel = () => {
-    toggleForm();
     clearForm();
-  }
+    setEdit(false);
+  };
+
+  const handleClose = () => {
+    closeModal();
+    setEdit(false);
+  };
 
   return (
-    <section className={`modal ${ isActive ? "is-active" : "" }`}>
+    <section className={`modal ${isActive ? "is-active" : ""}`}>
       <div className="modal-background" onClick={closeModal}></div>
-      
+
       <article ref={modalBodyRef} className="modal-card">
         <header className="modal-card-head">
-          <p className="has-text-weight-bold is-size-4">
-            HU{story.numero} - {story.titulo}
+          <p className="modal-card-title">
+            HU{story.number} - {story.title}
           </p>
+
+          {!editState && (
+            <button
+              className="button is-link is-rounded is-small mr-2"
+              onClick={() => setEdit(true)}
+            >
+              <span className="icon is-small">
+                <i className="fas fa-pen-to-square"></i>
+              </span>
+              <span>Editar</span>
+            </button>
+          )}
+          <button className="delete is-medium" onClick={handleClose}></button>
         </header>
 
         <section className="modal-card-body">
-          {/* Sección form numero */}
-          <div className="field is-hidden for-hide">
-            <label className="label">Número Historia</label>
-            <div className="control">
-              <div className="field has-addons">
+          {!editState ? (
+            <>
+              <div className="field">
+                <label className="label">Descripción</label>
                 <div className="control">
-                  <button className="button is-static">HU</button>
-                </div>
-
-                <div className="control">
-                  <input className="input form-value required" name="numero" type="number" placeholder="10" min="0" defaultValue={story.numero}/>
+                  <p className={story.description ? "" : "is-italic"}>
+                    {story.description || "Sin Descripción"}
+                  </p>
                 </div>
               </div>
-            </div>
-            <p className="help is-danger is-hidden warning-numero">
-              Este campo es obligatorio
-            </p>
-          </div>
-
-          {/* Sección form titulo */}
-          <div className="field is-hidden for-hide">
-            <label className="label">Título Historia</label>
-            <div className="control">
-              <input className="input form-value required" name="titulo" type="text" placeholder="Creación de usuarios, CRUD perfiles, etc..." defaultValue={story.titulo}/>
-            </div>
-            <p className="help is-danger is-hidden warning-titulo">
-              Este campo es obligatorio
-            </p>
-          </div>
-
-          {/* Sección descripción */}
-          <div className="field">
-            <label className="label">Descripción Historia</label>
-            <div className="control">
-              <textarea className="textarea for-read form-value required" name="descripcion" 
-              placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
-              defaultValue={ story.descripcion || "Sin Descripción" }
-              readOnly/>
-            </div>
-            <p className="help is-danger is-hidden warning-descripcion">
-              Este campo es obligatorio
-            </p>
-          </div>
-
-          {/* Sección puntos */}
-          <div className="field for-hide">
-            <label className="label">Puntos de Historia </label>     
-            <span className="tag is-medium is-primary">{story.puntos} Puntos</span>    
-          </div>
-
-          {/* Sección avance */}
-          <div className="field for-hide">
-            <label className="label level is-mobile">
-              <span className="level-left">Porcentaje de Avance</span>
-              <span className="level-right">{story.avance}%</span>
-            </label>     
-            <progress className="progress is-link" value={story.avance} max="100">{story.avance}</progress>    
-          </div>
-
-          {/* Sección form de puntos y avance */}
-          <div className="field is-horizontal is-hidden for-hide">
-            <div className="field-body">
               <div className="field">
                 <label className="label">Puntos de Historia</label>
-                <div className="control">
-                  <input className="input form-value validate-number" name="puntos" type="number" placeholder="10" min="0" defaultValue={story.puntos}/>
-                </div>
-                <p className="help is-danger is-hidden warning-puntos">
-                  Valor inválido
-                </p>
+                <span className="tag is-medium is-primary is-rounded">
+                  {story.points} Puntos
+                </span>
               </div>
               <div className="field">
-                <label className="label">Porcentaje de Avance</label>
+                <label className="label level is-mobile">
+                  <span className="level-left">Porcentaje de Avance</span>
+                  <span className="level-right">{story.progress}%</span>
+                </label>
+                <progress
+                  className="progress is-primary"
+                  value={story.progress}
+                  max="100"
+                >
+                  {story.progress}
+                </progress>
+              </div>
+              <div className="field">
+                <label className="label">Criterios de Aceptación</label>
                 <div className="control">
-                  <div className="field has-addons">
-                    <div className="control is-expanded">
-                      <input className="input form-value validate-number" name="avance" type="number" placeholder="50" min="0" max="100" defaultValue={story.avance}/>
-                    </div>
-                    <div className="control">
-                      <button className="button is-static">%</button>
-                    </div>
-                  </div>
+                  <p className={story.criteria ? "" : "is-italic"}>
+                    {story.criteria || "Sin Criterios de Aceptación"}
+                  </p>
                 </div>
-                <p className="help is-danger is-hidden warning-avance">
-                  Valor inválido
-                </p>
               </div>
-            </div>
-          </div>
-
-          {/* Sección criterios de aceptación */}
+              <div className="field">
+                <label className="label">Criticidad</label>
+                <span
+                  className={`tag is-rounded is-medium is-${
+                    criticidadStyle[story.criticality]
+                  }`}
+                >
+                  {story.criticality}
+                </span>
+              </div>
+            </>
+          ) : (
+            <Form form={form}>
+              <Input
+                name="number"
+                label="Número Historia"
+                type="number"
+                placeholder="10"
+                min="0"
+                validations={["required"]}
+                addons={<button className="button is-static">HU</button>}
+              />
+              <Input
+                name="title"
+                label="Título Historia"
+                type="text"
+                placeholder="Creación de usuarios, CRUD perfiles, etc..."
+                validations={["required"]}
+              />
+              <Textarea
+                name="description"
+                label="Descripción Historia"
+                placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
+                validations={["required"]}
+              />
+              <Input
+                name="points"
+                label="Puntos de Historia"
+                style={{ width: "50%" }}
+                type="number"
+                placeholder="10"
+                min="0"
+                validations={["required"]}
+              />
+              <Input
+                name="progress"
+                label="Porcentaje de Avance"
+                style={{ width: "50%" }}
+                type="number"
+                placeholder="50"
+                min="0"
+                max="100"
+                validations={["required"]}
+                rightAddons={<button className="button is-static">%</button>}
+              />
+              <Textarea
+                name="criteria"
+                label="Criterios de Aceptación"
+                placeholder="El sistema debe ser capaz de..."
+              />
+              <Select
+                name="criticality"
+                label={
+                  <span>
+                    <span>Criticidad</span>
+                    <span
+                      className={`icon has-text-${
+                        criticidadStyle[storyState.criticality]
+                      }`}
+                    >
+                      <i className="fas fa-circle"></i>
+                    </span>
+                  </span>
+                }
+                options={CRITICIDAD}
+              />
+              <Select
+                name="responsables"
+                label="Responsable(s)"
+                options={teamMembersAsOptions}
+                multiple={true}
+              />
+            </Form>
+          )}
           <div className="field">
-            <label className="label">Criterios de Aceptación</label>
+            <label className="label">{editState ? "" : "Responsable(s)"}</label>
             <div className="control">
-              <textarea className="textarea for-read form-value" name="criterios" 
-              placeholder="El sistema debe ser capaz de..."
-              defaultValue={story.criterios || "Sin Criterios de Aceptación"}
-              readOnly/>
-            </div>
-          </div>
-
-          {/* Sección criticidad */}
-          <div className="field">
-            <label className="label">Criticidad</label>    
-            <span className={`tag is-medium is-${criticidadStyle[story.criticidad]} for-hide`}>
-              {story.criticidad}
-            </span>
-            <div className="control is-hidden for-hide">
-              <div className="select">
-                <select className="form-value" name="criticidad" defaultValue={story.criticidad} onChange={el => changeColorSelect(el.target)}>
-                  {CRITICIDAD.map((item,i) => 
-                    <option className="has-background-white has-text-black" key={i} value={item}>{item}</option>
-                  )}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Sección responsables */}
-          <div className="field">   
-            <label className="label">Responsable(s)</label>  
-            <div className="control for-hide">
-              <div className="tags">
-                {story.responsables.length ? 
-                  story.responsables.map((responsable, index)=>
-                    <span className="tag is-light is-medium" key={index}>{responsable}</span>
-                  ) : 
-                  <span className="tag is-light is-medium">Sin Responsables</span>
-              }
-              </div>
-            </div>
-
-            <div className="control is-hidden for-hide">
-              <div className="buttons form-value">
-                {RESPONSABLES_SAMPLE.map((resp, i) =>
-                  <button key={i} className={`button ${story.responsables.includes(resp) ? "selected is-link" : ""}`} onClick={el => selectResponsable(el.target)}>{resp}</button>
+              <div className="tags are-medium">
+                {(editState ? storyState.responsables : story.responsables)
+                  .length ? (
+                  (editState
+                    ? storyState.responsables
+                    : story.responsables
+                  ).map((responsable, index) => (
+                    <span className="tag is-rounded is-primary" key={index}>
+                      {
+                        user.team.members.find(
+                          (member) => member.id === responsable
+                        ).name
+                      }
+                      {editState && (
+                        <button
+                          className="delete is-small"
+                          type="button"
+                          onClick={() =>
+                            setStory((state) => ({
+                              ...state,
+                              responsables: state.responsables.filter(
+                                (member) => member !== responsable
+                              ),
+                            }))
+                          }
+                        />
+                      )}
+                    </span>
+                  ))
+                ) : (
+                  <span className="tag is-rounded is-light">
+                    Sin Responsables
+                  </span>
                 )}
               </div>
             </div>
           </div>
         </section>
 
-        <footer className="modal-card-foot">
-          <button className="button is-link for-hide" onClick={toggleForm}>
-            Editar
-          </button>
+        {editState && (
+          <footer className="modal-card-foot">
+            <button className="button is-success" onClick={handleSave}>
+              Guardar
+            </button>
 
-          <button className="button is-link for-hide" onClick={closeModal}>
-            Cerrar
-          </button>
-          
-          <button  className="button is-success is-hidden for-hide" onClick={handleSave}>
-            Guardar
-          </button>
-
-          <button className="button is-danger is-hidden for-hide" type="reset" onClick={handleCancel}>
-            Cancelar
-          </button>
-        </footer>
+            <button className="button is-danger" onClick={handleCancel}>
+              Cancelar
+            </button>
+          </footer>
+        )}
       </article>
     </section>
-  )
-}
+  );
+};
 
 export default StoryDetails;
