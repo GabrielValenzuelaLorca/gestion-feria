@@ -1,20 +1,20 @@
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { updateStories } from "../../store/slices/storySlice";
+import { useSelector } from "react-redux";
 import { criticidadStyle } from "../../utils/classStyles";
-import { CRITICIDAD, RESPONSABLES_SAMPLE } from "../../utils/constants";
-import { newStory } from "../../utils/functions";
+import { CRITICIDAD } from "../../utils/constants";
 import useForm from "../../hooks/useForm";
 import { Form, Input, Select, Textarea } from "../Forms";
 import { useMemo } from "react";
+import useFetch from "../../hooks/useFetch";
+import { updateStory } from "../../services/story";
 
 const StoryDetails = ({ story, isActive, closeModal }) => {
   const modalBodyRef = useRef();
-  const dispatch = useDispatch();
   const [editState, setEdit] = useState(false);
   const [storyState, setStory] = useState(story);
   const form = useForm(storyState, setStory);
   const user = useSelector((state) => state.user);
+  const [fetchUpdate, loadingUpdate] = useFetch(updateStory);
 
   const teamMembersAsOptions = useMemo(
     () =>
@@ -27,56 +27,13 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
     [storyState.responsables, user.team.members]
   );
 
-  const handleSave = () => {
-    let result = {};
-    let validation = true;
-    const formData = modalBodyRef.current.querySelectorAll(".form-value");
-
-    formData.forEach((element) => {
-      if (element.classList.contains("required")) {
-        const inputClass = element.classList;
-        const warningMessageClass = modalBodyRef.current.querySelector(
-          `.warning-${element.name}`
-        ).classList;
-        if (element.value === "") {
-          inputClass.add("is-danger");
-          warningMessageClass.remove("is-hidden");
-          validation = false;
-        } else {
-          inputClass.remove("is-danger");
-          warningMessageClass.add("is-hidden");
-          result[element.name] = element.value;
-        }
-      } else if (element.classList.contains("validate-number")) {
-        const inputClass = element.classList;
-        const warningMessageClass = modalBodyRef.current.querySelector(
-          `.warning-${element.name}`
-        ).classList;
-        if (
-          parseInt(element.value, 10) < parseInt(element.min, 10) ||
-          (element.max !== "" &&
-            parseInt(element.value, 10) > parseInt(element.max, 10))
-        ) {
-          inputClass.add("is-danger");
-          warningMessageClass.remove("is-hidden");
-          validation = false;
-        } else {
-          inputClass.remove("is-danger");
-          warningMessageClass.add("is-hidden");
-          result[element.name] = element.value;
-        }
-      } else if (element.classList.contains("buttons")) {
-        result.responsables = [];
-        [...element.children].forEach((resp) => {
-          if (resp.classList.contains("selected"))
-            result.responsables.push(resp.innerText);
-        });
-      } else result[element.name] = element.value === "" ? null : element.value;
-    });
-
-    if (validation) {
-      result = newStory({ ...story, ...result });
-      dispatch(updateStories([result]));
+  const handleSave = async () => {
+    if (form.validationState) {
+      await fetchUpdate(storyState);
+      closeModal();
+      handleCancel();
+    } else {
+      form.setShowError(true);
     }
   };
 
@@ -117,7 +74,6 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
           )}
           <button className="delete is-medium" onClick={handleClose}></button>
         </header>
-
         <section className="modal-card-body">
           {!editState ? (
             <>
@@ -177,6 +133,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 min="0"
                 validations={["required"]}
                 addons={<button className="button is-static">HU</button>}
+                disabled={loadingUpdate}
               />
               <Input
                 name="title"
@@ -184,12 +141,14 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 type="text"
                 placeholder="Creación de usuarios, CRUD perfiles, etc..."
                 validations={["required"]}
+                disabled={loadingUpdate}
               />
               <Textarea
                 name="description"
                 label="Descripción Historia"
                 placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
                 validations={["required"]}
+                disabled={loadingUpdate}
               />
               <Input
                 name="points"
@@ -198,7 +157,8 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 type="number"
                 placeholder="10"
                 min="0"
-                validations={["required"]}
+                validations={["required", "minNumber-0"]}
+                disabled={loadingUpdate}
               />
               <Input
                 name="progress"
@@ -208,13 +168,15 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 placeholder="50"
                 min="0"
                 max="100"
-                validations={["required"]}
+                validations={["required", "minNumber-0", "maxNumber-100"]}
                 rightAddons={<button className="button is-static">%</button>}
+                disabled={loadingUpdate}
               />
               <Textarea
                 name="criteria"
                 label="Criterios de Aceptación"
                 placeholder="El sistema debe ser capaz de..."
+                disabled={loadingUpdate}
               />
               <Select
                 name="criticality"
@@ -231,12 +193,14 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                   </span>
                 }
                 options={CRITICIDAD}
+                disabled={loadingUpdate}
               />
               <Select
                 name="responsables"
                 label="Responsable(s)"
                 options={teamMembersAsOptions}
                 multiple={true}
+                disabled={loadingUpdate}
               />
             </Form>
           )}
@@ -284,11 +248,23 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
 
         {editState && (
           <footer className="modal-card-foot">
-            <button className="button is-success" onClick={handleSave}>
+            <button
+              className={`button is-success ${
+                loadingUpdate ? "is-loading" : ""
+              }`}
+              onClick={handleSave}
+              disabled={loadingUpdate}
+            >
               Guardar
             </button>
 
-            <button className="button is-danger" onClick={handleCancel}>
+            <button
+              className={`button is-danger ${
+                loadingUpdate ? "is-loading" : ""
+              }`}
+              onClick={handleCancel}
+              disabled={loadingUpdate}
+            >
               Cancelar
             </button>
           </footer>

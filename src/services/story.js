@@ -40,3 +40,16 @@ export const updateStoriesState = async (params) => {
   const url = new URL(`${API_URL}/story/updateState`);
   return handleResponse(await fetch(url, requestOptions));
 };
+
+export const updateStory = async (story) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+    body: JSON.stringify(story),
+  };
+  const url = new URL(`${API_URL}/story/update/${story.id}`);
+  return handleResponse(await fetch(url, requestOptions));
+};

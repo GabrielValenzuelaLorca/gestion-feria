@@ -41,14 +41,12 @@ const StoryForm = ({ isActive, handleClose, refresh }) => {
   return (
     <section className={`modal ${isActive ? "is-active" : ""}`}>
       <div className="modal-background" onClick={handleClose} />
-
       <article className="modal-card">
         <header className="modal-card-head">
           <p className="has-text-weight-bold is-size-4">
             Crear Historia de Usuario
           </p>
         </header>
-
         <section className="modal-card-body">
           <Form form={form}>
             <Input
@@ -59,25 +57,25 @@ const StoryForm = ({ isActive, handleClose, refresh }) => {
               min="0"
               validations={["required"]}
               addons={<button className="button is-static">HU</button>}
+              disabled={loadingCreate}
             />
-
             <Input
               name="title"
               label="Título Historia"
               type="text"
               placeholder="Creación de usuarios, CRUD perfiles, etc..."
               validations={["required"]}
+              disabled={loadingCreate}
             />
-
             <Textarea
               name="description"
               label="Descripción Historia"
               placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
               validations={["required"]}
+              disabled={loadingCreate}
             />
           </Form>
         </section>
-
         <footer className="modal-card-foot">
           <button
             className={`button is-success ${loadingCreate ? "is-loading" : ""}`}
@@ -86,7 +84,6 @@ const StoryForm = ({ isActive, handleClose, refresh }) => {
           >
             Crear
           </button>
-
           <button
             className={`button is-danger ${loadingCreate ? "is-loading" : ""}`}
             onClick={cancel}

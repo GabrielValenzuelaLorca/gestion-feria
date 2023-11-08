@@ -1,20 +1,3 @@
-export const newStory = (story) => {
-  return {
-    id: story.id,
-    titulo: story.titulo,
-    estado: story.estado || "Backlog",
-    numero: parseInt(story.numero, 10),
-    avance: parseInt(story.avance, 10) || 0,
-    puntos: parseInt(story.puntos, 10) || 0,
-    criticidad: story.criticidad || "Opcional",
-    sprint: story.sprint || "Sin Definir",
-    descripcion: story.descripcion,
-    criterios: story.criterios || "",
-    responsables: story.responsables || [],
-    index: story.index,
-  };
-};
-
 export const setModalState = (state, setState) => {
   const root = document.getElementById("html");
   if (state) root.classList.add("is-clipped");
