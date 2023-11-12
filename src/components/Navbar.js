@@ -83,7 +83,9 @@ const Navbar = () => {
 
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable">
-              <div className="navbar-link">{user.name}</div>
+              <div className="navbar-link">
+                {user.name} {user.lastName}
+              </div>
 
               <div className="navbar-dropdown is-right">
                 <Link className="navbar-item" to="/usuario">

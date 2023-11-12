@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import { delay } from "../../utils/functions";
-import { Input, Form } from "../Forms";
+import { Input, Form, Select } from "../Forms";
 import { createUser } from "../../services/user";
 import { SHA3 } from "crypto-js";
 import { useDispatch } from "react-redux";
 import useForm from "../../hooks/useForm";
 import useFetch from "../../hooks/useFetch";
 import { addUser } from "../../store/slices/userSlice";
+import { CAMPUS } from "../../utils/constants";
+
+const defaultState = {
+  email: "",
+  name: "",
+  lastName: "",
+  campus: "",
+  password: "",
+  passwordRepeat: "",
+};
 
 const Register = ({ modalState, closeModal }) => {
-  const [formState, setForm] = useState({
-    correo: "",
-    nombre: "",
-    contraseña: "",
-    contraseña_repeat: "",
-  });
+  const [formState, setForm] = useState(defaultState);
   const [showMessage, setMessage] = useState(false);
   const dispatch = useDispatch();
   const form = useForm(formState, setForm);
@@ -29,19 +34,17 @@ const Register = ({ modalState, closeModal }) => {
   const [fetchRegister, isLoading] = useFetch(createUser, createCallback, true);
 
   const clearForm = () => {
-    const newState = Object.keys(formState).reduce((prev, acc) => {
-      prev[acc] = "";
-      return prev;
-    }, {});
-    setForm(newState);
+    setForm(defaultState);
   };
 
   const handleCreate = async () => {
     if (form.validationState) {
       await fetchRegister({
-        email: formState.correo.toLowerCase(),
-        name: formState.nombre,
-        password: SHA3(formState.contraseña).toString(),
+        email: formState.email.toLowerCase(),
+        name: formState.name,
+        lastName: formState.lastName,
+        campus: formState.campus,
+        password: SHA3(formState.password).toString(),
       });
     } else {
       form.setShowError(true);
@@ -72,7 +75,7 @@ const Register = ({ modalState, closeModal }) => {
 
           <Form className="modal-card-body" form={form}>
             <Input
-              name="correo"
+              name="email"
               label="Correo"
               type="email"
               placeholder="Ingrese su correo"
@@ -80,7 +83,7 @@ const Register = ({ modalState, closeModal }) => {
             />
 
             <Input
-              name="nombre"
+              name="name"
               label="Nombre"
               type="text"
               placeholder="Ingrese su nombre"
@@ -88,7 +91,22 @@ const Register = ({ modalState, closeModal }) => {
             />
 
             <Input
-              name="contraseña"
+              name="lastName"
+              label="Apellido"
+              type="text"
+              placeholder="Ingrese su apellido"
+              validations={["required"]}
+            />
+
+            <Select
+              name="campus"
+              label="Campus (donde rendirá el curso)"
+              options={CAMPUS}
+              validations={["required"]}
+            />
+
+            <Input
+              name="password"
               label="Contraseña"
               type="password"
               placeholder="********"
@@ -96,7 +114,7 @@ const Register = ({ modalState, closeModal }) => {
             />
 
             <Input
-              name="contraseña_repeat"
+              name="passwordRepeat"
               label="Repetir Contraseña"
               type="password"
               placeholder="********"
@@ -104,8 +122,8 @@ const Register = ({ modalState, closeModal }) => {
               customValidations={[
                 (value) => {
                   if (
-                    formState.contraseña !== "" &&
-                    formState.contraseña === value
+                    formState.password !== "" &&
+                    formState.password === value
                   ) {
                     return null;
                   }
@@ -118,13 +136,16 @@ const Register = ({ modalState, closeModal }) => {
 
           <footer className="modal-card-foot">
             <button
-              className={`button is-success ${isLoading && "is-loading"}`}
+              className={`button is-success ${isLoading ? "is-loading" : ""}`}
               onClick={handleCreate}
             >
               Registrar
             </button>
 
-            <button className="button is-danger" onClick={handleCancel}>
+            <button
+              className={`button is-danger ${isLoading ? "is-loading" : ""}`}
+              onClick={handleCancel}
+            >
               Cancelar
             </button>
           </footer>

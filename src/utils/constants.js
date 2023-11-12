@@ -51,3 +51,8 @@ export const DELIVERABLE_STATE = {
   done: { text: "Enviado", color: "is-primary" },
   evaluated: { text: "Nota", color: "is-success" },
 };
+
+export const CAMPUS = [
+  { text: "San Joaquín", value: "SJ" },
+  { text: "Casa Central", value: "CC" },
+];

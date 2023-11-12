@@ -13,6 +13,7 @@ export const userSlice = createSlice({
         "user",
         JSON.stringify({
           name: newState.name,
+          lastName: newState.lastName,
           id: newState.id,
           auth_token: newState.auth_token,
         })

@@ -4,7 +4,8 @@ import useFetch from "../../hooks/useFetch";
 import useForm from "../../hooks/useForm";
 import { updateUser } from "../../services/user";
 import { addUser } from "../../store/slices/userSlice";
-import { Form, Input } from "../Forms";
+import { Form, Input, Select } from "../Forms";
+import { CAMPUS } from "../../utils/constants";
 
 const UserCard = ({ user: { auth_token, team, ...userData } }) => {
   const [userState, setUserState] = useState(userData);
@@ -78,11 +79,28 @@ const UserCard = ({ user: { auth_token, team, ...userData } }) => {
               />
 
               <Input
+                name="lastName"
+                label="Apellido"
+                type="text"
+                placeholder="Ingrese su apellido"
+                validations={["required"]}
+                disabled={!editState}
+              />
+
+              <Input
                 name="email"
                 label="Correo"
                 type="text"
                 placeholder="Ingrese su correo"
                 validations={["required", "email"]}
+                disabled={!editState}
+              />
+
+              <Select
+                name="campus"
+                label="Campus"
+                options={CAMPUS}
+                validations={["required"]}
                 disabled={!editState}
               />
 
