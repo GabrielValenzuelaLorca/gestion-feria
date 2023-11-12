@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { criticidadStyle } from "../../utils/classStyles";
 import { CRITICIDAD } from "../../utils/constants";
@@ -7,14 +7,17 @@ import { Form, Input, Select, Textarea } from "../Forms";
 import { useMemo } from "react";
 import useFetch from "../../hooks/useFetch";
 import { updateStory } from "../../services/story";
+import { useContext } from "react";
+import { refreshContext } from "../../views/StoriesView";
 
 const StoryDetails = ({ story, isActive, closeModal }) => {
-  const modalBodyRef = useRef();
   const [editState, setEdit] = useState(false);
   const [storyState, setStory] = useState(story);
   const form = useForm(storyState, setStory);
   const user = useSelector((state) => state.user);
   const [fetchUpdate, loadingUpdate] = useFetch(updateStory);
+  const settings = useSelector((state) => state.settings);
+  const fetchStories = useContext(refreshContext);
 
   const teamMembersAsOptions = useMemo(
     () =>
@@ -30,11 +33,18 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
   const handleSave = async () => {
     if (form.validationState) {
       await fetchUpdate(storyState);
+      await fetchStories();
       closeModal();
       handleCancel();
     } else {
       form.setShowError(true);
     }
+  };
+
+  const changeSprint = async (e) => {
+    const value = e.target.value;
+    await fetchUpdate({ ...story, sprint: value });
+    await fetchStories();
   };
 
   const clearForm = () => {
@@ -55,16 +65,21 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
     <section className={`modal ${isActive ? "is-active" : ""}`}>
       <div className="modal-background" onClick={closeModal}></div>
 
-      <article ref={modalBodyRef} className="modal-card">
+      <article className="modal-card">
         <header className="modal-card-head">
           <p className="modal-card-title">
             HU{story.number} - {story.title}
           </p>
-
-          {!editState && (
+          {user.rol === "Alumno" && !settings.canEdit && (
+            <p className="is-size-7 mr-2 has-text-grey-light">
+              *La edición aún no ha sido habilitada
+            </p>
+          )}
+          {user.rol === "Alumno" && !editState && (
             <button
               className="button is-link is-rounded is-small mr-2"
               onClick={() => setEdit(true)}
+              disabled={!settings.canEdit}
             >
               <span className="icon is-small">
                 <i className="fas fa-pen-to-square"></i>
@@ -72,9 +87,36 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
               <span>Editar</span>
             </button>
           )}
+
           <button className="delete is-medium" onClick={handleClose}></button>
         </header>
         <section className="modal-card-body">
+          <div className="field">
+            <label className="label">Sprint</label>
+            <div className="control">
+              <div className="select">
+                <select
+                  name="sprint"
+                  onChange={changeSprint}
+                  value={story.sprint}
+                  disabled={loadingUpdate || !settings.canAssign}
+                >
+                  {["Backlog", "MVP", "Sprint 1", "Sprint 2", "Sprint 3"].map(
+                    (option, i) => (
+                      <option value={option} key={i}>
+                        {option}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+            </div>
+            {user.rol === "Alumno" && !settings.canAssign && (
+              <p className="is-size-7 has-text-grey-light">
+                *La asignación de sprint aún no ha sido habilitada
+              </p>
+            )}
+          </div>
           {!editState ? (
             <>
               <div className="field">

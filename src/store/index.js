@@ -2,14 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice";
 import storyReducer from "./slices/storySlice";
 import periodSlice from "./slices/periodSlice";
-import activitySlice from "./slices/activitySlice";
+import activitiesSlice from "./slices/activitiesSlice";
+import settingsSlice from "./slices/settingsSlice";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     stories: storyReducer,
     period: periodSlice,
-    activity: activitySlice,
+    activities: activitiesSlice,
+    settings: settingsSlice,
   },
 });
 

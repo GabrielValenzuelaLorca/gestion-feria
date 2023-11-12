@@ -1,35 +1,68 @@
-import React from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  createContext,
+  useCallback,
+} from "react";
 import BoardInfo from "../components/Stories/BoardInfo";
 import Board from "../components/Stories/Board";
-import { useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { getStoriesBySprint, updateStoriesState } from "../services/story";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
+
+export const refreshContext = createContext();
 
 const StoriesView = () => {
   const user = useSelector((state) => state.user);
+  const settings = useSelector((state) => state.settings);
   const [storiesState, setStories] = useState([]);
+  const [filterState, setFilter] = useState();
   const [fetchStories, loadingStories] = useFetch(
     getStoriesBySprint,
     setStories
   );
   const [updateStories] = useFetch(updateStoriesState);
 
-  useEffect(() => {
-    fetchStories("Backlog", user.team.id);
+  const fetchStoriesCallback = useCallback(async () => {
+    await fetchStories(null, user.team.id);
   }, [fetchStories, user.team.id]);
+
+  useEffect(() => {
+    fetchStoriesCallback();
+  }, [fetchStoriesCallback]);
+
+  const filterOptions = useMemo(() => {
+    const options = new Map([
+      ["Backlog", false],
+      ["MVP", false],
+      ["Sprint 1", false],
+      ["Sprint 2", false],
+      ["Sprint 3", false],
+    ]);
+
+    storiesState.forEach((story) => {
+      if (!options.get(story.sprint)) options.set(story.sprint, true);
+    });
+
+    return [...options.keys()].reduce((prev, acc) => {
+      if (options.get(acc)) return [...prev, acc];
+      else return prev;
+    }, []);
+  }, [storiesState]);
 
   const onDragEnd = (result) => {
     if (!result.destination || !result.source) return;
 
+    const [sprint, storyId] = result.draggableId.split("-");
     const {
-      draggableId: storyId,
       source: { index: sourceIndex, droppableId: source },
       destination: { index: destIndex, droppableId: dest },
     } = result;
 
     if (dest === source && destIndex === sourceIndex) return;
+    if (dest !== source && !settings.sprints[sprint]) return;
+
     const params = {
       sourceStories: [],
       destStories: [],
@@ -63,19 +96,51 @@ const StoriesView = () => {
 
   return (
     <section className="section">
-      <h1 className="title">Historias de Usuario</h1>
-      <BoardInfo
-        refresh={async () => {
-          await fetchStories("Backlog", user.team.id);
-        }}
-      />
-      <section className="block">
-        {loadingStories ? (
-          <progress className="progress is-primary" />
-        ) : (
-          <Board storiesState={storiesState} onDragEnd={onDragEnd} />
-        )}
-      </section>
+      <div className="level">
+        <div className="level-left">
+          <h1 className="title">Historias de Usuario</h1>
+        </div>
+        <div className="level-right">
+          <div className="buttons has-addons">
+            <button className="button is-static">
+              <div className="icon is-medium">
+                <i className="fas fa-lg fa-filter"></i>
+              </div>
+            </button>
+            <button
+              className={`button ${filterState ? "" : "is-primary"}`}
+              onClick={() => setFilter(undefined)}
+            >
+              Todos
+            </button>
+            {filterOptions.map((option, i) => (
+              <button
+                className={`button ${
+                  filterState === option ? "is-primary" : ""
+                }`}
+                key={i}
+                onClick={() => setFilter(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <refreshContext.Provider value={fetchStoriesCallback}>
+        <BoardInfo />
+        <section className="block">
+          {loadingStories ? (
+            <progress className="progress is-primary" />
+          ) : (
+            <Board
+              storiesState={storiesState}
+              onDragEnd={onDragEnd}
+              filter={filterState}
+            />
+          )}
+        </section>
+      </refreshContext.Provider>
     </section>
   );
 };

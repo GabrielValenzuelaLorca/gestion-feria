@@ -84,7 +84,7 @@ export const storySlice = createSlice({
   initialState,
   reducers: {
     addStory: (state, action) => {
-      state.push(action.payload);
+      return [...state, action.payload];
     },
     updateStories: (state, action) => {
       const modified_ids = action.payload.map((story) => story.id);

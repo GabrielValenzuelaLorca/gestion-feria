@@ -25,12 +25,14 @@ import EvaluationsView from "./views/EvaluationsView";
 import EvaluateView from "./views/EvaluateView";
 import { useCallback } from "react";
 import { getAppActivities } from "./services/activity";
-import { addActivity } from "./store/slices/activitySlice";
+import { setActivities } from "./store/slices/activitiesSlice";
+import { updateSettings } from "./store/slices/settingsSlice";
+import TeamStoriesView from "./views/TeamStoriesView";
 
 function App() {
   const userState = useSelector((state) => state.user);
   const periodState = useSelector((state) => state.period);
-  const activityState = useSelector((state) => state.activity);
+  const activityState = useSelector((state) => state.activities);
   const dispatch = useDispatch();
   const [fetchUser] = useFetch(
     getUser,
@@ -42,7 +44,13 @@ function App() {
   );
   const [fetchActivities] = useFetch(
     getAppActivities,
-    useCallback((activity) => dispatch(addActivity(activity)), [dispatch])
+    useCallback(
+      (activities) => {
+        dispatch(setActivities(activities));
+        dispatch(updateSettings(activities));
+      },
+      [dispatch]
+    )
   );
 
   useEffect(() => {
@@ -82,8 +90,8 @@ function App() {
             element={<NavbarLayout component={<ProfileView />} />}
           />
           <Route
-            path="dashboard"
-            element={<NavbarLayout component={<DashboardView />} />}
+            path="evaluacion/:deliverableId"
+            element={<NavbarLayout component={<EvaluateView />} />}
           />
 
           {["Administrador", "Profesor"].includes(userState.rol) && (
@@ -105,12 +113,12 @@ function App() {
                 element={<NavbarLayout component={<EvaluationsView />} />}
               />
               <Route
-                path="evaluacion/:deliverableId"
-                element={<NavbarLayout component={<EvaluateView />} />}
+                path="historias/:teamId"
+                element={<NavbarLayout component={<TeamStoriesView />} />}
               />
               <Route
-                path="historias"
-                element={<NavbarLayout component={<StoriesView />} />}
+                path="dashboard"
+                element={<NavbarLayout component={<DashboardView />} />}
               />
             </>
           )}

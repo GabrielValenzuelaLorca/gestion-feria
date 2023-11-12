@@ -3,13 +3,19 @@ import { Draggable } from "react-beautiful-dnd";
 import { criticidadStyle } from "../../utils/classStyles";
 import { setModalState } from "../../utils/functions";
 import StoryDetails from "./StoryDetails";
+import { useSelector } from "react-redux";
 
 const CardDraggable = ({ item }) => {
   const [modalState, setModal] = useState(false);
+  const user = useSelector((state) => state.user);
 
   return (
     <>
-      <Draggable draggableId={item.id} index={item.index}>
+      <Draggable
+        draggableId={`${item.sprint}-${item.id}`}
+        index={item.index}
+        isDragDisabled={["Administrador", "Profesor"].includes(user.rol)}
+      >
         {(provided, snapshot) => (
           <article
             className={`card block has-background-${

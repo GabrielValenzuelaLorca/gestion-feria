@@ -26,3 +26,27 @@ export const updateTeam = async (team) => {
   const url = new URL(`${API_URL}/team/update`);
   return handleResponse(await fetch(url, requestOptions));
 };
+
+export const dashboard = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/team/dashboard`);
+  return handleResponse(await fetch(url, requestOptions));
+};
+
+export const getTeam = async (teamId) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader(),
+    },
+  };
+  const url = new URL(`${API_URL}/team/${teamId}`);
+  return handleResponse(await fetch(url, requestOptions));
+};

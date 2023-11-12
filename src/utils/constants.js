@@ -7,21 +7,33 @@ export const STORY_STATES = [
   "Terminado",
 ];
 
-export const ACTIVITIES_TYPES = [
-  "Documento",
-  "Presentación",
-  "Creación de Historias",
-  "Edición de Historias",
-  "Asignar Historias a Sprint",
-  "Sprint",
-];
+export const SPRINTS = ["MVP", "Sprint 1", "Sprint 2", "Sprint 3"];
 
-export const RESPONSABLES_SAMPLE = [
-  "Pedro Godoy",
-  "Gabriel Valenzuela",
-  "Cecilia Reyes",
-  "Luis Hevia",
-  "Liubov Dombrovskaia",
+export const ACTIVITIES_TYPES = [
+  {
+    value: "document",
+    text: "Documento",
+  },
+  {
+    value: "presentation",
+    text: "Presentación",
+  },
+  {
+    value: "storyCreation",
+    text: "Creación de Historias",
+  },
+  {
+    value: "storyEdition",
+    text: "Edición de Historias",
+  },
+  {
+    value: "storyAssign",
+    text: "Asignar Historias a Sprint",
+  },
+  {
+    value: "sprint",
+    text: "Sprint",
+  },
 ];
 
 export const ROLES = [

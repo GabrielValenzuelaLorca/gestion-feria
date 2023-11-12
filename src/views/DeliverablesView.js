@@ -8,17 +8,17 @@ import {
   getDeliverablesByTeam,
 } from "../services/deliverable";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const DeliverablesView = () => {
   const user = useSelector((state) => state.user);
   const [deliverablesState, setDeliverables] = useState([]);
-
   const [fetchDeliverables, isLoadingDeliverables] = useFetch(
     getDeliverablesByTeam,
     setDeliverables
   );
-
   const [fetchCreateDeliverable, isLoadingCreate] = useFetch(createDeliverable);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDeliverables(user.team.id);
@@ -27,6 +27,10 @@ const DeliverablesView = () => {
   const handleEndButton = async (activity_id) => {
     await fetchCreateDeliverable(activity_id);
     await fetchDeliverables(user.team.id);
+  };
+
+  const handleEvaluation = (deliverableId) => {
+    navigate(`/evaluacion/${deliverableId}`);
   };
 
   return (
@@ -43,46 +47,104 @@ const DeliverablesView = () => {
                   <div className="column">
                     <h1 className="title is-4">{activity.name}</h1>
                     <p className="subtitle is-6">{activity.description}</p>
-                    {activity.state === "pending" ? (
-                      <>
-                        <p>
-                          Fecha de término:{" "}
-                          {activity.end.split("/").reverse().join("/")}
-                        </p>
-                        <p>
-                          Tiempo restante: {diffDates(new Date(), activity.end)}{" "}
-                          día(s)
-                        </p>
-                      </>
-                    ) : activity.state === "pending_delayed" ? (
-                      <>
-                        <p>
-                          Fecha de cierre:{" "}
-                          {activity.close.split("/").reverse().join("/")}
-                        </p>
-                        <p>
-                          Tiempo de atraso restante:{" "}
-                          {diffDates(new Date(), activity.close)} día(s)
-                        </p>
-                      </>
-                    ) : activity.state === "closed" ? (
-                      <p>No entregado</p>
-                    ) : (
-                      <>
-                        <p>
-                          Fecha de envío:{" "}
-                          {formatDatetimeToString(activity.send_date)}
-                        </p>
-                        <p>
-                          Estado de envío:{" "}
-                          {activity.state === "done" ? "A tiempo" : "Atrasado"}
-                        </p>
-                      </>
-                    )}
+
+                    <div className="field is-grouped is-grouped-multiline">
+                      {activity.state === "pending" ? (
+                        <>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Fecha de término
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {activity.end.split("/").reverse().join("/")}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Tiempo restante
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {diffDates(new Date(), activity.end)} días
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      ) : activity.state === "pending_delayed" ? (
+                        <>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Fecha de cierre
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {activity.close.split("/").reverse().join("/")}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Tiempo de atraso restante
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {diffDates(new Date(), activity.close)} días
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      ) : activity.state === "closed" ? (
+                        <div className="control">
+                          <span className="tag is-primary is-rounded">
+                            No entregado
+                          </span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Fecha de envío
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {formatDatetimeToString(activity.send_date)}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="control">
+                            <div className="tags has-addons">
+                              <span className="tag is-primary is-rounded">
+                                Estado de envío
+                              </span>
+                              <span className="tag is-primary is-light is-rounded">
+                                {activity.state === "done"
+                                  ? "A tiempo"
+                                  : "Atrasado"}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                   {activity.state !== "closed" && (
-                    <div className="column is-narrow">
-                      {activity.type === "Documento" ? (
+                    <div className="column is-narrow buttons">
+                      {activity.state === "evaluated" && (
+                        <button
+                          className="button is-primary is-outlined"
+                          onClick={() =>
+                            handleEvaluation(activity.deliverable_id)
+                          }
+                        >
+                          <span className="icon is-small">
+                            <i className="fa-solid fa-eye"></i>
+                          </span>
+                          <span>Ver Evaluación</span>
+                        </button>
+                      )}
+                      {activity.type === "document" ? (
                         <>
                           <div className="block">
                             <div className="file has-name is-boxed">

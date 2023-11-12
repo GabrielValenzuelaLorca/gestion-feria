@@ -7,22 +7,33 @@ import Textarea from "../components/Forms/Textarea";
 import useForm from "../hooks/useForm";
 import { Form } from "../components/Forms";
 import { evaluate, getDeliverableById } from "../services/deliverable";
+import { getTeam } from "../services/team";
+import { useSelector } from "react-redux";
 
 const EvaluateView = () => {
   const { deliverableId } = useParams();
   const [deliverableState, setDeliverable] = useState({});
+  const [teamState, setTeam] = useState({});
   const [evaluationState, setEvaluation] = useState({});
   const [fetchDeliverable, isLoading] = useFetch(
     getDeliverableById,
     setDeliverable
   );
+  const [fetchTeam] = useFetch(getTeam, setTeam);
   const [doEvaluation, loadingEvaluation] = useFetch(evaluate, null, true);
   const navigate = useNavigate();
   const form = useForm(evaluationState, setEvaluation);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     fetchDeliverable(deliverableId);
   }, [deliverableId, fetchDeliverable]);
+
+  useEffect(() => {
+    if (deliverableState.team) {
+      fetchTeam(deliverableState.team);
+    }
+  }, [fetchTeam, deliverableState.team]);
 
   useEffect(() => {
     if (deliverableState.activity && deliverableState.activity.rubric) {
@@ -70,37 +81,54 @@ const EvaluateView = () => {
         deliverableState.activity && (
           <>
             <header className="container">
-              <h1 className="title is-3">
+              <h1 className="title">
                 Evaluación: {deliverableState.activity.name}
               </h1>
+              {teamState.id && (
+                <h2 className="subtitle">
+                  Equipo: <strong>{teamState.name}</strong> | Proyecto:{" "}
+                  <span
+                    className={`${
+                      teamState.project.name
+                        ? "has-text-weight-bold"
+                        : "is-italic"
+                    }`}
+                  >
+                    {teamState.project.name || "Sin Proyecto"}
+                  </span>
+                </h2>
+              )}
               <div className="message is-primary ">
                 <div className="message-body">
                   <h2 className="subtitle is-6">
                     {deliverableState.activity.description}
                   </h2>
-                  {evaluationState.score && (
+                  {evaluationState.score !== null && (
                     <div className="block">
                       <strong>Nota final:</strong> {evaluationState.score}
                     </div>
                   )}
-                  {deliverableState.activity.rubric && (
-                    <button
-                      className={`button ${loadingEvaluation && "is-loading"} ${
-                        deliverableState.evaluation ? "is-link" : "is-success"
-                      }`}
-                      type="button"
-                      onClick={handleEvaluate}
-                      disabled={loadingEvaluation}
-                    >
-                      <span className="icon is-small">
-                        <i className="fas fa-check" aria-hidden="true" />
-                      </span>
-                      <span>
-                        {deliverableState.evaluation ? "Editar" : "Crear"}{" "}
-                        Evaluación
-                      </span>
-                    </button>
-                  )}
+                  {user.rol === "Profesor" &&
+                    deliverableState.activity.rubric && (
+                      <button
+                        className={`button ${
+                          loadingEvaluation && "is-loading"
+                        } ${
+                          deliverableState.evaluation ? "is-link" : "is-success"
+                        }`}
+                        type="button"
+                        onClick={handleEvaluate}
+                        disabled={loadingEvaluation}
+                      >
+                        <span className="icon is-small">
+                          <i className="fas fa-check" aria-hidden="true" />
+                        </span>
+                        <span>
+                          {deliverableState.evaluation ? "Editar" : "Terminar"}{" "}
+                          Evaluación
+                        </span>
+                      </button>
+                    )}
                 </div>
               </div>
             </header>
@@ -116,15 +144,29 @@ const EvaluateView = () => {
                             <div className="column" key={`${i}-column-${j}`}>
                               <div className="box">
                                 <div className="block ml-2">{description}</div>
-                                <button
-                                  className="button is-primary is-small is-rounded"
-                                  disabled={evaluationState.rows[i].index === j}
-                                  onClick={() =>
-                                    handlePunctuateButton(i, j, score)
-                                  }
-                                >
-                                  {score} Puntos
-                                </button>
+                                {user.rol === "Profesor" ? (
+                                  <button
+                                    className="button is-primary is-small is-rounded"
+                                    disabled={
+                                      evaluationState.rows[i].index === j
+                                    }
+                                    onClick={() =>
+                                      handlePunctuateButton(i, j, score)
+                                    }
+                                  >
+                                    {score} Puntos
+                                  </button>
+                                ) : (
+                                  <span
+                                    className={`tag is-small is-rounded ${
+                                      evaluationState.rows[i].index === j
+                                        ? "is-success"
+                                        : "is-grey"
+                                    }`}
+                                  >
+                                    {score} Puntos
+                                  </span>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -148,6 +190,7 @@ const EvaluateView = () => {
                     <Textarea
                       name="feedback"
                       placeholder="Ingrese su comentario"
+                      disabled={user.rol === "Alumno"}
                     />
                   </Form>
                 </>

@@ -13,7 +13,7 @@ const ActivityCard = ({ activity, setModal, setCurrentActivity }) => {
 
   return (
     <div className="card block">
-      <div className="card-header level">
+      <div className="card-header level mb-0">
         <div className="level-left">
           <h2 className="level-item card-header-title">{activity.name}</h2>
         </div>

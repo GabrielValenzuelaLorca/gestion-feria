@@ -3,24 +3,26 @@ import { DragDropContext } from "react-beautiful-dnd";
 import StateDroppable from "./StateDroppable";
 import { STORY_STATES } from "../../utils/constants";
 
-const Board = ({ storiesState, onDragEnd }) => {
+const Board = ({ storiesState, onDragEnd, filter }) => {
   const storiesByColumn = useMemo(() => {
     const initial = STORY_STATES.reduce((prev, acc) => {
       prev[acc] = [];
       return prev;
     }, {});
 
-    const stories = storiesState.reduce((prev, acc) => {
-      prev[acc.state].push(acc);
-      return prev;
-    }, initial);
+    const stories = storiesState
+      .filter((story) => (filter ? story.sprint === filter : true))
+      .reduce((prev, acc) => {
+        prev[acc.state].push(acc);
+        return prev;
+      }, initial);
 
     Object.keys(stories).forEach((key) => {
       stories[key].sort((a, b) => a.index - b.index);
     });
 
     return stories;
-  }, [storiesState]);
+  }, [storiesState, filter]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

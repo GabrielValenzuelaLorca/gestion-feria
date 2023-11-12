@@ -42,7 +42,8 @@ const ActivitiesView = () => {
   return (
     <section className="section columns">
       <div className="column">
-        <h1 className="title is-3">Calendario de Actividades</h1>
+        <h1 className="title is-3 mb-4">Calendario de Actividades</h1>
+
         {calendar}
       </div>
       <div className="column">
@@ -71,10 +72,10 @@ const ActivitiesView = () => {
         {isLoading ? (
           <progress className="progress is-primary" />
         ) : activitiesState.filter(
-            (activity) => diffDates(new Date(), activity.end) > 0
+            (activity) => diffDates(new Date(), activity.end) >= 0
           ).length ? (
           activitiesState
-            .filter((activity) => diffDates(new Date(), activity.end) > 0)
+            .filter((activity) => diffDates(new Date(), activity.end) >= 0)
             .sort(
               (a, b) => new Date(a.end).getTime() - new Date(b.end).getTime()
             )

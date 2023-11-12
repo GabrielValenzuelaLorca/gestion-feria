@@ -23,7 +23,7 @@ export const getStoriesBySprint = async (sprint, teamId) => {
     },
   };
   const url = new URL(`${API_URL}/story/getStoriesBySprint`);
-  url.searchParams.append("sprint", sprint);
+  if (sprint) url.searchParams.append("sprint", sprint);
   url.searchParams.append("teamId", teamId);
   return handleResponse(await fetch(url, requestOptions));
 };

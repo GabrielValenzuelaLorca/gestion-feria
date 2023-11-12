@@ -13,7 +13,7 @@ const Select = ({
   state,
   setState,
   showErrorState = false,
-  setError = null,
+  setError = () => {},
 }) => {
   const [warningState, setWarning] = useState(
     validations.includes("required") ? "Este campo es obligatorio" : ""

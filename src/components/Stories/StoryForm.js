@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useSelector } from "react-redux";
 import useForm from "../../hooks/useForm";
 import { Form, Input, Textarea } from "../Forms";
 import useFetch from "../../hooks/useFetch";
 import { createStory } from "../../services/story";
+import { refreshContext } from "../../views/StoriesView";
 
-const StoryForm = ({ isActive, handleClose, refresh }) => {
+const StoryForm = ({ isActive, handleClose }) => {
   const user = useSelector((state) => state.user);
   const defaultStoryState = {
     number: "",
@@ -16,11 +17,12 @@ const StoryForm = ({ isActive, handleClose, refresh }) => {
   const [storyState, setStory] = useState(defaultStoryState);
   const form = useForm(storyState, setStory);
   const [doCreate, loadingCreate] = useFetch(createStory);
+  const fetchStories = useContext(refreshContext);
 
   const save = async () => {
     if (form.validationState) {
       await doCreate(storyState);
-      await refresh();
+      await fetchStories();
       handleClose();
       clearForm();
     } else {

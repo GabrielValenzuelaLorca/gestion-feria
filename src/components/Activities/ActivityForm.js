@@ -1,26 +1,24 @@
 import React, { useState } from "react";
 import useForm from "../../hooks/useForm";
 import { createActivity, editActivity } from "../../services/activity";
-import { ACTIVITIES_TYPES } from "../../utils/constants";
+import { ACTIVITIES_TYPES, SPRINTS } from "../../utils/constants";
 import { diffDates } from "../../utils/functions";
 import { Checkbox, Form, Input, Select, Textarea } from "../Forms";
 
 const ActivityForm = ({
   isActive,
-  fetchActivities,
   closeModal,
   currentActivity,
   setCurrentActivity,
 }) => {
   const [loading, setLoading] = useState(false);
-
   const form = useForm(currentActivity, setCurrentActivity);
 
   const save = async (service) => {
     setLoading(true);
     if (form.validationState) {
       await service(currentActivity);
-      await fetchActivities();
+      window.location.reload();
       handleCancel();
     } else {
       form.setShowError(true);
@@ -51,20 +49,28 @@ const ActivityForm = ({
         </header>
 
         <Form className="modal-card-body" form={form}>
-          <Input
-            name="name"
-            label="Titulo Actividad"
-            type="text"
-            placeholder="Creación de informes..."
-            validations={["required"]}
-          />
-
           <Select
             name="type"
             label="Tipo Actividad"
             options={ACTIVITIES_TYPES}
             validations={["required"]}
           />
+          {currentActivity.type === "sprint" ? (
+            <Select
+              name="name"
+              label="Sprint"
+              options={SPRINTS}
+              validations={["required"]}
+            />
+          ) : (
+            <Input
+              name="name"
+              label="Titulo Actividad"
+              type="text"
+              placeholder="Creación de informes..."
+              validations={["required"]}
+            />
+          )}
 
           <Input
             name="start"

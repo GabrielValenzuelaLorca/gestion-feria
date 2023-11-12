@@ -67,7 +67,7 @@ const Input = ({
               }`}
               value={
                 (type !== "date"
-                  ? state[name].toString()
+                  ? (state[name] === null ? "" : state[name]).toString()
                   : state[name].replaceAll("/", "-")) || ""
               }
               type={type}
