@@ -32,6 +32,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
 
   const handleSave = async () => {
     if (form.validationState) {
+      story.criteria = story.criteria.filter((criteria) => criteria !== "");
       await fetchUpdate(storyState);
       await fetchStories();
       closeModal();
@@ -45,6 +46,40 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
     const value = e.target.value;
     await fetchUpdate({ ...story, sprint: value });
     await fetchStories();
+  };
+
+  const handleCriteriaChange = (e, index) => {
+    const value = e.target.value;
+    setStory((story) => {
+      const newStory = { ...story };
+      newStory.criteria[index] = value;
+      return newStory;
+    });
+  };
+
+  const handleAddCriteria = () => {
+    setStory((story) => {
+      const newStory = {
+        ...story,
+        criteria: [...story.criteria, ""],
+      };
+      return newStory;
+    });
+  };
+
+  const handleDeleteCriteria = () => {
+    if (storyState.criteria.length > 1) {
+      setStory((story) => {
+        const criteria = [...story.criteria];
+        criteria.pop();
+
+        const newStory = {
+          ...story,
+          criteria,
+        };
+        return newStory;
+      });
+    }
   };
 
   const clearForm = () => {
@@ -149,9 +184,17 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
               <div className="field">
                 <label className="label">Criterios de Aceptación</label>
                 <div className="control">
-                  <p className={story.criteria ? "" : "is-italic"}>
-                    {story.criteria || "Sin Criterios de Aceptación"}
-                  </p>
+                  <div className="content is-small">
+                    {story.criteria.length === 1 && story.criteria[0] === "" ? (
+                      <p className="is-italic">Sin Criterios de Aceptación</p>
+                    ) : (
+                      <ol>
+                        {story.criteria.map((criteria, i) => (
+                          <li key={i}>{criteria}</li>
+                        ))}
+                      </ol>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="field">
@@ -214,12 +257,47 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 rightAddons={<button className="button is-static">%</button>}
                 disabled={loadingUpdate}
               />
-              <Textarea
-                name="criteria"
-                label="Criterios de Aceptación"
-                placeholder="El sistema debe ser capaz de..."
-                disabled={loadingUpdate}
-              />
+              {storyState.criteria.map((criteria, i) => (
+                <div className="field" key={i}>
+                  {i === 0 && (
+                    <label className="label">Criterios de Aceptación</label>
+                  )}
+                  <div className="control">
+                    <textarea
+                      className="textarea"
+                      value={criteria}
+                      name={`criteria-${i}`}
+                      placeholder="El sistema debe ser capaz de..."
+                      disabled={loadingUpdate}
+                      onChange={(e) => handleCriteriaChange(e, i)}
+                    />
+                  </div>
+                </div>
+              ))}
+              <div className="field">
+                <div className="control buttons is-flex is-justify-content-flex-end">
+                  <button
+                    className="button is-primary is-small"
+                    type="button"
+                    onClick={handleAddCriteria}
+                  >
+                    <span className="icon is-small">
+                      <i className="fas fa-plus"></i>
+                    </span>
+                    <span>Añadir criterio</span>
+                  </button>
+                  <button
+                    className="button is-danger is-small"
+                    type="button"
+                    onClick={handleDeleteCriteria}
+                  >
+                    <span className="icon is-small">
+                      <i className="fas fa-trash"></i>
+                    </span>
+                    <span>Remover criterio</span>
+                  </button>
+                </div>
+              </div>
               <Select
                 name="criticality"
                 label={
