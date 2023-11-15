@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  createContext,
+} from "react";
 import BoardInfo from "../components/Stories/BoardInfo";
 import Board from "../components/Stories/Board";
 import useFetch from "../hooks/useFetch";
 import { getStoriesBySprint } from "../services/story";
 import { useParams } from "react-router-dom";
 import { getTeam } from "../services/team";
+
+export const teamContext = createContext();
 
 const TeamStoriesView = () => {
   const [storiesState, setStories] = useState([]);
@@ -55,7 +63,11 @@ const TeamStoriesView = () => {
               <h2 className="subtitle">
                 Equipo: <strong>{teamState.name}</strong> | Proyecto:{" "}
                 <span
-                  className={`${teamState.project.name ? "has-text-weight-bold" : "is-italic"}`}
+                  className={`${
+                    teamState.project.name
+                      ? "has-text-weight-bold"
+                      : "is-italic"
+                  }`}
                 >
                   {teamState.project.name || "Sin Proyecto"}
                 </span>
@@ -91,18 +103,20 @@ const TeamStoriesView = () => {
         </div>
       </div>
 
-      <BoardInfo />
-      <section className="block">
-        {loadingStories ? (
-          <progress className="progress is-primary" />
-        ) : (
-          <Board
-            storiesState={storiesState}
-            onDragEnd={() => {}}
-            filter={filterState}
-          />
-        )}
-      </section>
+      <teamContext.Provider value={teamState}>
+        <BoardInfo />
+        <section className="block">
+          {loadingStories ? (
+            <progress className="progress is-primary" />
+          ) : (
+            <Board
+              storiesState={storiesState}
+              onDragEnd={() => {}}
+              filter={filterState}
+            />
+          )}
+        </section>
+      </teamContext.Provider>
     </section>
   );
 };

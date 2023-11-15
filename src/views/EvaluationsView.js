@@ -75,7 +75,7 @@ const EvaluationsView = () => {
                       </h2>
                     )}
                   </div>
-                  {
+                  {activityState.type !== "sprint" && (
                     <div className="block">
                       <button
                         className={`button ${
@@ -97,7 +97,7 @@ const EvaluationsView = () => {
                         </span>
                       </button>
                     </div>
-                  }
+                  )}
                 </div>
               </article>
             )}
@@ -136,14 +136,19 @@ const EvaluationsView = () => {
                             disabled={
                               !["done", "evaluated"].includes(
                                 deliverable.state
-                              ) || !activityState.rubric
+                              ) ||
+                              (activityState.type !== "sprint" &&
+                                !activityState.rubric)
                             }
                           >
                             <span className="icon is-small">
                               <i className="fa-solid fa-check"></i>
                             </span>
                             <span>
-                              {activityState.rubric ? "Evaluar" : "Sin Rúbrica"}
+                              {activityState.type !== "sprint" &&
+                              !activityState.rubric
+                                ? "Sin Rúbrica"
+                                : "Evaluar"}
                             </span>
                           </button>
                         </div>

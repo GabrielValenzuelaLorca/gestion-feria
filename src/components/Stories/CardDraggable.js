@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { criticidadStyle } from "../../utils/classStyles";
 import { setModalState } from "../../utils/functions";
 import StoryDetails from "./StoryDetails";
 import { useSelector } from "react-redux";
+import { teamContext } from "../../views/TeamStoriesView";
 
 const CardDraggable = ({ item }) => {
   const [modalState, setModal] = useState(false);
   const user = useSelector((state) => state.user);
+  const team = useContext(teamContext);
+
+  const currentTeam = useMemo(() => team || user.team, [team, user.team]);
 
   return (
     <>
@@ -85,7 +89,11 @@ const CardDraggable = ({ item }) => {
                       className="tag is-light is-primary is-rounded"
                       key={index}
                     >
-                      {responsable}
+                      {
+                        currentTeam.members?.find(
+                          (member) => member.id === responsable
+                        ).name
+                      }
                     </span>
                   ))
                 ) : (

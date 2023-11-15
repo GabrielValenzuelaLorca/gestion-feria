@@ -5,6 +5,7 @@ const Select = ({
   name,
   label,
   options,
+  loading = false,
   placeholder = "Seleccione una opción",
   multiple = false,
   validations = [],
@@ -55,13 +56,13 @@ const Select = ({
         <div
           className={`select ${
             showErrorState && localErrorState ? "is-danger" : ""
-          }`}
+          } ${loading ? "is-loading" : ""}`}
         >
           <select
             name={name}
             value={!multiple && state[name]}
             onChange={handleChange}
-            disabled={disabled}
+            disabled={disabled || loading}
           >
             <option value="" hidden>
               {placeholder}

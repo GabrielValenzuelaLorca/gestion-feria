@@ -7,27 +7,42 @@ import { getActivities } from "../services/activity";
 import { diffDates, setModalState } from "../utils/functions";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
+import { getUsers } from "../services/user";
 
 const defaultActivity = {
   name: "",
   type: "",
+  campus: "all",
   start: "",
   end: "",
   delay: false,
   close: "",
   description: "",
+  evaluators: [],
 };
 
 const ActivitiesView = () => {
   const [activitiesState, setActivities] = useState([]);
+  const [evaluatorsState, setEvaluators] = useState([]);
   const [currentActivity, setCurrentActivity] = useState(defaultActivity);
   const [modalState, setModal] = useState(false);
   const [fetchActivities, isLoading] = useFetch(getActivities, setActivities);
+  const [fetchEvaluators, loadingEvaluators] = useFetch(
+    getUsers,
+    setEvaluators
+  );
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
     fetchActivities();
   }, [fetchActivities]);
+
+  useEffect(() => {
+    fetchEvaluators({
+      roles: ["Profesor", "Ayudante", "Juez"],
+      active: true,
+    });
+  }, [fetchEvaluators]);
 
   const calendar = useMemo(() => {
     return (
@@ -99,7 +114,10 @@ const ActivitiesView = () => {
         fetchActivities={fetchActivities}
         currentActivity={currentActivity}
         setCurrentActivity={setCurrentActivity}
+        evaluators={evaluatorsState}
+        loadingEvaluators={loadingEvaluators}
         closeModal={() => setModalState(false, setModal)}
+        user={user}
       />
     </section>
   );

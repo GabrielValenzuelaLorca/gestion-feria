@@ -1,6 +1,6 @@
 import useFetch from "../../hooks/useFetch";
 import { updateUser } from "../../services/user";
-import { ROLES } from "../../utils/constants";
+import { CAMPUS, ROLES } from "../../utils/constants";
 
 const UserCard = ({ user }) => {
   const [update, loading] = useFetch(updateUser);
@@ -16,19 +16,57 @@ const UserCard = ({ user }) => {
     }
   };
 
+  const handleCampusChange = async (e) => {
+    try {
+      update({
+        ...user,
+        campus: e.target.value,
+      });
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
   return (
     <article className={"box"}>
       <div className="columns is-vcentered">
-        <div className={"column has-text-centered has-text-weight-semibold"}>
-          Foto
-        </div>
-        <div className={"column has-text-centered has-text-weight-semibold"}>
+        <div
+          className={"column is-2 has-text-centered has-text-weight-semibold"}
+        >
           {user.name}
         </div>
-        <div className={"column has-text-centered has-text-weight-semibold"}>
+        <div
+          className={"column is-3 has-text-centered has-text-weight-semibold"}
+        >
+          {user.lastName}
+        </div>
+        <div
+          className={"column is-3 has-text-centered has-text-weight-semibold"}
+        >
           {user.email}
         </div>
-        <div className="column has-text-centered">
+        <div className="column is-2 has-text-centered">
+          <div className="field">
+            <div className="control">
+              <div
+                className={`select is-primary ${loading ? "is-loading" : ""}`}
+              >
+                <select
+                  onChange={handleCampusChange}
+                  defaultValue={user.campus}
+                  disabled={loading}
+                >
+                  {CAMPUS.map((campus, index) => (
+                    <option value={campus.value} key={index}>
+                      {campus.text}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="column is-2 has-text-centered">
           <div className="field">
             <div className="control">
               <div

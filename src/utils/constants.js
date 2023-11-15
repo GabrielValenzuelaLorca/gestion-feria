@@ -53,6 +53,7 @@ export const DELIVERABLE_STATE = {
 };
 
 export const CAMPUS = [
+  { text: "Ambos", value: "all" },
   { text: "San Joaquín", value: "SJ" },
   { text: "Casa Central", value: "CC" },
 ];

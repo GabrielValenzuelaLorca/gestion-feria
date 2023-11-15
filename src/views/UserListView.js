@@ -19,6 +19,7 @@ const UserListView = () => {
       users.filter(
         (user) =>
           user.name.toLowerCase().includes(filter.toLowerCase()) ||
+          user.lastName.toLowerCase().includes(filter.toLowerCase()) ||
           user.email.toLowerCase().includes(filter.toLowerCase())
       )
     );

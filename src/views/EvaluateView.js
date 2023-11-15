@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
-import { Fragment } from "react";
-import Textarea from "../components/Forms/Textarea";
 import useForm from "../hooks/useForm";
-import { Form } from "../components/Forms";
 import { evaluate, getDeliverableById } from "../services/deliverable";
 import { getTeam } from "../services/team";
 import { useSelector } from "react-redux";
+import EvaluateRubric from "../components/Evaluate/EvaluateRubric";
+import EvaluateSprint from "../components/Evaluate/EvaluateSprint";
 
 const EvaluateView = () => {
   const { deliverableId } = useParams();
@@ -34,39 +32,6 @@ const EvaluateView = () => {
       fetchTeam(deliverableState.team);
     }
   }, [fetchTeam, deliverableState.team]);
-
-  useEffect(() => {
-    if (deliverableState.activity && deliverableState.activity.rubric) {
-      if (deliverableState.evaluation) {
-        setEvaluation(deliverableState.evaluation);
-      } else {
-        const state = {
-          rows: [],
-          score: 0,
-          feedback: "",
-        };
-        deliverableState.activity.rubric.forEach((row) => {
-          state.rows.push({
-            index: 0,
-            score: row.columns[0].score,
-          });
-          state.score += row.columns[0].score;
-        });
-        setEvaluation(state);
-      }
-    }
-  }, [deliverableState.activity, deliverableState.evaluation]);
-
-  const handlePunctuateButton = (row, column, score) => {
-    setEvaluation((state) => {
-      const newState = { ...state };
-      newState.rows[row].index = column;
-      newState.rows[row].score = score;
-      const newScore = newState.rows.reduce((prev, acc) => prev + acc.score, 0);
-      newState.score = newScore;
-      return newState;
-    });
-  };
 
   const handleEvaluate = async () => {
     await doEvaluation(deliverableId, evaluationState);
@@ -98,12 +63,12 @@ const EvaluateView = () => {
                   </span>
                 </h2>
               )}
-              <div className="message is-primary ">
+              <div className="message is-primary">
                 <div className="message-body">
                   <h2 className="subtitle is-6">
                     {deliverableState.activity.description}
                   </h2>
-                  {evaluationState.score !== null && (
+                  {evaluationState.score !== undefined && (
                     <div className="block">
                       <strong>Nota final:</strong> {evaluationState.score}
                     </div>
@@ -132,74 +97,22 @@ const EvaluateView = () => {
                 </div>
               </div>
             </header>
-            <section>
-              {deliverableState.activity.rubric ? (
-                <>
-                  {deliverableState.activity.rubric.map(
-                    ({ criteria, columns }, i) => (
-                      <Fragment key={i}>
-                        <h3 className="subtitle">{criteria}</h3>
-                        <div className="columns is-variable is-1">
-                          {columns.map(({ description, score }, j) => (
-                            <div className="column" key={`${i}-column-${j}`}>
-                              <div className="box">
-                                <div className="block ml-2">{description}</div>
-                                {user.rol === "Profesor" ? (
-                                  <button
-                                    className="button is-primary is-small is-rounded"
-                                    disabled={
-                                      evaluationState.rows[i].index === j
-                                    }
-                                    onClick={() =>
-                                      handlePunctuateButton(i, j, score)
-                                    }
-                                  >
-                                    {score} Puntos
-                                  </button>
-                                ) : (
-                                  <span
-                                    className={`tag is-small is-rounded ${
-                                      evaluationState.rows[i].index === j
-                                        ? "is-success"
-                                        : "is-grey"
-                                    }`}
-                                  >
-                                    {score} Puntos
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-
-                          <div className="column is-narrow">
-                            <div className="tags has-addons">
-                              <span className="tag is-primary is-light is-medium">
-                                {evaluationState.rows[i].score}
-                              </span>
-                              <span className="tag is-primary is-medium">
-                                Puntos
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </Fragment>
-                    )
-                  )}
-                  <h3 className="subtitle">Comentarios</h3>
-                  <Form form={form}>
-                    <Textarea
-                      name="feedback"
-                      placeholder="Ingrese su comentario"
-                      disabled={user.rol === "Alumno"}
-                    />
-                  </Form>
-                </>
-              ) : (
-                <p className="notification">
-                  No hay rúbrica para realizar esta evaluación
-                </p>
-              )}
-            </section>
+            {deliverableState.activity.type !== "sprint" ? (
+              <EvaluateRubric
+                deliverable={deliverableState}
+                user={user}
+                evaluation={evaluationState}
+                setEvaluation={setEvaluation}
+                form={form}
+              />
+            ) : (
+              <EvaluateSprint
+                deliverable={deliverableState}
+                user={user}
+                evaluation={evaluationState}
+                setEvaluation={setEvaluation}
+              />
+            )}
           </>
         )
       )}

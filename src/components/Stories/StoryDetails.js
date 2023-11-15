@@ -9,6 +9,7 @@ import useFetch from "../../hooks/useFetch";
 import { updateStory } from "../../services/story";
 import { useContext } from "react";
 import { refreshContext } from "../../views/StoriesView";
+import { teamContext } from "../../views/TeamStoriesView";
 
 const StoryDetails = ({ story, isActive, closeModal }) => {
   const [editState, setEdit] = useState(false);
@@ -18,17 +19,21 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
   const [fetchUpdate, loadingUpdate] = useFetch(updateStory);
   const settings = useSelector((state) => state.settings);
   const fetchStories = useContext(refreshContext);
+  const team = useContext(teamContext);
 
-  const teamMembersAsOptions = useMemo(
-    () =>
-      user.team.members
+  const currentTeam = useMemo(() => team || user.team, [team, user.team]);
+
+  const teamMembersAsOptions = useMemo(() => {
+    if (currentTeam.members) {
+      return currentTeam.members
         .filter((member) => !storyState.responsables.includes(member.id))
         .map((member) => ({
           value: member.id,
           text: member.name,
-        })),
-    [storyState.responsables, user.team.members]
-  );
+        }));
+    }
+    return [];
+  }, [storyState.responsables, currentTeam]);
 
   const handleSave = async () => {
     if (form.validationState) {
@@ -336,7 +341,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                   ).map((responsable, index) => (
                     <span className="tag is-rounded is-primary" key={index}>
                       {
-                        user.team.members.find(
+                        currentTeam.members?.find(
                           (member) => member.id === responsable
                         ).name
                       }

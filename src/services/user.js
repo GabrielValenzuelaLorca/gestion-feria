@@ -45,9 +45,11 @@ export const getUsers = async (params = {}) => {
     },
   };
   const url = new URL(`${API_URL}/user/all`);
-  Object.keys(params).forEach((key) =>
-    url.searchParams.append(key, params[key])
-  );
+  Object.keys(params).forEach((key) => {
+    if (key === "roles")
+      url.searchParams.append(key, JSON.stringify(params[key]));
+    else url.searchParams.append(key, params[key]);
+  });
   return handleResponse(await fetch(url, requestOptions));
 };
 

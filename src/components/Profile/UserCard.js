@@ -101,15 +101,13 @@ const UserCard = ({ user: { auth_token, team, ...userData } }) => {
                 label="Campus"
                 options={CAMPUS}
                 validations={["required"]}
-                disabled={!editState}
+                disabled
               />
 
-              <Input name="rol" label="Rol" type="text" disabled={true} />
+              <Input name="rol" label="Rol" type="text" disabled />
 
               <footer
-                className={`border-top field is-grouped ${
-                  !editState ? "is-hidden" : ""
-                }`}
+                className={`field is-grouped ${!editState ? "is-hidden" : ""}`}
               >
                 <div className="control">
                   <button

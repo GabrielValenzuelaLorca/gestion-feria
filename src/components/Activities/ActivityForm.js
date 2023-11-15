@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import useForm from "../../hooks/useForm";
 import { createActivity, editActivity } from "../../services/activity";
-import { ACTIVITIES_TYPES, SPRINTS } from "../../utils/constants";
+import { ACTIVITIES_TYPES, CAMPUS, SPRINTS } from "../../utils/constants";
 import { diffDates } from "../../utils/functions";
 import { Checkbox, Form, Input, Select, Textarea } from "../Forms";
 
@@ -10,9 +10,38 @@ const ActivityForm = ({
   closeModal,
   currentActivity,
   setCurrentActivity,
+  evaluators,
+  loadingEvaluators,
+  user,
 }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm(currentActivity, setCurrentActivity);
+
+  const evaluatorsAsOptions = useMemo(
+    () =>
+      evaluators
+        .filter((evaluator) => {
+          const condition =
+            currentActivity.campus === "all" ||
+            evaluator.campus === "all" ||
+            currentActivity.campus === evaluator.campus;
+          return (
+            condition && !currentActivity.evaluators.includes(evaluator.id)
+          );
+        })
+        .map((evaluator) => ({
+          value: evaluator.id,
+          text: `${evaluator.rol}: ${evaluator.name} ${evaluator.lastName}`,
+        })),
+    [evaluators, currentActivity.evaluators, currentActivity.campus]
+  );
+
+  useEffect(() => {
+    setCurrentActivity((state) => ({
+      ...state,
+      evaluators: [],
+    }));
+  }, [setCurrentActivity, currentActivity.campus]);
 
   const save = async (service) => {
     setLoading(true);
@@ -72,6 +101,18 @@ const ActivityForm = ({
             />
           )}
 
+          <Select
+            name="campus"
+            label="Campus"
+            options={CAMPUS.filter(
+              (campus) =>
+                user.campus === "all" ||
+                ["all", user.campus].includes(campus.value)
+            )}
+            validations={["required"]}
+            loading={loadingEvaluators}
+          />
+
           <Input
             name="start"
             label="Fecha de Inicio"
@@ -128,6 +169,51 @@ const ActivityForm = ({
             placeholder="Los alumnos tendrán que crear sus historias de usuario para..."
             validations={["required", "min-8"]}
           />
+
+          <Select
+            name="evaluators"
+            label="Evaluador(es)"
+            options={evaluatorsAsOptions}
+            multiple={true}
+            disabled={loadingEvaluators}
+          />
+
+          <div className="field">
+            <div className="control">
+              <div className="tags are-medium">
+                {currentActivity.evaluators.length ? (
+                  currentActivity.evaluators.map((evaluator, index) => (
+                    <span className="tag is-rounded is-primary" key={index}>
+                      {(() => {
+                        const foundEvaluator = evaluators.find(
+                          (completeEvaluator) =>
+                            completeEvaluator.id === evaluator
+                        );
+                        return `${foundEvaluator.rol}: ${foundEvaluator.name} ${foundEvaluator.lastName}`;
+                      })()}
+
+                      <button
+                        className="delete is-small"
+                        type="button"
+                        onClick={() =>
+                          setCurrentActivity((state) => ({
+                            ...state,
+                            evaluators: state.evaluators.filter(
+                              (stateEvaluator) => stateEvaluator !== evaluator
+                            ),
+                          }))
+                        }
+                      />
+                    </span>
+                  ))
+                ) : (
+                  <span className="tag is-rounded is-light">
+                    Sin Evaluadores
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
         </Form>
 
         <footer className="modal-card-foot">

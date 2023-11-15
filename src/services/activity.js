@@ -56,6 +56,7 @@ export const getAppActivities = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      ...authHeader(),
     },
   };
   const url = new URL(`${API_URL}/activity/getAppActivities`);

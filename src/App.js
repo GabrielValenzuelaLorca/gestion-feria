@@ -62,8 +62,8 @@ function App() {
   }, [fetchPeriod, periodState.id]);
 
   useEffect(() => {
-    if (!activityState) fetchActivities();
-  }, [fetchActivities, activityState]);
+    if (userState.id && !activityState) fetchActivities();
+  }, [fetchActivities, activityState, userState.id]);
 
   return (
     <Router>
