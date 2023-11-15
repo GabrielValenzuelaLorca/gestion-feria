@@ -39,9 +39,9 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
     if (form.validationState) {
       story.criteria = story.criteria.filter((criteria) => criteria !== "");
       await fetchUpdate(storyState);
-      await fetchStories();
       closeModal();
       handleCancel();
+      await fetchStories();
     } else {
       form.setShowError(true);
     }
@@ -50,6 +50,8 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
   const changeSprint = async (e) => {
     const value = e.target.value;
     await fetchUpdate({ ...story, sprint: value });
+    closeModal();
+    handleCancel();
     await fetchStories();
   };
 
@@ -340,11 +342,13 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                     : story.responsables
                   ).map((responsable, index) => (
                     <span className="tag is-rounded is-primary" key={index}>
-                      {
-                        currentTeam.members?.find(
+                      {(() => {
+                        const member = currentTeam.members.find(
                           (member) => member.id === responsable
-                        ).name
-                      }
+                        );
+
+                        return `${member.name} ${member.lastName}`;
+                      })()}
                       {editState && (
                         <button
                           className="delete is-small"

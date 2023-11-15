@@ -18,7 +18,7 @@ const Members = ({ team, userId, setTeam, editable = false, ...rest }) => {
   );
 
   useEffect(() => {
-    fetchStudents({ rol: "Alumno", active: true });
+    fetchStudents({ roles: ["Alumno"], active: true });
   }, [fetchStudents]);
 
   return (

@@ -127,20 +127,26 @@ const StoriesView = () => {
           </div>
         </div>
       </div>
-      <refreshContext.Provider value={fetchStoriesCallback}>
-        <BoardInfo />
-        <section className="block">
-          {loadingStories ? (
-            <progress className="progress is-primary" />
-          ) : (
-            <Board
-              storiesState={storiesState}
-              onDragEnd={onDragEnd}
-              filter={filterState}
-            />
-          )}
-        </section>
-      </refreshContext.Provider>
+      {user.team.id ? (
+        <refreshContext.Provider value={fetchStoriesCallback}>
+          <BoardInfo />
+          <section className="block">
+            {loadingStories ? (
+              <progress className="progress is-primary" />
+            ) : (
+              <Board
+                storiesState={storiesState}
+                onDragEnd={onDragEnd}
+                filter={filterState}
+              />
+            )}
+          </section>
+        </refreshContext.Provider>
+      ) : (
+        <p className="notification">
+          Debe pertenecer a un equipo para interactuar con historias de usuario
+        </p>
+      )}
     </section>
   );
 };

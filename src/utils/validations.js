@@ -43,7 +43,7 @@ const VALIDATION_PROPERTIES = {
   },
   email: {
     condition: (value) =>
-      value !== "" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      value === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
     message: () => "Ingrese un correo válido",
   },
   min: {

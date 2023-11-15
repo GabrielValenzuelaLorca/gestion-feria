@@ -4,25 +4,29 @@ import { Form, Input, Textarea } from "../Forms";
 import { useDispatch } from "react-redux";
 import useFetch from "../../hooks/useFetch";
 import { addUser } from "../../store/slices/userSlice";
-import { updateProject } from "../../services/project";
+import { updateTeam } from "../../services/team";
+import { flatMembers } from "../../utils/functions";
 
-const ProjectCard = ({ project }) => {
-  const [projectState, setProjectState] = useState(project);
+const ProjectCard = ({ user }) => {
+  const [projectState, setProjectState] = useState(user.team.project);
   const [editState, setEdit] = useState(false);
   const dispatch = useDispatch();
   const form = useForm(projectState, setProjectState);
-  const [update, loading] = useFetch(updateProject, (response) => {
+  const [update, loading] = useFetch(updateTeam, (response) => {
     dispatch(addUser(response));
   });
 
   useEffect(() => {
-    setProjectState(project);
-  }, [project]);
+    setProjectState(user.team.project);
+  }, [user.team.project]);
 
   const handleUpdate = async () => {
     try {
       if (form.validationState) {
-        await update(projectState);
+        await update({
+          ...flatMembers(user.team),
+          project: projectState,
+        });
         setEdit(false);
       } else {
         form.setShowError(true);
@@ -35,7 +39,7 @@ const ProjectCard = ({ project }) => {
   const handleCancel = () => {
     form.setShowError(false);
     setEdit(false);
-    setProjectState(project);
+    setProjectState(user.team.project);
   };
 
   return (

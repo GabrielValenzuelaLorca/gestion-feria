@@ -37,11 +37,22 @@ const ActivityForm = ({
   );
 
   useEffect(() => {
-    setCurrentActivity((state) => ({
-      ...state,
-      evaluators: [],
-    }));
-  }, [setCurrentActivity, currentActivity.campus]);
+    if (evaluators) {
+      setCurrentActivity((state) => ({
+        ...state,
+        evaluators: state.evaluators.filter((evaluator) => {
+          const detailedEvaluator = evaluators.find(
+            (detailedEvaluator) => detailedEvaluator.id === evaluator
+          );
+          return (
+            currentActivity.campus === "all" ||
+            detailedEvaluator.campus === "all" ||
+            state.campus === detailedEvaluator.campus
+          );
+        }),
+      }));
+    }
+  }, [setCurrentActivity, currentActivity.campus, evaluators]);
 
   const save = async (service) => {
     setLoading(true);

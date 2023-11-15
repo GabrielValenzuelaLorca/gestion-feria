@@ -45,7 +45,7 @@ const EvaluateView = () => {
       ) : (
         deliverableState.activity && (
           <>
-            <header className="container">
+            <header className="container mb-6">
               <h1 className="title">
                 Evaluación: {deliverableState.activity.name}
               </h1>

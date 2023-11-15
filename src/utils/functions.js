@@ -6,10 +6,6 @@ export const setModalState = (state, setState) => {
   setState(state);
 };
 
-export const addToRefs = (ref, element) => {
-  if (element && !ref.current.includes(element)) ref.current.push(element);
-};
-
 export const diffDates = (initial, final) => {
   const diff = new Date(final).getTime() - new Date(initial).getTime();
   return Math.ceil(diff / (1000 * 3600 * 24) + 1);
@@ -26,4 +22,14 @@ export const formatDatetimeToString = (datetime) => {
   const newDate = date.split("/").reverse().join("/");
   const newHour = hour && hour.split(".")[0];
   return `${newDate}${newHour ? `, ${newHour}` : ""}`;
+};
+
+export const flatMembers = (team) => {
+  if (team.id) {
+    return {
+      ...team,
+      members: team.members.map((member) => member.id),
+    };
+  }
+  return team;
 };

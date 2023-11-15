@@ -21,7 +21,7 @@ const DeliverablesView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDeliverables(user.team.id);
+    if (user.team.id) fetchDeliverables(user.team.id);
   }, [fetchDeliverables, user.team.id]);
 
   const handleEndButton = async (activity_id) => {

@@ -80,28 +80,33 @@ const CardDraggable = ({ item }) => {
                 </div>
               </div>
 
-              <p className="has-text-weight-medium">Responsables:</p>
+              {currentTeam.members && (
+                <>
+                  <p className="has-text-weight-medium">Responsables:</p>
 
-              <div className="tags">
-                {item.responsables.length ? (
-                  item.responsables.map((responsable, index) => (
-                    <span
-                      className="tag is-light is-primary is-rounded"
-                      key={index}
-                    >
-                      {
-                        currentTeam.members?.find(
-                          (member) => member.id === responsable
-                        ).name
-                      }
-                    </span>
-                  ))
-                ) : (
-                  <span className="tag is-light is-primary is-rounded">
-                    Sin Responsables
-                  </span>
-                )}
-              </div>
+                  <div className="tags">
+                    {item.responsables.length ? (
+                      item.responsables.map((responsable, index) => (
+                        <span
+                          className="tag is-light is-primary is-rounded"
+                          key={index}
+                        >
+                          {(() => {
+                            const member = currentTeam.members.find(
+                              (member) => member.id === responsable
+                            );
+                            return `${member.name} ${member.lastName}`;
+                          })()}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="tag is-light is-primary is-rounded">
+                        Sin Responsables
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </article>
         )}

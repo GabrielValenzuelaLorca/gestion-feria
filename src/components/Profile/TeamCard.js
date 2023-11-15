@@ -4,20 +4,10 @@ import useFetch from "../../hooks/useFetch";
 import useForm from "../../hooks/useForm";
 import { updateTeam } from "../../services/team";
 import { addUser } from "../../store/slices/userSlice";
-import { setModalState } from "../../utils/functions";
+import { flatMembers, setModalState } from "../../utils/functions";
 import { Form, Input } from "../Forms";
 import Members from "./Members";
 import TeamForm from "./TeamForm";
-
-const flatMembers = (team) => {
-  if (team.id) {
-    return {
-      ...team,
-      members: team.members.map((member) => member.id),
-    };
-  }
-  return team;
-};
 
 const TeamCard = ({ user }) => {
   const [teamModal, setTeamModal] = useState(false);
@@ -36,7 +26,10 @@ const TeamCard = ({ user }) => {
   const handleUpdate = async () => {
     try {
       if (form.validationState) {
-        await update(teamState);
+        await update({
+          ...user.team,
+          ...teamState,
+        });
         setEdit(false);
       } else {
         form.setShowError(true);
