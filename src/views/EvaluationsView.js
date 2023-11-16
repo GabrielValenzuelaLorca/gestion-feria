@@ -6,11 +6,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getDeliverablesByActivity } from "../services/evaluation";
 import { DELIVERABLE_STATE } from "../utils/constants";
 import { formatDatetimeToString } from "../utils/functions";
+import { useSelector } from "react-redux";
 
 const EvaluationsView = () => {
   const { activityId } = useParams();
   const [deliverablesState, setDeliverables] = useState([]);
   const [activityState, setActivity] = useState({});
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
 
   const fetchCallback = useCallback((data) => {
     setDeliverables(data.deliverables);
@@ -21,7 +24,6 @@ const EvaluationsView = () => {
     getDeliverablesByActivity,
     fetchCallback
   );
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchEvaluations(activityId);
@@ -31,8 +33,12 @@ const EvaluationsView = () => {
     navigate(`/rubrica/${activityId}`);
   };
 
-  const handleEvaluationButton = (deliverableId) => {
+  const handleEvaluateButton = (deliverableId) => {
     navigate(`/evaluacion/${deliverableId}`);
+  };
+
+  const handleEvaluationButton = (deliverableId) => {
+    navigate(`/evaluacionDetallada/${deliverableId}`);
   };
 
   return (
@@ -127,31 +133,50 @@ const EvaluationsView = () => {
                               }`
                             : DELIVERABLE_STATE[deliverable.state].text}
                         </div>
-                        <div className="level-item">
-                          <button
-                            className="button is-primary"
-                            onClick={() =>
-                              handleEvaluationButton(deliverable.id)
-                            }
-                            disabled={
-                              !["done", "evaluated"].includes(
-                                deliverable.state
-                              ) ||
-                              (activityState.type !== "sprint" &&
-                                !activityState.rubric)
-                            }
-                          >
-                            <span className="icon is-small">
-                              <i className="fa-solid fa-check"></i>
-                            </span>
-                            <span>
-                              {activityState.type !== "sprint" &&
-                              !activityState.rubric
-                                ? "Sin Rúbrica"
-                                : "Evaluar"}
-                            </span>
-                          </button>
-                        </div>
+                        {deliverable.activity.type === "sprint" &&
+                          deliverable.state === "evaluated" && (
+                            <div className="level-item">
+                              <button
+                                className="button is-primary is-outlined"
+                                onClick={() =>
+                                  handleEvaluationButton(deliverable.id)
+                                }
+                              >
+                                <span className="icon is-small">
+                                  <i className="fa-solid fa-eye"></i>
+                                </span>
+                                <span>Ver Evaluación</span>
+                              </button>
+                            </div>
+                          )}
+
+                        {activityState.evaluators.includes(user.id) && (
+                          <div className="level-item">
+                            <button
+                              className="button is-primary"
+                              onClick={() =>
+                                handleEvaluateButton(deliverable.id)
+                              }
+                              disabled={
+                                !["done", "evaluated"].includes(
+                                  deliverable.state
+                                ) ||
+                                (activityState.type !== "sprint" &&
+                                  !activityState.rubric)
+                              }
+                            >
+                              <span className="icon is-small">
+                                <i className="fa-solid fa-check"></i>
+                              </span>
+                              <span>
+                                {activityState.type !== "sprint" &&
+                                !activityState.rubric
+                                  ? "Sin Rúbrica"
+                                  : "Evaluar"}
+                              </span>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

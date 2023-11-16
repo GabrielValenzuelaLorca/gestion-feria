@@ -68,30 +68,32 @@ const EvaluateView = () => {
                   <h2 className="subtitle is-6">
                     {deliverableState.activity.description}
                   </h2>
-                  {evaluationState.score !== undefined && (
-                    <div className="block">
-                      <strong>Nota final:</strong> {evaluationState.score}
-                    </div>
-                  )}
-                  {user.rol === "Profesor" &&
-                    deliverableState.activity.rubric && (
+                  {deliverableState.activity.type !== "sprint" &&
+                    evaluationState.score !== undefined && (
+                      <div className="block">
+                        <strong>Nota final:</strong> {evaluationState.score}
+                      </div>
+                    )}
+                  {deliverableState.activity.evaluators.includes(user.id) &&
+                    (deliverableState.activity.type === "sprint" ||
+                      deliverableState.activity.rubric) && (
                       <button
-                        className={`button ${
+                        className={`button is-success ${
                           loadingEvaluation && "is-loading"
-                        } ${
-                          deliverableState.evaluation ? "is-link" : "is-success"
                         }`}
                         type="button"
                         onClick={handleEvaluate}
-                        disabled={loadingEvaluation}
+                        disabled={
+                          loadingEvaluation ||
+                          !deliverableState.activity.evaluators.includes(
+                            user.id
+                          )
+                        }
                       >
                         <span className="icon is-small">
                           <i className="fas fa-check" aria-hidden="true" />
                         </span>
-                        <span>
-                          {deliverableState.evaluation ? "Editar" : "Terminar"}{" "}
-                          Evaluación
-                        </span>
+                        <span>Terminar Evaluación</span>
                       </button>
                     )}
                 </div>

@@ -1,27 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { getStoriesBySprint } from "../../services/story";
-import { getUsers } from "../../services/user";
 import { Fragment } from "react";
 
 const EvaluateSprint = ({ deliverable, user, evaluation, setEvaluation }) => {
   const [storiesState, setStories] = useState([]);
-  const [evaluatorsState, setEvaluators] = useState([]);
   const [fetchStories, loadingStories] = useFetch(
     getStoriesBySprint,
     setStories
   );
-  const [fetchEvaluators, loadingEvaluators] = useFetch(
-    getUsers,
-    setEvaluators
-  );
-
-  useEffect(() => {
-    fetchEvaluators({
-      roles: ["Profesor", "Ayudante", "Juez"],
-      active: true,
-    });
-  }, [fetchEvaluators]);
 
   useEffect(() => {
     if (deliverable.activity && deliverable.team) {
@@ -35,9 +22,29 @@ const EvaluateSprint = ({ deliverable, user, evaluation, setEvaluation }) => {
     }
   }, [deliverable.evaluation, setEvaluation]);
 
+  const handleScore = (storyId, criteriaIndex, e) => {
+    const value = parseInt(e.target.value) || 0;
+    if (value >= 0 && value <= 4) {
+      setEvaluation((evaluation) => {
+        const newState = { ...evaluation };
+        newState.stories[storyId][criteriaIndex][user.id].score = value;
+        return newState;
+      });
+    }
+  };
+
+  const handleFeedback = (storyId, criteriaIndex, e) => {
+    const value = e.target.value;
+    setEvaluation((evaluation) => {
+      const newState = { ...evaluation };
+      newState.stories[storyId][criteriaIndex][user.id].feedback = value;
+      return newState;
+    });
+  };
+
   return (
     <section>
-      {loadingEvaluators || loadingStories ? (
+      {loadingStories ? (
         <progress className="progress is-primary"></progress>
       ) : storiesState.length > 0 ? (
         Object.keys(evaluation.stories).map((storyId) => {
@@ -49,8 +56,11 @@ const EvaluateSprint = ({ deliverable, user, evaluation, setEvaluation }) => {
                 <span className="is-size-6">({story.points} Puntos)</span>
               </h1>
               <h2 className="subtitle is-6">{story.description}</h2>
-              {story.criteria.map((criteria) => (
-                <div className="box columns mb-6">
+              {story.criteria.map((criteria, i) => (
+                <div
+                  className="box columns mb-6"
+                  key={`${storyId}-criteria-${i}`}
+                >
                   <div className="column is-8">{criteria}</div>
                   <div className="column is-1">
                     <div className="field">
@@ -59,8 +69,14 @@ const EvaluateSprint = ({ deliverable, user, evaluation, setEvaluation }) => {
                         <input
                           className="input is-success is-medium"
                           type="number"
+                          value={evaluation.stories[storyId][i][user.id].score}
                           min={0}
                           max={4}
+                          placeholder="4"
+                          onChange={(e) => handleScore(storyId, i, e)}
+                          disabled={
+                            !deliverable.activity.evaluators.includes(user.id)
+                          }
                         />
                       </div>
                     </div>
@@ -73,10 +89,13 @@ const EvaluateSprint = ({ deliverable, user, evaluation, setEvaluation }) => {
                           className="textarea is-small is-primary"
                           placeholder="Ingrese su comentario"
                           rows={2}
-                          // value={""}
-                          // onChange={(e) =>
-                          //   handleOnChange(i, null, e.target.value)
-                          // }
+                          value={
+                            evaluation.stories[storyId][i][user.id].feedback
+                          }
+                          onChange={(e) => handleFeedback(storyId, i, e)}
+                          disabled={
+                            !deliverable.activity.evaluators.includes(user.id)
+                          }
                         />
                       </div>
                     </div>

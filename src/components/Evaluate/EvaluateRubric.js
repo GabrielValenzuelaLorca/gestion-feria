@@ -54,7 +54,8 @@ const EvaluateRubric = ({
                     <div className="column" key={`${i}-column-${j}`}>
                       <div className="box">
                         <div className="block ml-2">{description}</div>
-                        {user.rol === "Profesor" ? (
+                        {user.rol === "Profesor" &&
+                        deliverable.activity.evaluators.includes(user.id) ? (
                           <button
                             className="button is-primary is-small is-rounded"
                             disabled={evaluation.rows[i].index === j}
@@ -93,7 +94,10 @@ const EvaluateRubric = ({
             <Textarea
               name="feedback"
               placeholder="Ingrese su comentario"
-              disabled={user.rol === "Alumno"}
+              disabled={
+                user.rol === "Alumno" ||
+                !deliverable.activity.evaluators.includes(user.id)
+              }
             />
           </Form>
         </>

@@ -28,6 +28,7 @@ import { getAppActivities } from "./services/activity";
 import { setActivities } from "./store/slices/activitiesSlice";
 import { updateSettings } from "./store/slices/settingsSlice";
 import TeamStoriesView from "./views/TeamStoriesView";
+import DetailedEvaluationView from "./views/DetailedEvaluationView";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -92,6 +93,10 @@ function App() {
           <Route
             path="evaluacion/:deliverableId"
             element={<NavbarLayout component={<EvaluateView />} />}
+          />
+          <Route
+            path="evaluacionDetallada/:deliverableId"
+            element={<NavbarLayout component={<DetailedEvaluationView />} />}
           />
 
           {["Administrador", "Profesor"].includes(userState.rol) && (
