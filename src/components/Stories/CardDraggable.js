@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useContext } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { criticidadStyle } from "../../utils/classStyles";
 import { setModalState } from "../../utils/functions";
