@@ -1,15 +1,20 @@
 import React, { Children, cloneElement, useEffect } from "react";
+import { useMemo } from "react";
 
 const Form = ({ className, form, children }) => {
-  useEffect(() => {
-    const filteredChildren = Children.toArray(children).filter(
-      (child) => child.props.validations || child.props.customValidations
-    );
+  const { errorState, setError } = form.formProps;
 
-    if (
-      filteredChildren.length !== Object.keys(form.formProps.errorState).length
-    ) {
-      form.formProps.setError((state) => {
+  const filteredChildren = useMemo(
+    () =>
+      Children.toArray(children).filter(
+        (child) => child.props.validations || child.props.customValidations
+      ),
+    [children]
+  );
+
+  useEffect(() => {
+    if (filteredChildren.length !== Object.keys(errorState).length) {
+      setError((state) => {
         const newState = {};
         filteredChildren.forEach((child) => {
           const name = child.props.name;
@@ -18,7 +23,7 @@ const Form = ({ className, form, children }) => {
         return newState;
       });
     }
-  }, [children, form.formProps]);
+  }, [errorState, setError, filteredChildren]);
 
   return (
     <form className={className}>

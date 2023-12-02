@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useFetch from "../../hooks/useFetch";
 import useForm from "../../hooks/useForm";
 import { createTeam } from "../../services/team";
 import { addUser } from "../../store/slices/userSlice";
-import { Form, Input } from "../Forms";
+import { Form, Input, Textarea } from "../Forms";
 import Members from "./Members";
 
-const TeamForm = ({ isActive, closeModal, userId }) => {
+const TeamForm = ({ isActive, closeModal }) => {
+  const user = useSelector((state) => state.user);
   const DEFAULT_TEAM = {
     name: "",
     phrase: "",
-    members: [userId],
+    members: [user.id],
   };
 
   const dispatch = useDispatch();
@@ -54,14 +55,13 @@ const TeamForm = ({ isActive, closeModal, userId }) => {
             validations={["required"]}
           />
 
-          <Input
+          <Textarea
             name="phrase"
             label="Frase representativa del equipo"
-            type="text"
             placeholder="Ingrese frase"
           />
 
-          <Members team={team} userId={userId} setTeam={setTeam} editable />
+          <Members team={team} setTeam={setTeam} editable />
         </Form>
 
         <footer className="modal-card-foot">

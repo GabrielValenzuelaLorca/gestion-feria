@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { validateArray } from '../utils/validations';
+import { useEffect, useState } from "react";
+import { validateArray } from "../utils/validations";
 
 const useForm = (state, setState) => {
   const [showErrorState, setShowError] = useState(false);
@@ -8,7 +8,7 @@ const useForm = (state, setState) => {
 
   useEffect(() => {
     setValidation(validateArray(errorState));
-  }, [errorState])
+  }, [errorState]);
 
   return {
     validationState,
@@ -18,9 +18,9 @@ const useForm = (state, setState) => {
       setState,
       errorState,
       showErrorState,
-      setError
-    }
+      setError,
+    },
   };
-}
+};
 
 export default useForm;

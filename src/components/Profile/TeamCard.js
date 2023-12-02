@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useFetch from "../../hooks/useFetch";
 import useForm from "../../hooks/useForm";
 import { updateTeam } from "../../services/team";
 import { addUser } from "../../store/slices/userSlice";
 import { flatMembers, setModalState } from "../../utils/functions";
-import { Form, Input } from "../Forms";
+import { Form, Input, Textarea } from "../Forms";
 import Members from "./Members";
 import TeamForm from "./TeamForm";
 
-const TeamCard = ({ user }) => {
+const TeamCard = () => {
+  const user = useSelector((state) => state.user);
   const [teamModal, setTeamModal] = useState(false);
   const [teamState, setTeamState] = useState(flatMembers(user.team));
   const [editState, setEdit] = useState(false);
@@ -68,7 +69,6 @@ const TeamCard = ({ user }) => {
             closeModal={() => {
               setModalState(false, setTeamModal);
             }}
-            userId={user.id}
           />
         </>
       ) : (
@@ -109,10 +109,9 @@ const TeamCard = ({ user }) => {
                   disabled={!editState}
                 />
 
-                <Input
+                <Textarea
                   name="phrase"
                   label="Frase"
-                  type="text"
                   placeholder="No ingresado"
                   disabled={!editState}
                 />
@@ -128,7 +127,6 @@ const TeamCard = ({ user }) => {
 
                 <Members
                   team={teamState}
-                  userId={user.id}
                   setTeam={setTeamState}
                   editable={editState}
                 />

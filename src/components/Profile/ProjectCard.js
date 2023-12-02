@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import useForm from "../../hooks/useForm";
 import { Form, Input, Textarea } from "../Forms";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useFetch from "../../hooks/useFetch";
 import { addUser } from "../../store/slices/userSlice";
 import { updateTeam } from "../../services/team";
 import { flatMembers } from "../../utils/functions";
 
-const ProjectCard = ({ user }) => {
+const ProjectCard = () => {
+  const user = useSelector((state) => state.user);
   const [projectState, setProjectState] = useState(user.team.project);
   const [editState, setEdit] = useState(false);
   const dispatch = useDispatch();

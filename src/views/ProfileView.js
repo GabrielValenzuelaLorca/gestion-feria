@@ -15,11 +15,11 @@ const ProfileView = () => {
       {user.rol === "Alumno" && user.period === period.id && (
         <>
           <section className="section">
-            <TeamCard user={user} />
+            <TeamCard />
           </section>
           {user.team.project && (
             <section className="section">
-              <ProjectCard user={user} />
+              <ProjectCard />
             </section>
           )}
         </>
