@@ -11,14 +11,14 @@ const CardDraggable = ({ item }) => {
   const user = useSelector((state) => state.user);
   const team = useContext(teamContext);
 
-  const currentTeam = useMemo(() => team || user.team, [team, user.team]);
+  const currentTeam = user.team || team;
 
   return (
     <>
       <Draggable
         draggableId={`${item.sprint}-${item.id}`}
         index={item.index}
-        isDragDisabled={["Administrador", "Profesor"].includes(user.rol)}
+        isDragDisabled={"Profesor" === user.rol}
       >
         {(provided, snapshot) => (
           <article
@@ -31,7 +31,8 @@ const CardDraggable = ({ item }) => {
           >
             <div className="card-header is-align-items-center">
               <p className="card-header-title">
-                HU{item.number} - {item.title}
+                HU{item.number > 9 ? item.number : `0${item.number}`} -{" "}
+                {item.title}
               </p>
               <div className="card-header-icon">
                 <button
@@ -83,22 +84,23 @@ const CardDraggable = ({ item }) => {
               {currentTeam.members && (
                 <>
                   <p className="has-text-weight-medium">Responsables:</p>
-
                   <div className="tags">
                     {item.responsables.length ? (
-                      item.responsables.map((responsable, index) => (
-                        <span
-                          className="tag is-light is-primary is-rounded"
-                          key={index}
-                        >
-                          {(() => {
-                            const member = currentTeam.members.find(
-                              (member) => member.id === responsable
-                            );
-                            return `${member.name} ${member.lastName}`;
-                          })()}
-                        </span>
-                      ))
+                      item.responsables.map((responsable, index) => {
+                        const member = currentTeam.members.find(
+                          (member) => member.id === responsable
+                        );
+                        return (
+                          <span
+                            className="tag is-light is-primary is-rounded"
+                            key={index}
+                          >
+                            {member
+                              ? `${member.name} ${member.lastName}`
+                              : "Usuario no encontrado"}
+                          </span>
+                        );
+                      })
                     ) : (
                       <span className="tag is-light is-primary is-rounded">
                         Sin Responsables

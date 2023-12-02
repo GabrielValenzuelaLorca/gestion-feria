@@ -10,6 +10,7 @@ import Board from "../components/Stories/Board";
 import useFetch from "../hooks/useFetch";
 import { getStoriesBySprint, updateStoriesState } from "../services/story";
 import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 export const refreshContext = createContext();
 
@@ -17,20 +18,12 @@ const StoriesView = () => {
   const user = useSelector((state) => state.user);
   const settings = useSelector((state) => state.settings);
   const [storiesState, setStories] = useState([]);
-  const [filterState, setFilter] = useState();
+  const [filterState, setFilter] = useState("Backlog");
   const [fetchStories, loadingStories] = useFetch(
     getStoriesBySprint,
     setStories
   );
   const [updateStories] = useFetch(updateStoriesState);
-
-  const fetchStoriesCallback = useCallback(async () => {
-    await fetchStories(null, user.team.id);
-  }, [fetchStories, user.team.id]);
-
-  useEffect(() => {
-    fetchStoriesCallback();
-  }, [fetchStoriesCallback]);
 
   const filterOptions = useMemo(() => {
     const options = new Map([
@@ -47,9 +40,17 @@ const StoriesView = () => {
 
     return [...options.keys()].reduce((prev, acc) => {
       if (options.get(acc)) return [...prev, acc];
-      else return prev;
+      return prev;
     }, []);
   }, [storiesState]);
+
+  const fetchStoriesCallback = useCallback(async () => {
+    await fetchStories(null, user.team.id);
+  }, [fetchStories, user.team.id]);
+
+  useEffect(() => {
+    fetchStoriesCallback();
+  }, [fetchStoriesCallback]);
 
   const onDragEnd = (result) => {
     if (!result.destination || !result.source) return;
@@ -107,12 +108,6 @@ const StoriesView = () => {
                 <i className="fas fa-lg fa-filter"></i>
               </div>
             </button>
-            <button
-              className={`button ${filterState ? "" : "is-primary"}`}
-              onClick={() => setFilter(undefined)}
-            >
-              Todos
-            </button>
             {filterOptions.map((option, i) => (
               <button
                 className={`button ${
@@ -120,6 +115,7 @@ const StoriesView = () => {
                 }`}
                 key={i}
                 onClick={() => setFilter(option)}
+                disabled={filterState === option}
               >
                 {option}
               </button>
@@ -131,15 +127,13 @@ const StoriesView = () => {
         <refreshContext.Provider value={fetchStoriesCallback}>
           <BoardInfo />
           <section className="block">
-            {loadingStories ? (
-              <progress className="progress is-primary" />
-            ) : (
+            <Loader loading={loadingStories}>
               <Board
                 storiesState={storiesState}
                 onDragEnd={onDragEnd}
                 filter={filterState}
               />
-            )}
+            </Loader>
           </section>
         </refreshContext.Provider>
       ) : (

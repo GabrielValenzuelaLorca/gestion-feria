@@ -11,7 +11,7 @@ const Board = ({ storiesState, onDragEnd, filter }) => {
     }, {});
 
     const stories = storiesState
-      .filter((story) => (filter ? story.sprint === filter : true))
+      .filter((story) => story.sprint === filter)
       .reduce((prev, acc) => {
         prev[acc.state].push(acc);
         return prev;

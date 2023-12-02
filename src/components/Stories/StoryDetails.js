@@ -12,16 +12,27 @@ import { refreshContext } from "../../views/StoriesView";
 import { teamContext } from "../../views/TeamStoriesView";
 
 const StoryDetails = ({ story, isActive, closeModal }) => {
+  const settings = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.user);
   const [editState, setEdit] = useState(false);
   const [storyState, setStory] = useState(story);
   const form = useForm(storyState, setStory);
-  const user = useSelector((state) => state.user);
   const [fetchUpdate, loadingUpdate] = useFetch(updateStory);
-  const settings = useSelector((state) => state.settings);
   const fetchStories = useContext(refreshContext);
   const team = useContext(teamContext);
 
-  const currentTeam = useMemo(() => team || user.team, [team, user.team]);
+  const currentTeam = user.team || team;
+
+  const canCreateOrEdit =
+    ["Alumno", "Ayudante"].includes(user.rol) &&
+    (settings.canEdit || settings.canCreate);
+
+  const canAssign =
+    ["Alumno", "Ayudante"].includes(user.rol) && settings.canAssign;
+
+  const responsablesForTags = editState
+    ? storyState.responsables
+    : story.responsables;
 
   const teamMembersAsOptions = useMemo(() => {
     if (currentTeam.members) {
@@ -29,7 +40,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
         .filter((member) => !storyState.responsables.includes(member.id))
         .map((member) => ({
           value: member.id,
-          text: member.name,
+          text: `${member.name} ${member.lastName}`,
         }));
     }
     return [];
@@ -108,40 +119,49 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
       <div className="modal-background" onClick={closeModal}></div>
 
       <article className="modal-card">
-        <header className="modal-card-head">
-          <p className="modal-card-title">
-            HU{story.number} - {story.title}
-          </p>
-          {user.rol === "Alumno" && !settings.canEdit && (
-            <p className="is-size-7 mr-2 has-text-grey-light">
+        <header className="modal-card-head is-flex is-flex-direction-column is-align-items-end">
+          <div className="level mb-0" style={{ width: "100%" }}>
+            <div className="level-left">
+              <p className="modal-card-title">
+                HU{story.number} - {story.title}
+              </p>
+            </div>
+            <div className="level-right">
+              {["Alumno", "Ayudante"].includes(user.rol) && !editState && (
+                <button
+                  className="button is-link is-rounded is-small mr-2"
+                  onClick={() => setEdit(true)}
+                  disabled={!canCreateOrEdit}
+                >
+                  <span className="icon is-small">
+                    <i className="fas fa-pen-to-square"></i>
+                  </span>
+                  <span>Editar</span>
+                </button>
+              )}
+
+              <button
+                className="delete is-medium"
+                onClick={handleClose}
+              ></button>
+            </div>
+          </div>
+          {["Alumno", "Ayudante"].includes(user.rol) && !canCreateOrEdit && (
+            <p className="is-size-7 has-text-grey-light">
               *La edición aún no ha sido habilitada
             </p>
           )}
-          {user.rol === "Alumno" && !editState && (
-            <button
-              className="button is-link is-rounded is-small mr-2"
-              onClick={() => setEdit(true)}
-              disabled={!settings.canEdit}
-            >
-              <span className="icon is-small">
-                <i className="fas fa-pen-to-square"></i>
-              </span>
-              <span>Editar</span>
-            </button>
-          )}
-
-          <button className="delete is-medium" onClick={handleClose}></button>
         </header>
         <section className="modal-card-body">
           <div className="field">
             <label className="label">Sprint</label>
             <div className="control">
-              <div className="select">
+              <div className={`select ${loadingUpdate ? "is-loading" : ""}`}>
                 <select
                   name="sprint"
                   onChange={changeSprint}
                   value={story.sprint}
-                  disabled={loadingUpdate || !settings.canAssign}
+                  disabled={loadingUpdate || !canAssign}
                 >
                   {["Backlog", "MVP", "Sprint 1", "Sprint 2", "Sprint 3"].map(
                     (option, i) => (
@@ -153,7 +173,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 </select>
               </div>
             </div>
-            {user.rol === "Alumno" && !settings.canAssign && (
+            {!canAssign && (
               <p className="is-size-7 has-text-grey-light">
                 *La asignación de sprint aún no ha sido habilitada
               </p>
@@ -223,7 +243,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 type="number"
                 placeholder="10"
                 min="0"
-                validations={["required"]}
+                validations={["required", "minNumber-0"]}
                 addons={<button className="button is-static">HU</button>}
                 disabled={loadingUpdate}
               />
@@ -250,7 +270,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 placeholder="10"
                 min="0"
                 validations={["required", "minNumber-0"]}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !settings.canEdit}
               />
               <Input
                 name="progress"
@@ -262,7 +282,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 max="100"
                 validations={["required", "minNumber-0", "maxNumber-100"]}
                 rightAddons={<button className="button is-static">%</button>}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !settings.canEdit}
               />
               {storyState.criteria.map((criteria, i) => (
                 <div className="field" key={i}>
@@ -275,7 +295,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                       value={criteria}
                       name={`criteria-${i}`}
                       placeholder="El sistema debe ser capaz de..."
-                      disabled={loadingUpdate}
+                      disabled={loadingUpdate || !settings.canEdit}
                       onChange={(e) => handleCriteriaChange(e, i)}
                     />
                   </div>
@@ -287,6 +307,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                     className="button is-primary is-small"
                     type="button"
                     onClick={handleAddCriteria}
+                    disabled={loadingUpdate || !settings.canEdit}
                   >
                     <span className="icon is-small">
                       <i className="fas fa-plus"></i>
@@ -297,6 +318,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                     className="button is-danger is-small"
                     type="button"
                     onClick={handleDeleteCriteria}
+                    disabled={loadingUpdate || !settings.canEdit}
                   >
                     <span className="icon is-small">
                       <i className="fas fa-trash"></i>
@@ -308,7 +330,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
               <Select
                 name="criticality"
                 label={
-                  <span>
+                  <>
                     <span>Criticidad</span>
                     <span
                       className={`icon has-text-${
@@ -317,17 +339,17 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                     >
                       <i className="fas fa-circle"></i>
                     </span>
-                  </span>
+                  </>
                 }
                 options={CRITICIDAD}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !settings.canEdit}
               />
               <Select
                 name="responsables"
                 label="Responsable(s)"
                 options={teamMembersAsOptions}
                 multiple={true}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !settings.canEdit}
               />
             </Form>
           )}
@@ -335,12 +357,8 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
             <label className="label">{editState ? "" : "Responsable(s)"}</label>
             <div className="control">
               <div className="tags are-medium">
-                {(editState ? storyState.responsables : story.responsables)
-                  .length ? (
-                  (editState
-                    ? storyState.responsables
-                    : story.responsables
-                  ).map((responsable, index) => (
+                {responsablesForTags.length ? (
+                  responsablesForTags.map((responsable, index) => (
                     <span className="tag is-rounded is-primary" key={index}>
                       {(() => {
                         const member = currentTeam.members.find(
@@ -366,7 +384,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                     </span>
                   ))
                 ) : (
-                  <span className="tag is-rounded is-light">
+                  <span className="tag is-rounded is-primary is-light">
                     Sin Responsables
                   </span>
                 )}
