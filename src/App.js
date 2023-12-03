@@ -98,16 +98,16 @@ function App() {
             path="evaluacionDetallada/:deliverableId"
             element={<NavbarLayout component={<DetailedEvaluationView />} />}
           />
+          <Route
+            path="rubrica/:activityId"
+            element={<NavbarLayout component={<RubricView />} />}
+          />
 
           {["Administrador", "Profesor"].includes(userState.rol) && (
             <>
               <Route
                 path="entregables"
                 element={<NavbarLayout component={<AllDeliverablesView />} />}
-              />
-              <Route
-                path="rubrica/:activityId"
-                element={<NavbarLayout component={<RubricView />} />}
               />
               <Route
                 path="usuarios"
