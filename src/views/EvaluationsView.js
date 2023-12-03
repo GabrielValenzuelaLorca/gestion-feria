@@ -117,7 +117,11 @@ const EvaluationsView = () => {
                           <span>
                             Equipo: <strong>{deliverable.team.name}</strong> |
                             Proyecto:{" "}
-                            <strong>{deliverable.team.project.name}</strong>
+                            {deliverable.team.project.name ? (
+                              <strong>{deliverable.team.project.name}</strong>
+                            ) : (
+                              <span className="is-italic">Sin Proyecto</span>
+                            )}
                           </span>
                         </div>
                       </div>

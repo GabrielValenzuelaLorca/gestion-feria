@@ -83,6 +83,7 @@ const Members = ({ team, setTeam, editable = false }) => {
                     className="dropdown-item button-option"
                     onMouseDown={() => addTeamMember(student.id)}
                     key={i}
+                    style={{ cursor: "pointer" }}
                   >
                     {`${student.name} ${student.lastName}`}
                   </button>

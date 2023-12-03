@@ -11,13 +11,14 @@ import useFetch from "../hooks/useFetch";
 import { getStoriesBySprint } from "../services/story";
 import { useParams } from "react-router-dom";
 import { getTeam } from "../services/team";
+import Loader from "../components/Loader";
 
 export const teamContext = createContext();
 
 const TeamStoriesView = () => {
   const [storiesState, setStories] = useState([]);
   const [teamState, setTeam] = useState({});
-  const [filterState, setFilter] = useState();
+  const [filterState, setFilter] = useState("Backlog");
   const [fetchStories, loadingStories] = useFetch(
     getStoriesBySprint,
     setStories
@@ -82,12 +83,6 @@ const TeamStoriesView = () => {
                 <i className="fas fa-lg fa-filter"></i>
               </div>
             </button>
-            <button
-              className={`button ${filterState ? "" : "is-primary"}`}
-              onClick={() => setFilter(undefined)}
-            >
-              Todos
-            </button>
             {filterOptions.map((option, i) => (
               <button
                 className={`button ${
@@ -95,6 +90,7 @@ const TeamStoriesView = () => {
                 }`}
                 key={i}
                 onClick={() => setFilter(option)}
+                disabled={filterState === option}
               >
                 {option}
               </button>
@@ -106,15 +102,13 @@ const TeamStoriesView = () => {
       <teamContext.Provider value={teamState}>
         <BoardInfo />
         <section className="block">
-          {loadingStories ? (
-            <progress className="progress is-primary" />
-          ) : (
+          <Loader loading={loadingStories}>
             <Board
               storiesState={storiesState}
               onDragEnd={() => {}}
               filter={filterState}
             />
-          )}
+          </Loader>
         </section>
       </teamContext.Provider>
     </section>
