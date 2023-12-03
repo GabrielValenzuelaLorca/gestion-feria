@@ -33,6 +33,10 @@ const DeliverablesView = () => {
     navigate(`/evaluacion/${deliverableId}`);
   };
 
+  const handleRubric = (activityId) => {
+    navigate(`/rubrica/${activityId}`);
+  };
+
   return (
     <section className="section">
       <section className="container">
@@ -131,6 +135,21 @@ const DeliverablesView = () => {
                   </div>
                   {activity.state !== "closed" && (
                     <div className="column is-narrow buttons">
+                      <button
+                        className="button is-primary"
+                        onClick={() => handleRubric(activity.id)}
+                        disabled={!activity.rubric}
+                      >
+                        <span className="icon is-small">
+                          <i className="fa-solid fa-eye"></i>
+                        </span>
+                        {activity.rubric ? (
+                          <span>Ver Rúbrica</span>
+                        ) : (
+                          <span className="is-italic">Sin Rúbrica</span>
+                        )}
+                      </button>
+
                       {activity.state === "evaluated" && (
                         <button
                           className="button is-primary is-outlined"
