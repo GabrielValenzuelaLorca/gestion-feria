@@ -16,14 +16,7 @@ const Navbar = () => {
       <nav className="navbar is-dark" aria-label="main navigation">
         <div className="navbar-brand">
           <div className="navbar-burger" />
-          <a className="navbar-item" href="www.youtube.com">
-            <img
-              src="https://bulma.io/images/bulma-logo-white.png"
-              width="112"
-              height="28"
-              alt="Logo"
-            />
-          </a>
+          <p className="title is-4 navbar-item">CASE</p>
         </div>
 
         <div className="navbar-menu">
