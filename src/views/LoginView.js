@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Register from "../components/Login/Register";
 import { setModalState } from "../utils/functions";
 import LoginForm from "../components/Login/LoginForm";
-import logo_di from "../assets/images/logo_di.png";
-import logo_fesw from "../assets/images/logo-fesw-300x161.png";
+// import logo_di from "../assets/images/logo_di.png";
+// import logo_fesw from "../assets/images/logo-fesw-300x161.png";
 
 const LoginView = () => {
   const [modalState, setModal] = useState(false);
