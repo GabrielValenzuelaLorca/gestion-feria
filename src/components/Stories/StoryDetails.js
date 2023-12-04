@@ -21,7 +21,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
   const fetchStories = useContext(refreshContext);
   const team = useContext(teamContext);
 
-  const currentTeam = user.team || team;
+  const currentTeam = team || user.team;
 
   const canCreateOrEdit =
     ["Alumno", "Ayudante"].includes(user.rol) &&

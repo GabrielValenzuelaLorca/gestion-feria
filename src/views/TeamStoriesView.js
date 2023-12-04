@@ -26,15 +26,6 @@ const TeamStoriesView = () => {
   const [fetchTeam] = useFetch(getTeam, setTeam);
   const { teamId } = useParams();
 
-  const fetchStoriesCallback = useCallback(async () => {
-    await fetchStories(null, teamId);
-  }, [fetchStories, teamId]);
-
-  useEffect(() => {
-    fetchStoriesCallback();
-    fetchTeam(teamId);
-  }, [fetchStoriesCallback, fetchTeam, teamId]);
-
   const filterOptions = useMemo(() => {
     const options = new Map([
       ["Backlog", false],
@@ -53,6 +44,20 @@ const TeamStoriesView = () => {
       else return prev;
     }, []);
   }, [storiesState]);
+
+  const fetchStoriesCallback = useCallback(async () => {
+    await fetchStories(null, teamId);
+  }, [fetchStories, teamId]);
+
+  useEffect(() => {
+    fetchStoriesCallback();
+    fetchTeam(teamId);
+  }, [fetchStoriesCallback, fetchTeam, teamId]);
+
+  useEffect(() => {
+    if (filterOptions.length > 0 && !filterOptions.includes(filterState))
+      setFilter(filterOptions[0]);
+  }, [filterOptions, filterState]);
 
   return (
     <section className="section">

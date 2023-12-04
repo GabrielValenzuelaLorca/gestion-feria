@@ -11,7 +11,7 @@ const CardDraggable = ({ item }) => {
   const user = useSelector((state) => state.user);
   const team = useContext(teamContext);
 
-  const currentTeam = user.team || team;
+  const currentTeam = team || user.team;
 
   return (
     <>

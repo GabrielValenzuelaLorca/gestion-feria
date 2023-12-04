@@ -15,27 +15,28 @@ const BoardInfo = () => {
 
   return (
     <>
-      {activities.map((activity, i) => (
-        <section className="message is-primary" key={i}>
-          <div className="message-header">{activity.name}</div>
-          <div className="message-body">
-            <div className="block">
-              <p>{activity.description}</p>
-            </div>
+      {user.rol !== "Profesor" &&
+        activities.map((activity, i) => (
+          <section className="message is-primary" key={i}>
+            <div className="message-header">{activity.name}</div>
+            <div className="message-body">
+              <div className="block">
+                <p>{activity.description}</p>
+              </div>
 
-            <div className="block">
-              <p>
-                <strong>Fecha de Término:</strong>{" "}
-                {formatDatetimeToString(activity.end)}
-              </p>
-              <p>
-                <strong>Tiempo Restante:</strong>{" "}
-                {diffDates(new Date(), activity.end)} días
-              </p>
+              <div className="block">
+                <p>
+                  <strong>Fecha de Término:</strong>{" "}
+                  {formatDatetimeToString(activity.end)}
+                </p>
+                <p>
+                  <strong>Tiempo Restante:</strong>{" "}
+                  {diffDates(new Date(), activity.end)} días
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        ))}
       {user.rol === "Alumno" && (
         <div className="block">
           <button
