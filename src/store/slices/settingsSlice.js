@@ -17,15 +17,16 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     updateSettings: (state, action) => {
+      state = { ...initialState };
       action.payload.forEach((activity) => {
-        const operations = {
+        ({
           storyCreation: () => (state.canCreate = true),
           storyEdition: () => (state.canEdit = true),
           storyAssign: () => (state.canAssign = true),
           sprint: () => (state.sprints[activity.name] = true),
-        };
-        operations[activity.type]();
+        })[activity.type]();
       });
+      return state;
     },
   },
 });

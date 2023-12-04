@@ -52,6 +52,11 @@ const StoriesView = () => {
     fetchStoriesCallback();
   }, [fetchStoriesCallback]);
 
+  useEffect(() => {
+    if (filterOptions.length > 0 && !filterOptions.includes(filterState))
+      setFilter(filterOptions[0]);
+  }, [filterOptions, filterState]);
+
   const onDragEnd = (result) => {
     if (!result.destination || !result.source) return;
 
