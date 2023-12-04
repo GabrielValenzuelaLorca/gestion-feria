@@ -18,6 +18,7 @@ const DeliverablesView = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [deliverablesState, setDeliverables] = useState([]);
+  const [fileState, setFile] = useState();
   const [fetchDeliverables, isLoadingDeliverables] = useFetch(
     getDeliverablesByTeam,
     setDeliverables
@@ -43,9 +44,14 @@ const DeliverablesView = () => {
   }, [fetchDeliverables, user.team.id]);
 
   const handleEndButton = async (activity_id) => {
-    await fetchCreateDeliverable(activity_id);
+    await fetchCreateDeliverable(activity_id, fileState);
     await fetchDeliverables(user.team.id);
     await fetchAppActivities();
+  };
+
+  const handleFileButton = (e) => {
+    const files = e.target.files;
+    if (files.length > 0) setFile(files[0]);
   };
 
   const handleEvaluation = (deliverableId) => {
@@ -155,93 +161,84 @@ const DeliverablesView = () => {
                       </div>
                     </div>
                     {activity.state !== "closed" && (
-                      <div className="column is-narrow buttons">
-                        <button
-                          className="button is-primary"
-                          onClick={() => handleRubric(activity.id)}
-                          disabled={!activity.rubric}
-                        >
-                          <span className="icon is-small">
-                            <i className="fa-solid fa-eye"></i>
-                          </span>
-                          {activity.rubric ? (
-                            <span>Ver Rúbrica</span>
-                          ) : (
-                            <span className="is-italic">Sin Rúbrica</span>
-                          )}
-                        </button>
-
-                        {activity.state === "evaluated" && (
-                          <button
-                            className="button is-primary is-outlined"
-                            onClick={() =>
-                              handleEvaluation(activity.deliverable_id)
-                            }
-                          >
-                            <span className="icon is-small">
-                              <i className="fa-solid fa-eye"></i>
-                            </span>
-                            <span>Ver Evaluación</span>
-                          </button>
-                        )}
-                        {activity.type === "document" ? (
-                          <>
-                            <div className="block">
-                              <div className="file has-name is-boxed">
-                                <label className="file-label">
-                                  <input
-                                    className="file-input"
-                                    type="file"
-                                    name="file"
-                                  />
-                                  <span className="file-cta">
-                                    <span className="file-icon">
-                                      <i className="fas fa-upload"></i>
-                                    </span>
-                                    <span className="file-label">
-                                      Seleccionar archivo
-                                    </span>
+                      <div className="column is-narrow">
+                        {activity.type === "document" && (
+                          <div className="block">
+                            <div className="file has-name is-boxed is-centered">
+                              <label className="file-label">
+                                <input
+                                  className="file-input"
+                                  type="file"
+                                  name="file"
+                                  onChange={handleFileButton}
+                                />
+                                <span className="file-cta">
+                                  <span className="file-icon">
+                                    <i className="fas fa-upload"></i>
                                   </span>
+                                  <span className="file-label">
+                                    Seleccionar archivo
+                                  </span>
+                                </span>
+                                {fileState && (
                                   <span className="file-name">
-                                    Screen Shot 2017-07-29 at 15.54.25.png
+                                    {fileState.name}
                                   </span>
-                                </label>
-                              </div>
+                                )}
+                              </label>
                             </div>
-                            <div className="block">
-                              {["pending", "pending_delayed"].includes(
-                                activity.state
-                              ) ? (
-                                <button className="button is-success is-pulled-right">
-                                  Enviar
-                                </button>
+                          </div>
+                        )}
+                        <div className="buttons">
+                          {activity.state === "evaluated" ? (
+                            <button
+                              className="button is-primary is-outlined"
+                              onClick={() =>
+                                handleEvaluation(activity.deliverable_id)
+                              }
+                            >
+                              <span className="icon is-small">
+                                <i className="fa-solid fa-eye"></i>
+                              </span>
+                              <span>Ver Evaluación</span>
+                            </button>
+                          ) : (
+                            <button
+                              className="button is-primary"
+                              onClick={() => handleRubric(activity.id)}
+                              disabled={!activity.rubric}
+                            >
+                              <span className="icon is-small">
+                                <i className="fa-solid fa-eye"></i>
+                              </span>
+                              {activity.rubric ? (
+                                <span>Ver Rúbrica</span>
                               ) : (
-                                <button className="button is-static">
-                                  <span className="icon">
-                                    <i className="fas fa-check"></i>
-                                  </span>
-                                  <span>Enviado</span>
-                                </button>
+                                <span className="is-italic">Sin Rúbrica</span>
                               )}
-                            </div>
-                          </>
-                        ) : ["pending", "pending_delayed"].includes(
+                            </button>
+                          )}
+                          {["pending", "pending_delayed"].includes(
                             activity.state
                           ) ? (
-                          <button
-                            className="button is-success is-pulled-right"
-                            onClick={() => handleEndButton(activity.id)}
-                          >
-                            Terminar Actividad
-                          </button>
-                        ) : (
-                          <button className="button is-primary" disabled>
-                            <span className="icon">
-                              <i className="fas fa-check"></i>
-                            </span>
-                            <span>Enviado</span>
-                          </button>
-                        )}
+                            <button
+                              className="button is-success is-pulled-right"
+                              onClick={() => handleEndButton(activity.id)}
+                              disabled={
+                                activity.type === "document" && !fileState
+                              }
+                            >
+                              Terminar Actividad
+                            </button>
+                          ) : (
+                            <button className="button is-primary" disabled>
+                              <span className="icon">
+                                <i className="fas fa-check"></i>
+                              </span>
+                              <span>Enviado</span>
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>

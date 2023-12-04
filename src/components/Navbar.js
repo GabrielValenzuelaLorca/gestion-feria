@@ -18,9 +18,6 @@ const Navbar = () => {
           <div className="navbar-burger" />
           <p className="title is-4 navbar-item">CASE 💼</p>
         </div>
-
-        <div0></div0>
-
         <div className="navbar-menu">
           <div className="navbar-start">
             <Link className="navbar-item" to="/actividades">
@@ -94,7 +91,7 @@ const Navbar = () => {
                 <Link className="navbar-item" to="/usuario">
                   <span className="icon-text">
                     <span className="icon">
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                     </span>
                     <span>Perfil</span>
                   </span>

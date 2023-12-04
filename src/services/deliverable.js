@@ -1,14 +1,20 @@
 import { API_URL } from "../config";
 import { authHeader, handleResponse } from "./helper";
 
-export const createDeliverable = async (activity_id) => {
+export const createDeliverable = async (activity_id, file) => {
   const requestOptions = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       ...authHeader(),
     },
   };
+
+  if (file) {
+    const body = new FormData();
+    body.append("file", file, file.name);
+    requestOptions.body = body;
+  }
+
   const url = new URL(`${API_URL}/deliverable/create/${activity_id}`);
   return handleResponse(await fetch(url, requestOptions));
 };
