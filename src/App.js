@@ -29,6 +29,7 @@ import { setActivities } from "./store/slices/activitiesSlice";
 import { updateSettings } from "./store/slices/settingsSlice";
 import TeamStoriesView from "./views/TeamStoriesView";
 import DetailedEvaluationView from "./views/DetailedEvaluationView";
+import TeamView from "./views/TeamView";
 
 function App() {
   const userState = useSelector((state) => state.user);
@@ -136,6 +137,10 @@ function App() {
               <Route
                 path="entregables"
                 element={<NavbarLayout component={<DeliverablesView />} />}
+              />
+              <Route
+                path="equipo"
+                element={<NavbarLayout component={<TeamView />} />}
               />
             </>
           )}

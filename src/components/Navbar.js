@@ -16,8 +16,10 @@ const Navbar = () => {
       <nav className="navbar is-dark" aria-label="main navigation">
         <div className="navbar-brand">
           <div className="navbar-burger" />
-          <p className="title is-4 navbar-item">CASE</p>
+          <p className="title is-4 navbar-item">CASE 💼</p>
         </div>
+
+        <div0></div0>
 
         <div className="navbar-menu">
           <div className="navbar-start">
@@ -47,6 +49,14 @@ const Navbar = () => {
                       <i className="fas fa-table-columns"></i>
                     </span>
                     <span>Historias de Usuario</span>
+                  </span>
+                </Link>
+                <Link className="navbar-item" to="/equipo">
+                  <span className="icon-text">
+                    <span className="icon">
+                      <i className="fa-solid fa-users"></i>
+                    </span>
+                    <span>Mi Equipo</span>
                   </span>
                 </Link>
               </>
@@ -84,7 +94,7 @@ const Navbar = () => {
                 <Link className="navbar-item" to="/usuario">
                   <span className="icon-text">
                     <span className="icon">
-                      <i className="fas fa-user"></i>
+                      <i class="fa-solid fa-user"></i>
                     </span>
                     <span>Perfil</span>
                   </span>
