@@ -58,6 +58,10 @@ const DeliverablesView = () => {
     navigate(`/evaluacion/${deliverableId}`);
   };
 
+  const handleSprintEvaluation = (deliverableId) => {
+    navigate(`/evaluacionDetallada/${deliverableId}`);
+  };
+
   const handleRubric = (activityId) => {
     navigate(`/rubrica/${activityId}`);
   };
@@ -192,7 +196,11 @@ const DeliverablesView = () => {
                             <button
                               className="button is-primary is-outlined"
                               onClick={() =>
-                                handleEvaluation(activity.deliverable_id)
+                                activity.type === "sprint"
+                                  ? handleSprintEvaluation(
+                                      activity.deliverable_id
+                                    )
+                                  : handleEvaluation(activity.deliverable_id)
                               }
                             >
                               <span className="icon is-small">
