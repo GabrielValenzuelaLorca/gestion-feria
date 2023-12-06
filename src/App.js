@@ -17,7 +17,7 @@ import RubricView from "./views/RubricView";
 import UserListView from "./views/UserListView";
 import useFetch from "./hooks/useFetch";
 import { getUser } from "./services/user";
-import { addUser } from "./store/slices/userSlice";
+import { addUser, removeUser } from "./store/slices/userSlice";
 import { getActivePeriod } from "./services/period";
 import { addPeriod } from "./store/slices/periodSlice";
 import AllDeliverablesView from "./views/AllDeliverablesView";
@@ -41,7 +41,9 @@ function App() {
     useCallback((user) => dispatch(addUser(user)), [dispatch]),
     false,
     null,
-    () => dispatch(addUser({}))
+    useCallback(() => {
+      dispatch(removeUser());
+    }, [dispatch])
   );
   const [fetchPeriod] = useFetch(
     getActivePeriod,
@@ -62,7 +64,7 @@ function App() {
     if (userState.id && !userState.rol) {
       fetchUser(userState.id);
     }
-  }, [fetchUser, userState.id, userState.rol, dispatch]);
+  }, [fetchUser, userState.id, userState.rol]);
 
   useEffect(() => {
     if (!periodState.id) fetchPeriod();
