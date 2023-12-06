@@ -14,7 +14,7 @@ const BoardInfo = () => {
   const [modalState, setModal] = useState(false);
 
   return (
-    <>
+    <section className="container">
       {user.rol !== "Profesor" &&
         activities.map((activity, i) => (
           <section className="message is-primary" key={i}>
@@ -60,7 +60,7 @@ const BoardInfo = () => {
         isActive={modalState}
         handleClose={() => setModalState(false, setModal)}
       />
-    </>
+    </section>
   );
 };
 

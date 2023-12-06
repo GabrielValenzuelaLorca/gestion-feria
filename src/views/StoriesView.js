@@ -11,6 +11,7 @@ import useFetch from "../hooks/useFetch";
 import { getStoriesBySprint, updateStoriesState } from "../services/story";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
+import * as bulmaToast from "bulma-toast";
 
 export const refreshContext = createContext();
 
@@ -66,8 +67,19 @@ const StoriesView = () => {
       destination: { index: destIndex, droppableId: dest },
     } = result;
 
+    if (dest !== source && !settings.sprints[sprint]) {
+      bulmaToast.toast({
+        message: "El sprint de esta historia no ha iniciado",
+        extraClasses: "has-text-weight-bold",
+        type: "is-danger",
+        position: "center",
+        dismissible: true,
+        pauseOnHover: true,
+        opacity: 0.5,
+      });
+      return;
+    }
     if (dest === source && destIndex === sourceIndex) return;
-    if (dest !== source && !settings.sprints[sprint]) return;
 
     const params = {
       sourceStories: [],
@@ -102,7 +114,7 @@ const StoriesView = () => {
 
   return (
     <section className="section">
-      <div className="level">
+      <div className="level container">
         <div className="level-left">
           <h1 className="title">Historias de Usuario</h1>
         </div>
@@ -113,18 +125,24 @@ const StoriesView = () => {
                 <i className="fas fa-lg fa-filter"></i>
               </div>
             </button>
-            {filterOptions.map((option, i) => (
-              <button
-                className={`button ${
-                  filterState === option ? "is-primary" : ""
-                }`}
-                key={i}
-                onClick={() => setFilter(option)}
-                disabled={filterState === option}
-              >
-                {option}
+            {filterOptions.length > 0 ? (
+              filterOptions.map((option, i) => (
+                <button
+                  className={`button ${
+                    filterState === option ? "is-primary" : ""
+                  }`}
+                  key={i}
+                  onClick={() => setFilter(option)}
+                  disabled={filterState === option}
+                >
+                  {option}
+                </button>
+              ))
+            ) : (
+              <button className={`button is-italic`} disabled>
+                Sin Historias
               </button>
-            ))}
+            )}
           </div>
         </div>
       </div>

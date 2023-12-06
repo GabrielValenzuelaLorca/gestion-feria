@@ -20,9 +20,13 @@ const StateDroppable = ({ stateItems, id }) => {
           {...provided.droppableProps}
           ref={provided.innerRef}
         >
-          {stateItems.map((item) => (
-            <CardDraggable item={item} key={item.id} />
-          ))}
+          {stateItems.length > 0 ? (
+            stateItems.map((item) => (
+              <CardDraggable item={item} key={item.id} />
+            ))
+          ) : (
+            <p className="tag is-primary is-light is-rounded">Sin Historias</p>
+          )}
           {provided.placeholder}
         </section>
       )}
