@@ -30,6 +30,9 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
   const canAssign =
     ["Alumno", "Ayudante"].includes(user.rol) && settings.canAssign;
 
+  const canEditSprint =
+    ["Alumno", "Ayudante"].includes(user.rol) && settings.sprints[story.sprint];
+
   const responsablesForTags = editState
     ? storyState.responsables
     : story.responsables;
@@ -131,7 +134,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 <button
                   className="button is-link is-rounded is-small mr-2"
                   onClick={() => setEdit(true)}
-                  disabled={!canCreateOrEdit}
+                  disabled={!canCreateOrEdit && !canEditSprint}
                 >
                   <span className="icon is-small">
                     <i className="fas fa-pen-to-square"></i>
@@ -146,11 +149,13 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
               ></button>
             </div>
           </div>
-          {["Alumno", "Ayudante"].includes(user.rol) && !canCreateOrEdit && (
-            <p className="is-size-7 has-text-grey-light">
-              *La edición aún no ha sido habilitada
-            </p>
-          )}
+          {["Alumno", "Ayudante"].includes(user.rol) &&
+            !canCreateOrEdit &&
+            !canEditSprint && (
+              <p className="is-size-7 has-text-grey-light">
+                *La edición aún no ha sido habilitada
+              </p>
+            )}
         </header>
         <section className="modal-card-body">
           <div className="field">
@@ -201,7 +206,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                   <span className="level-right">{story.progress}%</span>
                 </label>
                 <progress
-                  className="progress is-primary"
+                  className="progress is-link"
                   value={story.progress}
                   max="100"
                 >
@@ -245,7 +250,7 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 min="0"
                 validations={["required", "minNumber-0"]}
                 addons={<button className="button is-static">HU</button>}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !canCreateOrEdit}
               />
               <Input
                 name="title"
@@ -253,14 +258,14 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 type="text"
                 placeholder="Creación de usuarios, CRUD perfiles, etc..."
                 validations={["required"]}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !canCreateOrEdit}
               />
               <Textarea
                 name="description"
                 label="Descripción Historia"
                 placeholder="Como <sujeto> quiero <deseo> para <objetivo>..."
                 validations={["required"]}
-                disabled={loadingUpdate}
+                disabled={loadingUpdate || !canCreateOrEdit}
               />
               <Input
                 name="points"
@@ -282,7 +287,10 @@ const StoryDetails = ({ story, isActive, closeModal }) => {
                 max="100"
                 validations={["required", "minNumber-0", "maxNumber-100"]}
                 rightAddons={<button className="button is-static">%</button>}
-                disabled={loadingUpdate || !settings.canEdit}
+                disabled={
+                  loadingUpdate ||
+                  (!settings.canEdit && !settings.sprints[story.sprint])
+                }
               />
               {storyState.criteria.map((criteria, i) => (
                 <div className="field" key={i}>

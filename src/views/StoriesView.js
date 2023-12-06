@@ -67,6 +67,7 @@ const StoriesView = () => {
       destination: { index: destIndex, droppableId: dest },
     } = result;
 
+    if (dest === source && destIndex === sourceIndex) return;
     if (dest !== source && !settings.sprints[sprint]) {
       bulmaToast.toast({
         message: "El sprint de esta historia no ha iniciado",
@@ -79,7 +80,6 @@ const StoriesView = () => {
       });
       return;
     }
-    if (dest === source && destIndex === sourceIndex) return;
 
     const params = {
       sourceStories: [],

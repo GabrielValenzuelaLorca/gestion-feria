@@ -17,7 +17,17 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     updateSettings: (state, action) => {
-      state = { ...initialState };
+      state = {
+        canEdit: false,
+        canCreate: false,
+        canAssign: false,
+        sprints: {
+          MVP: false,
+          "Sprint 1": false,
+          "Sprint 2": false,
+          "Sprint 3": false,
+        },
+      };
       action.payload.forEach((activity) => {
         ({
           storyCreation: () => (state.canCreate = true),

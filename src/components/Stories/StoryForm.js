@@ -22,9 +22,8 @@ const StoryForm = ({ isActive, handleClose }) => {
   const save = async () => {
     if (form.validationState) {
       await doCreate(storyState);
+      cancel();
       await fetchStories();
-      handleClose();
-      clearForm();
     } else {
       form.setShowError(true);
     }
