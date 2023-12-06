@@ -77,7 +77,7 @@ const DeliverablesView = () => {
                       <p className="subtitle is-6">{activity.description}</p>
 
                       <div className="field is-grouped is-grouped-multiline">
-                        {activity.state === "pending" ? (
+                        {activity.state === "pending" && !activity.delayed ? (
                           <>
                             <div className="control">
                               <div className="tags has-addons">
@@ -100,7 +100,7 @@ const DeliverablesView = () => {
                               </div>
                             </div>
                           </>
-                        ) : activity.state === "pending_delayed" ? (
+                        ) : activity.state === "pending" && activity.delayed ? (
                           <>
                             <div className="control">
                               <div className="tags has-addons">
@@ -150,9 +150,7 @@ const DeliverablesView = () => {
                                   Estado de envío
                                 </span>
                                 <span className="tag is-primary is-light is-rounded">
-                                  {activity.state === "done"
-                                    ? "A tiempo"
-                                    : "Atrasado"}
+                                  {activity.delayed ? "Atrasado" : "A tiempo"}
                                 </span>
                               </div>
                             </div>
@@ -218,9 +216,7 @@ const DeliverablesView = () => {
                               )}
                             </button>
                           )}
-                          {["pending", "pending_delayed"].includes(
-                            activity.state
-                          ) ? (
+                          {activity.state === "pending" ? (
                             <button
                               className="button is-success is-pulled-right"
                               onClick={() => handleEndButton(activity.id)}

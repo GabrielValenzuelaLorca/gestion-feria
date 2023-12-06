@@ -46,7 +46,6 @@ export const ROLES = [
 
 export const DELIVERABLE_STATE = {
   pending: { text: "Pendiente de envío", color: "is-warning" },
-  pending_delayed: { text: "Pendiente de envío", color: "is-warning" },
   closed: { text: "No enviado", color: "is-danger" },
   done: { text: "Enviado", color: "is-primary" },
   evaluated: { text: "Nota", color: "is-success" },

@@ -15,17 +15,13 @@ const useFetch = (
       setLoading(true);
       try {
         const response = await service(...params);
-        if (callback) {
-          await callback(response.data);
-        }
-        if (!redirect) {
-          setLoading(false);
-        }
+        if (callback) await callback(response.data);
+        if (!redirect) setLoading(false);
       } catch (e) {
         console.error("Error", e);
         setMessage(errorMessage);
         setLoading(false);
-        catchCallback();
+        if (catchCallback) catchCallback();
         throw e;
       }
     },
