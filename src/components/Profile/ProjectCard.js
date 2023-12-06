@@ -65,7 +65,10 @@ const ProjectCard = () => {
                 onClick={() => setEdit(true)}
                 disabled={editState}
               >
-                Editar Proyecto
+                <span className="icon is-small">
+                  <i className="fas fa-pen-to-square"></i>
+                </span>
+                <span>Editar Proyecto</span>
               </button>
             </div>
           </div>

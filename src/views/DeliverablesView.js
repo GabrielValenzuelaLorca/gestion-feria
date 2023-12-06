@@ -247,7 +247,9 @@ const DeliverablesView = () => {
             })
           ) : (
             <p className="notification">
-              No hay actividades por realizar en este momento
+              {user.team.id
+                ? "No hay actividades por realizar en este momento"
+                : "Debes pertenecer a un equipo para enviar entregables"}
             </p>
           )}
         </Loader>

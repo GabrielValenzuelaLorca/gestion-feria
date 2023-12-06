@@ -88,7 +88,14 @@ const TeamCard = () => {
                 }}
                 disabled={editState}
               >
-                {!user.team.id ? "Crear Equipo" : "Editar Equipo"}
+                <span className="icon is-small">
+                  {!user.team.id ? (
+                    <i className="fas fa-plus"></i>
+                  ) : (
+                    <i className="fas fa-pen-to-square"></i>
+                  )}
+                </span>
+                <span>{!user.team.id ? "Crear Equipo" : "Editar Equipo"}</span>
               </button>
             </div>
           </div>
