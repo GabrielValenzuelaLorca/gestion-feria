@@ -56,8 +56,15 @@ function App() {
   );
 
   useEffect(() => {
-    if (userState.id && !userState.rol) fetchUser(userState.id);
-  }, [fetchUser, userState.id, userState.rol]);
+    if (userState.id && !userState.rol) {
+      try {
+        fetchUser(userState.id);
+      } catch (e) {
+        console.error("User not found", e);
+        dispatch(addUser({}));
+      }
+    }
+  }, [fetchUser, userState.id, userState.rol, dispatch]);
 
   useEffect(() => {
     if (!periodState.id) fetchPeriod();
