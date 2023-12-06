@@ -69,7 +69,7 @@ const EvaluationsView = () => {
                         {formatDatetimeToString(activityState.close)}
                       </h2>
                     )}
-                    {deliverablesState.length && (
+                    {deliverablesState.length > 0 && (
                       <h2 className="is-size-6">
                         <strong>Estado de envíos:</strong>{" "}
                         {
