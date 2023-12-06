@@ -13,6 +13,7 @@ export const handleResponse = async (response) => {
     data = text && JSON.parse(text);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 
   return data;

@@ -4,7 +4,8 @@ const useFetch = (
   service,
   callback = null,
   redirect = false,
-  errorMessage = null
+  errorMessage = null,
+  catchCallback
 ) => {
   const [isLoading, setLoading] = useState(false);
   const [messageState, setMessage] = useState(null);
@@ -24,10 +25,11 @@ const useFetch = (
         console.error("Error", e);
         setMessage(errorMessage);
         setLoading(false);
+        catchCallback();
         throw e;
       }
     },
-    [callback, errorMessage, redirect, service]
+    [callback, errorMessage, redirect, service, catchCallback]
   );
 
   return [doFetch, isLoading, messageState];

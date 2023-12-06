@@ -38,7 +38,10 @@ function App() {
   const dispatch = useDispatch();
   const [fetchUser] = useFetch(
     getUser,
-    useCallback((user) => dispatch(addUser(user)), [dispatch])
+    useCallback((user) => dispatch(addUser(user)), [dispatch]),
+    false,
+    null,
+    () => dispatch(addUser({}))
   );
   const [fetchPeriod] = useFetch(
     getActivePeriod,
@@ -57,12 +60,7 @@ function App() {
 
   useEffect(() => {
     if (userState.id && !userState.rol) {
-      try {
-        fetchUser(userState.id);
-      } catch (e) {
-        console.error("User not found", e);
-        dispatch(addUser({}));
-      }
+      fetchUser(userState.id);
     }
   }, [fetchUser, userState.id, userState.rol, dispatch]);
 
