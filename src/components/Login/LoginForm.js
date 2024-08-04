@@ -68,10 +68,6 @@ const LoginForm = ({ setModalState }) => {
         </p>
       </div>
 
-      <div className="field">
-        <p>¿Olvidó su nombre de usuario o contraseña?</p>
-      </div>
-
       <hr className="dropdown-divider"/>
 
       <div className="field is-centered">
